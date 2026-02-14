@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
   private final TurretSubsystem m_TurretSubsystem = new TurretSubsystem();
   private final SpindexerSubsystem m_SpindexerSubsystem = new SpindexerSubsystem();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
@@ -38,6 +40,13 @@ public class RobotContainer {
   }
   
   private void configureBindings() {
+    // Up and down on the d-pad for moving the climb
+    m_driverController.povUp().whileTrue(Commands.run(()-> m_ClimbSubsystem.setMotor(.5), m_ClimbSubsystem)
+    .finallyDo(()-> m_ClimbSubsystem.setMotor(0)));
+    m_driverController.povDown().whileTrue(Commands.run(()-> m_ClimbSubsystem.setMotor(-.5), m_ClimbSubsystem)
+    .finallyDo(()-> m_ClimbSubsystem.setMotor(0)));
+    
+    // Spins turret motor indefinitely :D
     m_driverController.rightBumper().whileTrue(Commands.run(() -> m_TurretSubsystem.runTurretMotor(0.1))
     .finallyDo(() -> m_TurretSubsystem.runTurretMotor(0)));
     

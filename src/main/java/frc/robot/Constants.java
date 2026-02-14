@@ -17,6 +17,10 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   
+  public static class ClimbConstant {
+    public static final int CLIMB_MOTOR_ID = 16;
+  }
+  
   public static class turretConstants {
     public static final int turretMotorId = 13;
   }
