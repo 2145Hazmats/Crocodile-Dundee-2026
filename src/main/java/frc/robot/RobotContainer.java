@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -12,6 +13,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /**
@@ -30,37 +32,59 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  
+  private final CommandXboxController m_operatorController =
+      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+  
+    // Default Commands
+    m_TurretSubsystem.setDefaultCommand(Commands.run(() -> m_TurretSubsystem.runTurretMotor(m_operatorController.getLeftX() * 0.1), m_TurretSubsystem));
+
     // Configure the trigger bindings
     configureBindings();
 
   }
   
   private void configureBindings() {
+
+    // P1 Controls
+
+    // P2 Controls
+
     // Up and down on the d-pad for moving the climb
-    m_driverController.povUp().whileTrue(Commands.run(()-> m_ClimbSubsystem.setMotor(.5), m_ClimbSubsystem)
+    m_driverController.povUp().whileTrue(Commands.run(() -> m_ClimbSubsystem.setMotor(.5), m_ClimbSubsystem)
     .finallyDo(()-> m_ClimbSubsystem.setMotor(0)));
-    m_driverController.povDown().whileTrue(Commands.run(()-> m_ClimbSubsystem.setMotor(-.5), m_ClimbSubsystem)
+    m_driverController.povDown().whileTrue(Commands.run(() -> m_ClimbSubsystem.setMotor(-.5), m_ClimbSubsystem)
     .finallyDo(()-> m_ClimbSubsystem.setMotor(0)));
-    
+
     // Spins turret motor indefinitely :D
-    m_driverController.rightBumper().whileTrue(Commands.run(() -> m_TurretSubsystem.runTurretMotor(0.1))
-    .finallyDo(() -> m_TurretSubsystem.runTurretMotor(0)));
+    //m_driverController.rightBumper().whileTrue(Commands.run(() -> m_TurretSubsystem.runTurretMotor(0.1))
+    //.finallyDo(() -> m_TurretSubsystem.runTurretMotor(0)));
     
     // command to run the spindexer at a set speed, stops once you let go of the button y
     m_driverController.y().whileTrue(Commands.run(() -> m_SpindexerSubsystem.SetMotor(0.5), m_SpindexerSubsystem)
     .finallyDo(() ->  m_SpindexerSubsystem.SetMotor(0)));
     
+    // Michals moment has come again! ;)
     // Shoots the balls ;)
-    m_driverController.a().whileTrue(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(0.5), m_ShooterSubsystem).finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0)));
-    m_driverController.a().whileTrue(Commands.run(() -> m_ShooterSubsystem.setShooterMotor(0.5), m_ShooterSubsystem).finallyDo(() -> m_ShooterSubsystem.setShooterMotor(0)));
+    m_driverController.a().whileTrue(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(1), m_ShooterSubsystem).finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0)));
+    m_driverController.a().whileTrue(Commands.run(() -> m_ShooterSubsystem.setShooterMotor(1), m_ShooterSubsystem).finallyDo(() -> m_ShooterSubsystem.setShooterMotor(0)));
     
     // Intakes the balls and stops when the trigger is let go
-    m_driverController.leftTrigger().whileTrue(Commands.run(()->m_IntakeSubsystem.setIntakeMotors(0.5),m_IntakeSubsystem)
-    .finallyDo(()->m_IntakeSubsystem.setIntakeMotors(0)));
+    //m_driverController.leftTrigger().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.5), m_IntakeSubsystem)
+    //.finallyDo(()->m_IntakeSubsystem.setIntakingMotor(0)));
+
+    //moves intake to position ready to pick up fuel, and runs intake motor
+    //moves back to home position in robot and shuts off motors when releasing left trigger
+    m_operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
+      m_IntakeSubsystem.MoveActuatorPosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
+      Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED))))
+      .whileFalse(new ParallelCommandGroup(
+      m_IntakeSubsystem.MoveActuatorPosition(IntakeConstants.ACTUATOR_HOME_POSITION),
+      Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
   }
 
   /**

@@ -6,16 +6,29 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.ErrorConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-  private TalonFX intakeLeft;
-  private TalonFX intakeRight;
+  private TalonFX actuatorMotor;
+  private TalonFX intakingMotor;
+  private PIDController actuatorPID;
+
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
-    intakeLeft = new TalonFX(IntakeConstants.LEFT_INTAKE_MOTOR_ID);
-    intakeRight = new TalonFX(IntakeConstants.RIGHT_INTAKE_MOTOR_ID);
+    actuatorMotor = new TalonFX(IntakeConstants.ACTUATOR_INTAKE_MOTOR_ID);
+    intakingMotor = new TalonFX(IntakeConstants.INTAKING_MOTOR_ID);
+    actuatorPID = new PIDController(Constants.PIDActuatorConstants.ACTUATOR_P, Constants.PIDActuatorConstants.ACTUATOR_I
+    , Constants.PIDActuatorConstants.ACTUATOR_D);
+  }
+  public boolean isIntakeInRobot(){
+    return MathUtil.isNear(IntakeConstants.ACTUATOR_HOME_POSITION, getActuatorPosition(), ErrorConstants.ACTUATOR_HOME_ERROR );
   }
 
   @Override
@@ -23,8 +36,19 @@ public class IntakeSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void setIntakeMotors(double speed){
-    intakeLeft.set(speed);
-    intakeRight.set(speed);
+  public void setActuatorMotor(double speed){
+    actuatorMotor.set(speed);
+  }
+
+  public void setIntakingMotor(double speed){
+    intakingMotor.set(speed);
+  }
+
+  public double getActuatorPosition() {
+    return actuatorMotor.getPosition().getValueAsDouble();
+  }
+  public Command MoveActuatorPosition(double position) {
+    return Commands.run(() -> actuatorMotor.set(actuatorPID.calculate(actuatorMotor.getPosition().getValueAsDouble(), position)));
   }
 }
+

@@ -14,15 +14,17 @@ package frc.robot;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int DRIVER_CONTROLLER_PORT = 0;
+    public static final int OPERATOR_CONTROLLER_PORT = 0;
   }
   
   public static class ClimbConstants {
     public static final int CLIMB_MOTOR_ID = 16;
+    public static final int SERVO_CHANNEL = 1;
   }
   
   public static class TurretConstants {
-    public static final int turretMotorId = 13;
+    public static final int TURRET_MOTOR_ID = 13;
   }
   
   public static class SpindexerConstants {
@@ -30,13 +32,25 @@ public final class Constants {
   }
     
   public static class IntakeConstants {
-    public static final int LEFT_INTAKE_MOTOR_ID = 10;
-    public static final int RIGHT_INTAKE_MOTOR_ID = 11;
+    public static final int ACTUATOR_INTAKE_MOTOR_ID = 9;
+    public static final int INTAKING_MOTOR_ID = 11;
+    public static final double ACTUATOR_HOME_POSITION = 0.0;
+    public static final double ACTUATOR_DOWN_POSITION = 5.0;
+    public static final double INTAKE_MOTOR_SPEED = 0.5;
   }
 
   public static class ShooterConstants {
     public static final int SHOOTER_MOTOR_ID = 14;
     public static final int KICKER_MOTOR_ID = 15;
+  }
+  public static class PIDActuatorConstants{
+    public static final double ACTUATOR_P = 0.0001;
+    public static final double ACTUATOR_I = 0.0000;
+    public static final double ACTUATOR_D = 0.0000;
+  }
+  
+  public static class ErrorConstants {
+    public static final double ACTUATOR_HOME_ERROR = 2;
   }
 }
 

@@ -13,7 +13,7 @@ public class TurretSubsystem extends SubsystemBase {
   private TalonFX turretMotor; 
   /** Creates a new Turret. */
   public TurretSubsystem() {
-   turretMotor = new TalonFX(TurretConstants.turretMotorId); 
+   turretMotor = new TalonFX(TurretConstants.TURRET_MOTOR_ID); 
   }
 
   public void runTurretMotor (double speed) {

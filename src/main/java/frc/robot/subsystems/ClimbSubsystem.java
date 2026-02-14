@@ -12,8 +12,8 @@ import frc.robot.Constants.ClimbConstants;
 
 public class ClimbSubsystem extends SubsystemBase {
   private TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID);
-  private Servo lockServo = new Servo(1);
-  /** Creates a new ExampleSubsystem. */
+  private Servo lockServo = new Servo(ClimbConstants.SERVO_CHANNEL);
+  
   public ClimbSubsystem() {}
 
   public void setMotor(double speed){
