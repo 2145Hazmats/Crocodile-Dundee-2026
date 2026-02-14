@@ -7,13 +7,13 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.TurretConstants;
 
 public class TurretSubsystem extends SubsystemBase {
   private TalonFX turretMotor; 
   /** Creates a new Turret. */
   public TurretSubsystem() {
-   turretMotor = new TalonFX(Constants.turretConstants.turretMotorId); 
+   turretMotor = new TalonFX(TurretConstants.turretMotorId); 
   }
 
   public void runTurretMotor (double speed) {

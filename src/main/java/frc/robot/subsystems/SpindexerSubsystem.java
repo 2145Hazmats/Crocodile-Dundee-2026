@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.SpindexerConstants;
 
 public class SpindexerSubsystem extends SubsystemBase {
   // Provides a name for the KrakenMotor
@@ -15,7 +15,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   /** Creates a new SpindexerSubsystem. */
   public SpindexerSubsystem() {
     /** Creates a new TalonFX with MotorID using the name we gave the motor from earlier */
-    spindexerMotor = new TalonFX(Constants.SpindexerConstants.SPINDEXER_MOTOR_ID);
+    spindexerMotor = new TalonFX(SpindexerConstants.SPINDEXER_MOTOR_ID);
   }
   /** Command that will be run in robot container, it sets the motor at a given speed, */
   // Double needed because it is a decimal value * 100 for set value in percent motor speed, ex: 0.5 * 100 = 50% motor speed

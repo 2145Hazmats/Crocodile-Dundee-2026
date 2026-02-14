@@ -8,10 +8,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ClimbConstant;
+import frc.robot.Constants.ClimbConstants;
 
 public class ClimbSubsystem extends SubsystemBase {
-  private TalonFX climbMotor = new TalonFX(ClimbConstant.CLIMB_MOTOR_ID);
+  private TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID);
   private Servo lockServo = new Servo(1);
   /** Creates a new ExampleSubsystem. */
   public ClimbSubsystem() {}
