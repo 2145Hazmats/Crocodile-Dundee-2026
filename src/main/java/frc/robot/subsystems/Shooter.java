@@ -4,25 +4,29 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ShooterConstants;
 
-public class ExampleSubsystem extends SubsystemBase {
+public class Shooter extends SubsystemBase {
+  // Creates new motors
+  private TalonFX shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
+  private TalonFX kickerMotor = new TalonFX(ShooterConstants.KICKER_MOTOR_ID);
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {}
+  public Shooter() {
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+  }
+
+  // Sets the shooter motor to a speeeeeeeeeeeeeeeeeeeeeeeeed
+  public void setShooterMotor(double speed) {
+    shooterMotor.set(speed);
+  }
+
+  // Sets the kicker motor to a speeeeeeeeeeeeeeeeeeeeeeeeed
+  public void setKickerMotor(double speed) {
+    kickerMotor.set(speed);
   }
 
   /**
