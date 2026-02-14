@@ -17,6 +17,10 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   
+  public static class MotorConstants {
+    public static final int SPINDEXER_MOTOR_ID = 12;
+  }
+    
   public static class IntakeConstants {
     public static final int LEFT_INTAKE_MOTOR_ID = 10;
     public static final int RIGHT_INTAKE_MOTOR_ID = 11;

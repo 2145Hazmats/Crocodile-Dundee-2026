@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final SpindexerSubsystem m_SpindexerSubsystem = new SpindexerSubsystem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   private final Shooter m_Shooter = new Shooter();
@@ -39,6 +41,11 @@ public class RobotContainer {
   }
   
   private void configureBindings() {
+    // command to run the spindexer at a set speed, stops once you let go of the button y
+    m_driverController.y().whileTrue(Commands.run(() -> m_SpindexerSubsystem.SetMotor(0.5)
+    , m_SpindexerSubsystem)
+    .finallyDo(() ->  m_SpindexerSubsystem.SetMotor(0)));
+    
     // Shoots the balls ;)
     m_driverController.a().whileTrue(Commands.run(() -> m_Shooter.setKickerMotor(0.5), m_Shooter).finallyDo(() -> m_Shooter.setKickerMotor(0)));
     m_driverController.a().whileTrue(Commands.run(() -> m_Shooter.setShooterMotor(0.5), m_Shooter).finallyDo(() -> m_Shooter.setShooterMotor(0)));
