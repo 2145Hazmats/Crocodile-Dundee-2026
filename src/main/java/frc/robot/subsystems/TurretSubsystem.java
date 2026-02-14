@@ -6,14 +6,17 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
 
 public class TurretSubsystem extends SubsystemBase {
-  private TalonFX turretMotor; 
+  private TalonFX turretMotor;
+  private PIDController turretAnglePID;
   /** Creates a new Turret. */
   public TurretSubsystem() {
-   turretMotor = new TalonFX(TurretConstants.turretMotorId); 
+   turretMotor = new TalonFX(TurretConstants.TURRET_MOTOR_ID);
+   turretAnglePID = new PIDController(TurretConstants.TURRET_P,TurretConstants.TURRET_I, TurretConstants.TURRET_D);
   }
 
   public void runTurretMotor (double speed) {
