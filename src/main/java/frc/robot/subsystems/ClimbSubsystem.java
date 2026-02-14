@@ -6,11 +6,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstant;
 
 public class ClimbSubsystem extends SubsystemBase {
   private TalonFX climbMotor = new TalonFX(ClimbConstant.CLIMB_MOTOR_ID);
+  private Servo lockServo = new Servo(1);
   /** Creates a new ExampleSubsystem. */
   public ClimbSubsystem() {}
 
@@ -18,7 +20,9 @@ public class ClimbSubsystem extends SubsystemBase {
     climbMotor.set(speed);
   }
 
-  
+  public void setServo(double angle) {
+    lockServo.setAngle(angle);
+  }
 
   @Override
   public void periodic() {
