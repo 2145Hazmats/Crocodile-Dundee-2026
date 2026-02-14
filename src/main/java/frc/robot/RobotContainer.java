@@ -41,10 +41,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    m_driverController.y().whileTrue(Commands.run(() -> m_SpindexerSubsystem.SpinMotor(0.5)
+    // command to run the spindexer at a set speed, stops once you let go of the button y
+    m_driverController.y().whileTrue(Commands.run(() -> m_SpindexerSubsystem.SetMotor(0.5)
     , m_SpindexerSubsystem)
-    .finallyDo(() ->  m_SpindexerSubsystem.SpinMotor(0)));
+    .finallyDo(() ->  m_SpindexerSubsystem.SetMotor(0)));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
