@@ -11,7 +11,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.ErrorConstants;
 import frc.robot.Constants.IntakeConstants;
 
@@ -24,8 +23,11 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     actuatorMotor = new TalonFX(IntakeConstants.ACTUATOR_INTAKE_MOTOR_ID);
     intakingMotor = new TalonFX(IntakeConstants.INTAKING_MOTOR_ID);
-    actuatorPID = new PIDController(Constants.PIDActuatorConstants.ACTUATOR_P, Constants.PIDActuatorConstants.ACTUATOR_I
-    , Constants.PIDActuatorConstants.ACTUATOR_D);
+    actuatorPID = new PIDController( IntakeConstants.ACTUATOR_P, IntakeConstants.ACTUATOR_I
+    , IntakeConstants.ACTUATOR_D);
+  }
+  public Command resetIntakePosition(){
+    return Commands.runOnce(() -> actuatorPID.setSetpoint(IntakeConstants.ACTUATOR_HOME_POSITION), this);
   }
   public boolean isIntakeInRobot(){
     return MathUtil.isNear(IntakeConstants.ACTUATOR_HOME_POSITION, getActuatorPosition(), ErrorConstants.ACTUATOR_HOME_ERROR );

@@ -6,25 +6,30 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
   // Creates new motors
-  private TalonFX shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
-  private TalonFX kickerMotor = new TalonFX(ShooterConstants.KICKER_MOTOR_ID);
+  private TalonFX shooterMotor; 
+  private TalonFX kickerMotor;
+  private PIDController flywheelPID;
   /** Creates a new ExampleSubsystem. */
   public ShooterSubsystem() {
+   shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
+   kickerMotor = new TalonFX(ShooterConstants.KICKER_MOTOR_ID);
+   flywheelPID = new PIDController(ShooterConstants.FLYWHEEL_P, ShooterConstants.FLYWHEEL_I, ShooterConstants.FLYWHEEL_D); 
+ }
 
-  }
-
-  // Sets the shooter motor to a speeeeeeeeeeeeeeeeeeeeeeeeed
+  // Sets the shooter motor to a speed
   public void setShooterMotor(double speed) {
     shooterMotor.set(speed);
   }
 
-  // Sets the kicker motor to a speeeeeeeeeeeeeeeeeeeeeeeeed
+  // Sets the kicker motor to a speed
   public void setKickerMotor(double speed) {
     kickerMotor.set(speed);
   }
