@@ -21,7 +21,7 @@ public final class Constants {
     public static final int turretMotorId = 13;
   }
   
-  public static class MotorConstants {
+  public static class SpindexerConstants {
     public static final int SPINDEXER_MOTOR_ID = 12;
   }
     

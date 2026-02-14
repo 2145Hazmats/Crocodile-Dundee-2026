@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
-public class Shooter extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase {
   // Creates new motors
   private TalonFX shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
   private TalonFX kickerMotor = new TalonFX(ShooterConstants.KICKER_MOTOR_ID);
   /** Creates a new ExampleSubsystem. */
-  public Shooter() {
+  public ShooterSubsystem() {
 
   }
 

@@ -9,10 +9,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Turret extends SubsystemBase {
+public class TurretSubsystem extends SubsystemBase {
   private TalonFX turretMotor; 
   /** Creates a new Turret. */
-  public Turret() {
+  public TurretSubsystem() {
    turretMotor = new TalonFX(Constants.turretConstants.turretMotorId); 
   }
 
