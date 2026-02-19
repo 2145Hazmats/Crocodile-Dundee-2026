@@ -5,8 +5,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
@@ -15,7 +20,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private TalonFX shooterMotor; 
   private TalonFX kickerMotor;
   private PIDController flywheelPID;
-  /** Creates a new ExampleSubsystem. */
+
+  /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
    shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
    kickerMotor = new TalonFX(ShooterConstants.KICKER_MOTOR_ID);
@@ -32,15 +38,14 @@ public class ShooterSubsystem extends SubsystemBase {
     kickerMotor.set(speed);
   }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
+  public void flywheelSetpoint() {
+    flywheelPID.setSetpoint(ShooterConstants.FLYWHEEL_RPM_SETPOINT);
   }
+  public Command flywheelRevUp(){
+    return Commands.run(()-> shooterMotor.set(flywheelPID.calculate
+    (ShooterConstants.FLYWHEEL_RPM_SETPOINT, ShooterConstants.FLYWHEEL_RPM_SETPOINT)));
+  }
+  
 
   @Override
   public void periodic() {

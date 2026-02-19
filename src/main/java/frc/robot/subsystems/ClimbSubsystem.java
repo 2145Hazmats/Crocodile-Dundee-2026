@@ -56,6 +56,9 @@ public class ClimbSubsystem extends SubsystemBase {
       moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION),
       moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
   }
+ // public Command climbRelease(){
+  //  return Commands.run(()-> moveServoToPosition(ClimbConstants.SERVO_UNLOCK_POSITION), this);
+ // } 
 
   @Override
   public void periodic() {

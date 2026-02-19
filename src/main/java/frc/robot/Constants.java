@@ -15,14 +15,14 @@ package frc.robot;
 public final class Constants {
   public static class ControllerConstants {
     public static final int DRIVER_CONTROLLER_PORT = 0;
-    public static final int OPERATOR_CONTROLLER_PORT = 0;
+    public static final int OPERATOR_CONTROLLER_PORT = 1;
   }
   
   public static class ClimbConstants {
     public static final int CLIMB_MOTOR_ID = 16;
     public static final double CLIMB_UP_POSITION = 5;
     public static final double CLIMB_HOME_POSITION = 0;
-    public static final double SERVO_LOCK_POSITION = 10;
+    public static final double SERVO_LOCK_POSITION = 5;
     public static final double SERVO_UNLOCK_POSITION = 0;
     public static final int SERVO_CHANNEL = 1;
   }
@@ -55,6 +55,7 @@ public final class Constants {
     public static final double FLYWHEEL_P = 0.00001;
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.00000;
+    public static final double FLYWHEEL_RPM_SETPOINT = 2000;
   }
   
   

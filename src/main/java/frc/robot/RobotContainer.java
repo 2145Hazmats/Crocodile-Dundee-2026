@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -42,7 +43,8 @@ public class RobotContainer {
   public RobotContainer() {
   
     // Default Commands
-    m_TurretSubsystem.setDefaultCommand(Commands.run(() -> m_TurretSubsystem.runTurretMotor(m_operatorController.getLeftX() * 0.1), m_TurretSubsystem));
+    m_TurretSubsystem.setDefaultCommand(Commands.run(() -> m_TurretSubsystem.runTurretMotor(m_operatorController.getLeftX() * 0.1)
+    , m_TurretSubsystem));
 
     // Configure the trigger bindings
     configureBindings();
@@ -55,28 +57,25 @@ public class RobotContainer {
 
     // P2 Controls
 
-    // Up and down on the d-pad for moving the climb
-    m_driverController.b().whileTrue(m_ClimbSubsystem.climbUp());
-    m_driverController.a().whileTrue(m_ClimbSubsystem.climbDown());
+    
+    m_operatorController.b().whileTrue(m_ClimbSubsystem.climbUp());
+    m_operatorController.a().whileTrue(m_ClimbSubsystem.climbDown());
+   // m_driverController.x().whileTrue(m_ClimbSubsystem.climbRelease());
     
     // Spins turret motor indefinitely :D
     //m_driverController.rightBumper().whileTrue(Commands.run(() -> m_TurretSubsystem.runTurretMotor(0.1))
     //.finallyDo(() -> m_TurretSubsystem.runTurretMotor(0)));
     
     // command to run the spindexer at a set speed, stops once you let go of the button y
-    m_operatorController.rightTrigger().whileTrue(Commands.run(() -> m_SpindexerSubsystem.SetMotor(0.5), m_SpindexerSubsystem)
+    m_operatorController.y().whileTrue(Commands.run(() -> m_SpindexerSubsystem.SetMotor(0.5)
+    , m_SpindexerSubsystem)
     .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0)));
 
-    // Regurgitate the balls ;) I like balls.
+    // Regurgitate the fuel ;)
     m_operatorController.leftBumper().whileTrue(Commands.run(() -> m_SpindexerSubsystem.SetMotor(-0.5), m_SpindexerSubsystem)
     .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0)));
     m_operatorController.leftBumper().whileTrue(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(-0.5), m_ShooterSubsystem)
     .finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0)));
-    
-    // Michals moment has come again! ;)
-    // Shoots the balls ;)
-    m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(0.5), m_ShooterSubsystem).finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0)));
-    m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setShooterMotor(0.5), m_ShooterSubsystem).finallyDo(() -> m_ShooterSubsystem.setShooterMotor(0)));
     
     // Intakes the balls and stops when the trigger is let go
     //m_driverController.leftTrigger().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.5), m_IntakeSubsystem)
@@ -90,7 +89,20 @@ public class RobotContainer {
       .whileFalse(new ParallelCommandGroup(
       m_IntakeSubsystem.MoveActuatorPosition(IntakeConstants.ACTUATOR_HOME_POSITION),
       Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
+    //puts the flywheel at a setpoint of 2000 RPM, 
+    m_operatorController.rightTrigger().whileTrue(Commands.run(()-> m_ShooterSubsystem.flywheelRevUp
+    (ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem));
+    m_operatorController.rightTrigger().whileTrue(Commands.waitSeconds(1.5).andThen(Commands.run(() -> 
+    m_ShooterSubsystem.setKickerMotor(0.5))));
+
+    // Michals moment has come again! ;)
+    // Shoots the fuel ;
+    /* Joel Check this please, idk if I did the PID right */
+    m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(0.5)
+    , m_ShooterSubsystem).finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0)));
+    m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setShooterMotor(0.5)));
   }
+    
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
