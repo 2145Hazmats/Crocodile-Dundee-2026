@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,24 +18,33 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeSubsystem extends SubsystemBase {
   private TalonFX actuatorMotor;
   private TalonFX intakingMotor;
-  private PIDController actuatorPID;
+  private PIDController actuatorDownPID;
+  private PIDController actuatorHomePID;
 
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
     actuatorMotor = new TalonFX(IntakeConstants.ACTUATOR_INTAKE_MOTOR_ID);
     intakingMotor = new TalonFX(IntakeConstants.INTAKING_MOTOR_ID);
-    actuatorPID = new PIDController( IntakeConstants.ACTUATOR_P, IntakeConstants.ACTUATOR_I
-    , IntakeConstants.ACTUATOR_D);
+    actuatorDownPID = new PIDController( IntakeConstants.ACTUATOR_DOWN_P, IntakeConstants.ACTUATOR_DOWN_I
+    , IntakeConstants.ACTUATOR_DOWN_D);
+    actuatorHomePID = new PIDController
+    (IntakeConstants.ACTUATOR_HOME_P, IntakeConstants.ACTUATOR_HOME_I, IntakeConstants.ACTUATOR_HOME_D);
+    
+    
+    resetIntakePosition();
   }
   public Command resetIntakePosition(){
-    return Commands.runOnce(() -> actuatorPID.setSetpoint(IntakeConstants.ACTUATOR_HOME_POSITION), this);
+    return Commands.runOnce(() -> actuatorMotor.setPosition(IntakeConstants.ACTUATOR_HOME_POSITION), this);
   }
+
+
   public boolean isIntakeInRobot(){
     return MathUtil.isNear(IntakeConstants.ACTUATOR_HOME_POSITION, getActuatorPosition(), ErrorConstants.ACTUATOR_HOME_ERROR );
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("GroundIntakePosition", getActuatorPosition());
     // This method will be called once per scheduler run
   }
 
@@ -49,8 +59,11 @@ public class IntakeSubsystem extends SubsystemBase {
   public double getActuatorPosition() {
     return actuatorMotor.getPosition().getValueAsDouble();
   }
-  public Command MoveActuatorPosition(double position) {
-    return Commands.run(() -> actuatorMotor.set(actuatorPID.calculate(actuatorMotor.getPosition().getValueAsDouble(), position)));
+  public Command MoveActuatorDown(double position) {
+    return Commands.run(() -> actuatorMotor.set(actuatorDownPID.calculate(actuatorMotor.getPosition().getValueAsDouble(), position)));
+  }
+    public Command MoveActuatorHome(double position) {
+    return Commands.run(() -> actuatorMotor.set(actuatorHomePID.calculate(actuatorMotor.getPosition().getValueAsDouble(), position)));
   }
 }
 

@@ -19,8 +19,8 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
   /** Command that will be run in robot container, it sets the motor at a given speed, */
   // Double needed because it is a decimal value * 100 for set value in percent motor speed, ex: 0.5 * 100 = 50% motor speed
-  public void SetMotor(double Speeds){
-    spindexerMotor.set(Speeds);
+  public void SetMotor(double speed){
+    spindexerMotor.set(speed);
   }
 
   @Override

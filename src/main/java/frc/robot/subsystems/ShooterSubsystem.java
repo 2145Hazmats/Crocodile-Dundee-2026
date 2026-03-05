@@ -38,14 +38,13 @@ public class ShooterSubsystem extends SubsystemBase {
     kickerMotor.set(speed);
   }
 
-  public void flywheelSetpoint() {
-    flywheelPID.setSetpoint(ShooterConstants.FLYWHEEL_RPM_SETPOINT);
+  public void flywheelSetpoint(double speed) {
+    flywheelPID.setSetpoint(speed);
   }
-  public Command flywheelRevUp(){
-    return Commands.run(()-> shooterMotor.set(flywheelPID.calculate
-    (ShooterConstants.FLYWHEEL_RPM_SETPOINT, ShooterConstants.FLYWHEEL_RPM_SETPOINT)));
+
+  public Command flywheelRevUp(double setpoint) {
+    return Commands.run(()-> shooterMotor.set(flywheelPID.calculate(shooterMotor.getVelocity().getValueAsDouble() * 60, setpoint)));
   }
-  
 
   @Override
   public void periodic() {

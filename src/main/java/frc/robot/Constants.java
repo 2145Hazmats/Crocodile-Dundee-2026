@@ -19,7 +19,7 @@ public final class Constants {
   }
   
   public static class ClimbConstants {
-    public static final int CLIMB_MOTOR_ID = 16;
+    public static final int CLIMB_MOTOR_ID = 24;
     public static final double CLIMB_UP_POSITION = 5;
     public static final double CLIMB_HOME_POSITION = 0;
     public static final double SERVO_LOCK_POSITION = 5;
@@ -28,30 +28,34 @@ public final class Constants {
   }
   
   public static class TurretConstants {
-    public static final int TURRET_MOTOR_ID = 13;
+    public static final int TURRET_MOTOR_ID = 23;
     public static final double TURRET_P = 0.000001;
     public static final double TURRET_I = 0.00000;
     public static final double TURRET_D = 0.000000;
   }
   
   public static class SpindexerConstants {
-    public static final int SPINDEXER_MOTOR_ID = 12;
+    public static final int SPINDEXER_MOTOR_ID = 20;
   }
     
   public static class IntakeConstants {
-    public static final int ACTUATOR_INTAKE_MOTOR_ID = 9;
-    public static final int INTAKING_MOTOR_ID = 11;
-    public static final double ACTUATOR_HOME_POSITION = 0.0;
-    public static final double ACTUATOR_DOWN_POSITION = 5.0;
-    public static final double INTAKE_MOTOR_SPEED = 0.5;
-    public static final double ACTUATOR_P = 0.00001;
-    public static final double ACTUATOR_I = 0.0000;
-    public static final double ACTUATOR_D = 0.0000;
+    public static final int ACTUATOR_INTAKE_MOTOR_ID = 30;
+    public static final int INTAKING_MOTOR_ID = 31;
+    public static final double ACTUATOR_HOME_POSITION = 18.59423828125;
+    public static final double ACTUATOR_DOWN_POSITION = -16.13037109375;
+    public static final double INTAKE_MOTOR_SPEED = 0.3;
+    public static final double ACTUATOR_DOWN_P = 0.1;
+    public static final double ACTUATOR_DOWN_I = 0.0000;
+    public static final double ACTUATOR_DOWN_D = 0.0000;
+    public static final double ACTUATOR_HOME_P = 0.15;
+    public static final double ACTUATOR_HOME_I = 0.0;
+    public static final double ACTUATOR_HOME_D = 0.0;
+   
   }
 
   public static class ShooterConstants {
-    public static final int SHOOTER_MOTOR_ID = 14;
-    public static final int KICKER_MOTOR_ID = 15;
+    public static final int SHOOTER_MOTOR_ID = 22;
+    public static final int KICKER_MOTOR_ID = 21;
     public static final double FLYWHEEL_P = 0.00001;
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.00000;
@@ -60,7 +64,7 @@ public final class Constants {
   
   
   public static class ErrorConstants {
-    public static final double ACTUATOR_HOME_ERROR = 2;
+    public static final double ACTUATOR_HOME_ERROR = 0.0;
   }
 }
 
