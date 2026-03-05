@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class RobotContainer {
 
@@ -44,12 +46,13 @@ public class RobotContainer {
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController m_driverController = new CommandXboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
     private final CommandXboxController m_operatorController = new CommandXboxController(ControllerConstants.OPERATOR_CONTROLLER_PORT);
+    private final XboxController m_everythingController = new XboxController(ControllerConstants.EVERYTHING_CONTROLLER_PORT);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
     // The robot's subsystems and commands are defined here
     private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
-    //private final TurretSubsystem m_TurretSubsystem = new TurretSubsystem();
+    private final TurretSubsystem m_TurretSubsystem = new TurretSubsystem();
     private final SpindexerSubsystem m_SpindexerSubsystem = new SpindexerSubsystem();
     private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
     private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
@@ -109,8 +112,13 @@ public class RobotContainer {
 
     
     
-    /*-----------------------------------Robot Controls-----------------------------------*/
-        
+    /*-------------------------------------Robot Controls-------------------------------------*/
+    
+
+
+    /*-------------------------------------Operator Controls-------------------------------------*/
+    
+    
     //Climb controls   
         m_operatorController.b().whileTrue(m_ClimbSubsystem.climbUp());
         m_operatorController.a().whileTrue(m_ClimbSubsystem.climbDown());
@@ -158,8 +166,12 @@ public class RobotContainer {
     .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));
 
     
+  /*-------------------------------------------Driver Controls-------------------------------------------*/  
     
-    // Michals moment has come again! ;)
+  
+  
+  
+  // Michals moment has come again! ;)
     // Shoots the fuel ;
     /* Joel Check this please, idk if I did the PID right */
     m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(0.5)
