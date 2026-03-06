@@ -176,7 +176,8 @@ public class RobotContainer {
     /* Joel Check this please, idk if I did the PID right */
     m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(0.5)
     , m_ShooterSubsystem).finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0)));
-    m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setShooterMotor(0.5)));
+    m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setShooterMotor(0.5))
+    .finallyDo(()-> m_ShooterSubsystem.setShooterMotor(0)));
   }
     
     
