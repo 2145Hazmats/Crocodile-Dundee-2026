@@ -59,11 +59,9 @@ public class IntakeSubsystem extends SubsystemBase {
   public double getActuatorPosition() {
     return actuatorMotor.getPosition().getValueAsDouble();
   }
-  public Command MoveActuatorDown(double position) {
+
+  public Command MoveActuatorToPositionCommand(double position) {
     return Commands.run(() -> actuatorMotor.set(actuatorDownPID.calculate(actuatorMotor.getPosition().getValueAsDouble(), position)));
-  }
-    public Command MoveActuatorHome(double position) {
-    return Commands.run(() -> actuatorMotor.set(actuatorHomePID.calculate(actuatorMotor.getPosition().getValueAsDouble(), position)));
   }
 }
 
