@@ -76,6 +76,11 @@ public final class Constants {
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.00000;
     public static final double FLYWHEEL_RPM_SETPOINT = 2000;
+
+    public static final int HOOD_MOTOR_ID = 67;
+    public static final double HOOD_P = 0.00001;
+    public static final double HOOD_I = 0.00000;
+    public static final double HOOD_D = 0.00000;
   }
 
   public static class PoseConstants {
@@ -84,7 +89,7 @@ public final class Constants {
   }
   public static class VisionConstants{
     public static final Transform3d FRONT_CAMERA_POSITION = 
-    new Transform3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0), 
+    new Transform3d(Units.inchesToMeters(8.804), Units.inchesToMeters(-12.735), Units.inchesToMeters(9.407), 
     new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(10), Units.degreesToRadians(0)));
     public static final double AMBIGUITY_RATIO_CUTOFF = 0.2;
   }

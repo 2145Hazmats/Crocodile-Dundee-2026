@@ -174,10 +174,10 @@ public class RobotContainer {
             Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
 
         //puts the flywheel at a setpoint of 2000 RPM, 
-        m_operatorController.rightTrigger().whileTrue(Commands.run(()-> m_ShooterSubsystem.flywheelRevUp
-        (ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem));
-        m_operatorController.rightTrigger().whileTrue(Commands.waitSeconds(1.5).andThen(Commands.run(() -> 
-        m_ShooterSubsystem.setKickerMotor(0.5))));
+        m_operatorController.rightTrigger()
+        .whileTrue(Commands.run(()-> m_ShooterSubsystem.flywheelRevUp(ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem)
+        .alongWith(Commands.waitSeconds(1.5)
+        .andThen(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(0.5)))));
 
         m_operatorController.povUp().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.35), m_IntakeSubsystem)
         .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));
