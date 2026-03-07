@@ -6,7 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.jar.Attributes.Name;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -69,7 +72,10 @@ public class RobotContainer {
     }
 
     private void registerNamedCommands() {
+        NamedCommands.registerCommand("TTTH", m_TurretSubsystem.turnTurretToHub());
         NamedCommands.registerCommand("Shoot", shootCommand().withTimeout(4));
+        NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeUP());
+        NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeDOWN());
     }
 
     private void configureBindings() {
@@ -167,10 +173,10 @@ public class RobotContainer {
         //moves intake to position ready to pick up fuel, and runs intake motor
         //moves back to home position in robot and shuts off motors when releasing left trigger
         m_operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
-            m_IntakeSubsystem.MoveActuatorToPositionCommand(IntakeConstants.ACTUATOR_DOWN_POSITION),
+            m_IntakeSubsystem.moveActuatorToPositionCommand(IntakeConstants.ACTUATOR_DOWN_POSITION),
             Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))))
             .whileFalse(new ParallelCommandGroup(
-            m_IntakeSubsystem.MoveActuatorToPositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION),
+            m_IntakeSubsystem.moveActuatorToPositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION),
             Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
 
         //puts the flywheel at a setpoint of 2000 RPM, 

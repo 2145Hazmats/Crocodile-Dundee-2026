@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ErrorConstants;
 import frc.robot.Constants.IntakeConstants;
 
@@ -60,7 +61,20 @@ public class IntakeSubsystem extends SubsystemBase {
     return actuatorMotor.getPosition().getValueAsDouble();
   }
 
-  public Command MoveActuatorToPositionCommand(double position) {
+  public Command autoIntakeUP() {
+    return Commands.parallel(
+      moveActuatorToPositionCommand(Constants.IntakeConstants.ACTUATOR_DOWN_POSITION),
+      Commands.run(() -> setIntakingMotor(Constants.IntakeConstants.INTAKE_MOTOR_SPEED), this));
+  }
+  
+  public Command autoIntakeDOWN() {
+    return Commands.parallel(
+      moveActuatorToPositionCommand(Constants.IntakeConstants.ACTUATOR_HOME_POSITION),
+      Commands.run(() -> setIntakingMotor(0), this));
+  }
+
+
+  public Command moveActuatorToPositionCommand(double position) {
     return Commands.run(() -> actuatorMotor.set(actuatorDownPID.calculate(actuatorMotor.getPosition().getValueAsDouble(), position)));
   }
 }
