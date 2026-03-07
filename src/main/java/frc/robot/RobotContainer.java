@@ -66,6 +66,11 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+
+    /*-------------------------------------------Driver Controls-------------------------------------------*/
+
+        
+    
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -142,9 +147,8 @@ public class RobotContainer {
     .finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0)));
     
     
-    // Intakes the balls and stops when the trigger is let go
-    //m_driverController.leftTrigger().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.5), m_IntakeSubsystem)
-    //.finallyDo(()->m_IntakeSubsystem.setIntakingMotor(0)));
+    
+    
 
     
     
@@ -158,28 +162,18 @@ public class RobotContainer {
       Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
     //puts the flywheel at a setpoint of 2000 RPM, 
     m_operatorController.rightTrigger().whileTrue(Commands.run(()-> m_ShooterSubsystem.flywheelRevUp
-    (ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem));
-    m_operatorController.rightTrigger().whileTrue(Commands.waitSeconds(1.5).andThen(Commands.run(() -> 
-    m_ShooterSubsystem.setKickerMotor(0.5))));
+    (ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem).alongWith(Commands.waitSeconds(1.5).andThen(Commands.run(() -> 
+    m_ShooterSubsystem.setKickerMotor(0.5)))));
 
+    // Intakes the balls and stops when the trigger is let go
     m_operatorController.povUp().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.35), m_IntakeSubsystem)
     .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));
+    }
+/*----------------------------------------------------------------------------------------------------------------------------- */
+   
 
-    
-  /*-------------------------------------------Driver Controls-------------------------------------------*/  
-    
-  
-  
-  
-  // Michals moment has come again! ;)
-    // Shoots the fuel ;
-    /* Joel Check this please, idk if I did the PID right */
-    m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(0.5)
-    , m_ShooterSubsystem).finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0)));
-    m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_ShooterSubsystem.setShooterMotor(0.5)));
-  }
-    
-    
+
+
 
     public Command getAutonomousCommand() {
         // Simple drive forward auton

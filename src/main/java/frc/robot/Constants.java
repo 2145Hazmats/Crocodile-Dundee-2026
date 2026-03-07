@@ -61,6 +61,11 @@ public final class Constants {
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.00000;
     public static final double FLYWHEEL_RPM_SETPOINT = 2000;
+    public static final int HOOD_MOTOR_ID = 67;
+    public static final double HOOD_P = 0.00001;
+    public static final double HOOD_I = 0.00000;
+    public static final double HOOD_D = 0.00000;
+
   }
   
   
