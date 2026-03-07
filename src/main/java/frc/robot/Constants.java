@@ -4,6 +4,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.PIDConstants;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -18,6 +26,12 @@ public final class Constants {
     public static final int OPERATOR_CONTROLLER_PORT = 1;
     public static final int EVERYTHING_CONTROLLER_PORT = 2;
   }
+
+  public static class PathPlannerConstants {
+    // PID Autobuilder
+    public static final PIDConstants TRANSLATIONAL_PID = new PIDConstants(5, 0, 0);
+    public static final PIDConstants ROTATIONAL_PID = new PIDConstants(5, 0, 0);
+  }
   
   public static class ClimbConstants {
     public static final int CLIMB_MOTOR_ID = 24;
@@ -29,10 +43,11 @@ public final class Constants {
   }
   
   public static class TurretConstants {
-    public static final int TURRET_MOTOR_ID = 23;
-    public static final double TURRET_P = 0.000001;
+    public static final int TURRET_MOTOR_ID = 22;
+    public static final double TURRET_P = 0.1;
     public static final double TURRET_I = 0.00000;
-    public static final double TURRET_D = 0.000000;
+    public static final double TURRET_D = 0.001;
+    public static final double TURRET_GEAR_RATIO = 14.285714285714285714;
   }
   
   public static class SpindexerConstants {
@@ -55,17 +70,28 @@ public final class Constants {
   }
 
   public static class ShooterConstants {
-    public static final int SHOOTER_MOTOR_ID = 22;
+    public static final int SHOOTER_MOTOR_ID = 40;
     public static final int KICKER_MOTOR_ID = 21;
     public static final double FLYWHEEL_P = 0.00001;
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.00000;
     public static final double FLYWHEEL_RPM_SETPOINT = 2000;
   }
-  
+
+  public static class PoseConstants {
+    public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.62534, 4.034536};
+    public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.91514, 4.034536};
+  }
+  public static class VisionConstants{
+    public static final Transform3d FRONT_CAMERA_POSITION = 
+    new Transform3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0), 
+    new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(10), Units.degreesToRadians(0)));
+    public static final double AMBIGUITY_RATIO_CUTOFF = 0.2;
+  }
   
   public static class ErrorConstants {
-    public static final double ACTUATOR_HOME_ERROR = 0.0;
+    public static final double ACTUATOR_HOME_ERROR = 3.0;
   }
 }
+
 
