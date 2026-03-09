@@ -2,28 +2,39 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.json.simple.parser.ParseException;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.Constants.PoseConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -34,9 +45,12 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  * https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+    private Field2d generalField = new Field2d();
+
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    private double angleToHub = 0;
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -130,6 +144,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        configureAutoBuilder();
+        SmartDashboard.putData(generalField);
     }
 
     /**
@@ -154,6 +171,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        configureAutoBuilder();
+        SmartDashboard.putData(generalField);
     }
 
     /**
@@ -186,6 +206,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        configureAutoBuilder();
+        SmartDashboard.putData(generalField);
     }
 
     /**
@@ -220,6 +243,74 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
+    public void configureAutoBuilder() {
+        RobotConfig config;
+        final SwerveRequest.ApplyRobotSpeeds applyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
+
+        try{
+            config = RobotConfig.fromGUISettings();
+
+            AutoBuilder.configure(
+            () -> this.getState().Pose, // Robot pose supplier
+            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            () -> this.getState().Speeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            (speeds, feedforwards) -> setControl( 
+                    applyRobotSpeeds.withSpeeds(speeds)
+                        .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                        .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
+                ), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+            ),
+            config, // The robot configuration
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            this // Reference to this subsystem to set requirements
+            );
+        } catch (Exception e) {
+            DriverStation.reportError("Failed to configure PathPlanner", e.getStackTrace());
+        }
+
+        // Configure AutoBuilder last        
+    }
+
+    public Pose2d getPose2d(){
+        return this.getState().Pose;
+    }
+
+    public double calculateAngleToHub() {
+     try {
+       var alliance = DriverStation.getAlliance();
+       double xRelativeToHub = 1;
+       double yRelativeToHub = 1;
+       // double[] turretPosition = calculateTurretFieldPosition();
+       if(alliance.get() == Alliance.Blue) {
+         xRelativeToHub = getPose2d().getX() - PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0];
+         yRelativeToHub = getPose2d().getY() - PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1];
+       }
+       else if(alliance.get() == Alliance.Red) {
+         xRelativeToHub = getPose2d().getX() - PoseConstants.RED_ALLIANCE_HUB_LOCATION[0];
+         yRelativeToHub = getPose2d().getY() - PoseConstants.RED_ALLIANCE_HUB_LOCATION[1];
+       }
+       SmartDashboard.putNumber("XRelativeToHub", xRelativeToHub);
+       SmartDashboard.putNumber("YRelativeToHub", yRelativeToHub);
+       angleToHub = Math.atan(yRelativeToHub/xRelativeToHub);
+       return angleToHub;
+     } catch (Exception e) {
+       return angleToHub;
+     }
+   }
+
     @Override
     public void periodic() {
         /*
@@ -239,6 +330,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        generalField.setRobotPose(getPose2d());
+        SmartDashboard.putNumber("Angle to Hub", Units.radiansToDegrees(angleToHub));
     }
 
     private void startSimThread() {

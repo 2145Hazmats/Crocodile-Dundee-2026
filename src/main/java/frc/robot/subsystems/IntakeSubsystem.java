@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -18,17 +20,19 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeSubsystem extends SubsystemBase {
   private TalonFX actuatorMotor;
   private TalonFX intakingMotor;
-  private PIDController actuatorDownPID;
-  private PIDController actuatorHomePID;
+  private final PositionVoltage m_actuatorRequest = new PositionVoltage(0).withSlot(0);
+  
 
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
     actuatorMotor = new TalonFX(IntakeConstants.ACTUATOR_INTAKE_MOTOR_ID);
     intakingMotor = new TalonFX(IntakeConstants.INTAKING_MOTOR_ID);
-    actuatorDownPID = new PIDController( IntakeConstants.ACTUATOR_DOWN_P, IntakeConstants.ACTUATOR_DOWN_I
-    , IntakeConstants.ACTUATOR_DOWN_D);
-    actuatorHomePID = new PIDController
-    (IntakeConstants.ACTUATOR_HOME_P, IntakeConstants.ACTUATOR_HOME_I, IntakeConstants.ACTUATOR_HOME_D);
+    var slot0Configs = new Slot0Configs();
+    slot0Configs.kG = 0.1;
+    slot0Configs.kP = IntakeConstants.ACTUATOR_P;
+    slot0Configs.kI = IntakeConstants.ACTUATOR_I;
+    slot0Configs.kD = IntakeConstants.ACTUATOR_D;
+    actuatorMotor.getConfigurator().apply(slot0Configs);
     
     
     resetIntakePosition();
@@ -59,11 +63,12 @@ public class IntakeSubsystem extends SubsystemBase {
   public double getActuatorPosition() {
     return actuatorMotor.getPosition().getValueAsDouble();
   }
-  public Command MoveActuatorDown(double position) {
-    return Commands.run(() -> actuatorMotor.set(actuatorDownPID.calculate(actuatorMotor.getPosition().getValueAsDouble(), position)));
+
+  public Command setIntakePosition(double position){
+     return Commands.run(() -> actuatorMotor.setControl(m_actuatorRequest.withPosition(position)), this);
   }
-    public Command MoveActuatorHome(double position) {
-    return Commands.run(() -> actuatorMotor.set(actuatorHomePID.calculate(actuatorMotor.getPosition().getValueAsDouble(), position)));
-  }
+
+  
 }
+
 
