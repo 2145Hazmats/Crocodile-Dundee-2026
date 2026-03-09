@@ -62,17 +62,14 @@ public class RobotContainer {
     public RobotContainer() {
         
         configureBindings();
-        registerNamedCommands();
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
-    private void registerNamedCommands() {
-        NamedCommands.registerCommand("Shoot", shootCommand().withTimeout(4));
-    }
-
     private void configureBindings() {
+
+    /*-------------------------------------------Driver Controls-------------------------------------------*/  
 
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
@@ -85,7 +82,7 @@ public class RobotContainer {
             )
         );
 
-        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToHub());
+       // m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToHub());
 
         // Slow mode
         m_driverController.rightBumper().whileTrue(
@@ -128,11 +125,11 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        /*-------------------------------------Robot Controls-------------------------------------*/
+    /*-------------------------------------Robot Controls-------------------------------------*/
     
 
 
-        /*-------------------------------------Operator Controls-------------------------------------*/
+    /*-------------------------------------Operator Controls-------------------------------------*/
     
     
         //Climb controls   
@@ -167,41 +164,42 @@ public class RobotContainer {
         //moves intake to position ready to pick up fuel, and runs intake motor
         //moves back to home position in robot and shuts off motors when releasing left trigger
         m_operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
-            m_IntakeSubsystem.MoveActuatorToPositionCommand(IntakeConstants.ACTUATOR_DOWN_POSITION),
+            m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
             Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))))
             .whileFalse(new ParallelCommandGroup(
-            m_IntakeSubsystem.MoveActuatorToPositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION),
+            m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
             Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
 
-        //puts the flywheel at a setpoint of 2000 RPM, 
-        m_operatorController.rightTrigger().whileTrue(Commands.run(()-> m_ShooterSubsystem.flywheelRevUp
-        (ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem));
-        m_operatorController.rightTrigger().whileTrue(Commands.waitSeconds(1.5).andThen(Commands.run(() -> 
-        m_ShooterSubsystem.setKickerMotor(0.5))));
+        //Moves the hood of the shooter
+        m_ShooterSubsystem.setDefaultCommand(Commands.run(() -> m_ShooterSubsystem.setHoodMotor(m_operatorController.getRightY() * 0.1)
+        , m_ShooterSubsystem));
+        
+
+        //Parallel command to run the shooter , 
+        m_operatorController.rightTrigger()
+        .whileTrue(Commands.run(() -> m_ShooterSubsystem.setShooterMotor(-1))
+        .alongWith(Commands.waitSeconds(1.5)
+            .andThen(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(-1), m_ShooterSubsystem)))
+        .alongWith(Commands.waitSeconds(1.5).andThen(Commands.run(() -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem)))
+            .finallyDo(() -> {
+            m_ShooterSubsystem.setKickerMotor(0);
+            m_ShooterSubsystem.setShooterMotor(0);
+            m_SpindexerSubsystem.SetMotor(0);
+        }));
+
+        m_operatorController.povLeft().whileTrue(
+            Commands.run(
+                () -> {
+                    m_ShooterSubsystem.setFlywheelToSpeed(SmartDashboard.getNumber("Flywheel Setpoint", 0));
+                    m_ShooterSubsystem.setHoodMotorPosition(SmartDashboard.getNumber("Hood Setpoint", 0));
+                },
+                 m_ShooterSubsystem
+            )
+        );
 
         m_operatorController.povUp().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.35), m_IntakeSubsystem)
-        .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));
-
-    
-        /*-------------------------------------------Driver Controls-------------------------------------------*/  
-    
-        // Shoots the fuel
-        m_driverController.rightTrigger().whileTrue(shootCommand());
-    }
-
-    private Command shootCommand() {
-        return Commands.run(() -> {
-            m_ShooterSubsystem.setKickerMotor(-0.5);
-            m_ShooterSubsystem.setShooterMotor(0.5);
-        }, m_ShooterSubsystem)
-        .alongWith(Commands.run(() -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem))
-        .finallyDo(() -> {
-                m_ShooterSubsystem.setKickerMotor(0);
-                m_ShooterSubsystem.setShooterMotor(0);
-                m_SpindexerSubsystem.SetMotor(0);
-            }
-        );
-    }
+        .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));     
+    } 
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
