@@ -198,16 +198,8 @@ public class RobotContainer {
         );
 
         m_operatorController.povUp().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.35), m_IntakeSubsystem)
-        .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));
-
-    
-        
-    
-        
-    }
-
-
-    
+        .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));     
+    } 
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
