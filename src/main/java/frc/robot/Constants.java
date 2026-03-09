@@ -47,7 +47,7 @@ public final class Constants {
     public static final double TURRET_P = 0.1;
     public static final double TURRET_I = 0.00000;
     public static final double TURRET_D = 0.001;
-    public static final double TURRET_GEAR_RATIO = 14.285714285714285714;
+    public static final double TURRET_GEAR_RATIO = 14.285714285714286;
   }
   
   public static class SpindexerConstants {
@@ -57,27 +57,24 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int ACTUATOR_INTAKE_MOTOR_ID = 30;
     public static final int INTAKING_MOTOR_ID = 31;
-    public static final double ACTUATOR_HOME_POSITION = 18.59423828125;
-    public static final double ACTUATOR_DOWN_POSITION = -16.13037109375;
+    public static final double ACTUATOR_HOME_POSITION = 0; // TODO: Set home and down positions for the intake
+    public static final double ACTUATOR_DOWN_POSITION = 0; // <-----------------------------------------------
     public static final double INTAKE_MOTOR_SPEED = 0.3;
-    public static final double ACTUATOR_DOWN_P = 0.1;
-    public static final double ACTUATOR_DOWN_I = 0.0000;
-    public static final double ACTUATOR_DOWN_D = 0.0000;
-    public static final double ACTUATOR_HOME_P = 0.15;
-    public static final double ACTUATOR_HOME_I = 0.0;
-    public static final double ACTUATOR_HOME_D = 0.0;
+    public static final double ACTUATOR_P = 0.1;
+    public static final double ACTUATOR_I = 0.0000;
+    public static final double ACTUATOR_D = 0.0000;
    
   }
 
   public static class ShooterConstants {
-    public static final int SHOOTER_MOTOR_ID = 40;
+    public static final int SHOOTER_MOTOR_ID = 28;
     public static final int KICKER_MOTOR_ID = 21;
-    public static final double FLYWHEEL_P = 0.00001;
+    public static final double FLYWHEEL_P = 0.1;
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.00000;
     public static final double FLYWHEEL_RPM_SETPOINT = 2000;
 
-    public static final int HOOD_MOTOR_ID = 67;
+    public static final int HOOD_MOTOR_ID = 29;
     public static final double HOOD_P = 0.00001;
     public static final double HOOD_I = 0.00000;
     public static final double HOOD_D = 0.00000;
@@ -89,13 +86,23 @@ public final class Constants {
   }
   public static class VisionConstants{
     public static final Transform3d FRONT_CAMERA_POSITION = 
-    new Transform3d(Units.inchesToMeters(8.804), Units.inchesToMeters(-12.735), Units.inchesToMeters(9.407), 
+    new Transform3d(Units.inchesToMeters(8.804), Units.inchesToMeters(-12.735), Units.inchesToMeters(9.407),
     new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(10), Units.degreesToRadians(0)));
     public static final double AMBIGUITY_RATIO_CUTOFF = 0.2;
   }
   
   public static class ErrorConstants {
     public static final double ACTUATOR_HOME_ERROR = 3.0;
+  }
+
+  public static class MathConstants {
+    public static double DegreesToRotations(double angle) {
+      return angle / 360;
+    }
+
+    public static double RPMtoRPS(double RPM) {
+      return RPM / 60;
+    }
   }
 }
 
