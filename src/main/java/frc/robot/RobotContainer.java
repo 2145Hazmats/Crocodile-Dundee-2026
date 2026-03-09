@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.lang.ModuleLayer.Controller;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -44,11 +47,22 @@ public class RobotContainer {
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
+    
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
-    private final CommandXboxController m_driverController = new CommandXboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
-    private final CommandXboxController m_operatorController = new CommandXboxController(ControllerConstants.OPERATOR_CONTROLLER_PORT);
-    private final XboxController m_everythingController = new XboxController(ControllerConstants.EVERYTHING_CONTROLLER_PORT);
+
+    // Unc Controllers
+    private final CommandXboxController P1CommandController = new CommandXboxController(ControllerConstants.P1_CONTROLLER_PORT);
+    private final CommandXboxController P2CommandController = new CommandXboxController(ControllerConstants.P2_CONTROLLER_PORT);
+    private final CommandXboxController m_CommandEverythingController = new CommandXboxController(ControllerConstants.EVERYTHING_CONTROLLER_PORT);
+    private final CommandXboxController m_CommnandTestingController = new CommandXboxController(ControllerConstants.TESTING_CONTROLLER_PORT);
+
+    // New Controllers
+    private final XboxController P1Controller = new XboxController(ControllerConstants.P1_CONTROLLER_PORT);
+    private final XboxController P2Controller = new XboxController(ControllerConstants.P2_CONTROLLER_PORT);
+    private final XboxController m_EverythingController = new XboxController(ControllerConstants.EVERYTHING_CONTROLLER_PORT);
+    private final XboxController m_TestingController = new XboxController(ControllerConstants.TESTING_CONTROLLER_PORT);
+
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
@@ -76,9 +90,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-P1Controller.getRawAxis(ControllerConstants.LEFT_Y_AXIS) * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-P1Controller.getRawAxis(ControllerConstants.LEFT_X_AXIS) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-P1Controller.getRawAxis(ControllerConstants.RIGHT_X_AXIS) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -93,6 +107,14 @@ public class RobotContainer {
             )
         );
 
+        P1CommandController.y().whileTrue(drivetrain.applyRequest(() ->
+            drive.withVelocityX(-P1CommandController.getLeftY() * 0.5) // Drive forward with negative Y (forward)
+                 .withVelocityY(-P1CommandController.getLeftX() * 0.5) // Drive left with negative X (left)
+                 .withRotationalRate(-P1CommandController.getRightX() * 0.5) // Drive counterclockwise with negative X (left)
+            )
+        );
+            
+           
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
@@ -100,28 +122,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        m_driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        m_driverController.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
-        ));
-
-        /*
-        m_driverController.leftTrigger().whileTrue(Commands.run(() -> m_intakeSubsystem.setActuatorMotor(0.5), m_intakeSubsystem)
-        .finallyDo(() -> m_intakeSubsystem.setActuatorMotor(0)));
-
-        m_driverController.rightTrigger().whileTrue(Commands.run(() -> m_intakeSubsystem.setActuatorMotor(-0.5), m_intakeSubsystem)
-        .finallyDo(() -> m_intakeSubsystem.setActuatorMotor(0)));
-        */
-
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        m_driverController.back().and(m_driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        m_driverController.back().and(m_driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        m_driverController.start().and(m_driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        m_driverController.start().and(m_driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-        // Reset the field-centric heading on left bumper press.
-        m_driverController.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        P1CommandController.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -133,61 +134,125 @@ public class RobotContainer {
     
     
         //Climb controls   
-        m_operatorController.b().whileTrue(m_ClimbSubsystem.climbUp());
-        m_operatorController.a().whileTrue(m_ClimbSubsystem.climbDown());
+        P2CommandController.b().whileTrue(m_ClimbSubsystem.climbUp());
+        P2CommandController.a().whileTrue(m_ClimbSubsystem.climbDown());
         // m_driverController.x().whileTrue(m_ClimbSubsystem.climbRelease());
-    
-        // Spins turret motor indefinitely :D
-        //m_driverController.rightBumper().whileTrue(Commands.run(() -> m_TurretSubsystem.runTurretMotor(0.1))
-        //.finallyDo(() -> m_TurretSubsystem.runTurretMotor(0)));
     
     
         // Command to run the spindexer at a set speed, stops once you let go of the button y
-        m_operatorController.y().whileTrue(Commands.run(() -> m_SpindexerSubsystem.SetMotor(1.0)
-        , m_SpindexerSubsystem)
-        .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0)));
-
+        P2CommandController.y().whileTrue(Commands.run(
+            () -> m_SpindexerSubsystem.SetMotor(1.0), 
+            m_SpindexerSubsystem
+        )
+        .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0)));    
     
-        // Regurgitate the fuel ;)
-        m_operatorController.leftBumper().whileTrue(Commands.run(() -> m_SpindexerSubsystem.SetMotor(-1), m_SpindexerSubsystem)
-        .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0)));
-        m_operatorController.leftBumper().whileTrue(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(0.5), m_ShooterSubsystem)
-        .finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0)));
-    
-    
-        // Intakes the balls and stops when the trigger is let go
-        //m_driverController.leftTrigger().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.5), m_IntakeSubsystem)
-        //.finallyDo(()->m_IntakeSubsystem.setIntakingMotor(0)));
+    //moves intake to position ready to pick up fuel, and runs intake motor
+    //moves back to home position in robot and shuts off motors when releasing left trigger
+        P2CommandController.leftTrigger()
+        .whileTrue(
+            new ParallelCommandGroup(
+                m_IntakeSubsystem.MoveActuatorDown(IntakeConstants.ACTUATOR_DOWN_POSITION),
+                Commands.run(
+                    () -> m_IntakeSubsystem.setIntakingMotor(0)
+                )
+            )
+        )
+        .whileFalse(
+            new ParallelCommandGroup(
+                m_IntakeSubsystem.MoveActuatorHome(IntakeConstants.ACTUATOR_HOME_POSITION),
+                Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))
+            )
+        );
+  
+      /*-----------------------------------New Controller Configs----------------------------------- */
 
+      /*-------------------------------P1 Controller-------------------------------- */
+
+      final Trigger P1A = new Trigger(() -> P1Controller.getRawButton(1));
+      final Trigger P1B = new Trigger(() -> P1Controller.getRawButton(2));
+      final Trigger P1r4 = new Trigger(() -> P1Controller.getRawButton(3));
+      final Trigger P1X = new Trigger(() -> P1Controller.getRawButton(4));
+      final Trigger P1Y = new Trigger(() -> P1Controller.getRawButton(5));
+      final Trigger P1l4 = new Trigger(() -> P1Controller.getRawButton(6));
+      final Trigger P1rightBumper = new Trigger(() -> P1Controller.getRawButton(7));
+      final Trigger P1leftBumper = new Trigger(() -> P1Controller.getRawButton(8));
+      final Trigger P1rightTrigger = new Trigger(() -> P1Controller.getRawButton(9));
+      final Trigger P1leftTrigger = new Trigger(() -> P1Controller.getRawButton(10));
+      final Trigger P1minus = new Trigger(() -> P1Controller.getRawButton(11));
+      final Trigger P1Plus = new Trigger(() -> P1Controller.getRawButton(12));
+
+      /*-------------------------------P2 Controller-------------------------------- */
+
+
+      final Trigger P2A = new Trigger(() -> P2Controller.getRawButton(1));
+      final Trigger P2B = new Trigger(() -> P2Controller.getRawButton(2));
+      final Trigger P2r4 = new Trigger(() -> P2Controller.getRawButton(3));
+      final Trigger P2X = new Trigger(() -> P2Controller.getRawButton(4));
+      final Trigger P2Y = new Trigger(() -> P2Controller.getRawButton(5));
+      final Trigger P2l4 = new Trigger(() -> P2Controller.getRawButton(6));
+      final Trigger P2rightBumper = new Trigger(() -> P2Controller.getRawButton(7));
+      final Trigger P2leftBumper = new Trigger(() -> P2Controller.getRawButton(8));
+      final Trigger P2rightTrigger = new Trigger(() -> P2Controller.getRawButton(9));
+      final Trigger P2leftTrigger = new Trigger(() -> P2Controller.getRawButton(10));
+      final Trigger P2minus = new Trigger(() -> P2Controller.getRawButton(11));
+      final Trigger P2Plus = new Trigger(() -> P2Controller.getRawButton(12));
+
+    /*--------------------------------New Controller Commands-------------------------------- */
+      // slow mode
+
+      P1rightBumper.whileTrue(drivetrain.applyRequest(() ->
+        drive.withVelocityX(-P1Controller.getRawAxis(ControllerConstants.LEFT_Y_AXIS) * 0.5) // Drive forward with negative Y (forward)
+        .withVelocityY(-P1Controller.getRawAxis(ControllerConstants.LEFT_X_AXIS) * 0.5) // Drive left with negative X (left)
+        .withRotationalRate(-P1Controller.getRawAxis(ControllerConstants.RIGHT_X_AXIS) * 0.5) // Drive counterclockwise with negative X (left)
+      ));
+
+      P1A.whileTrue(drivetrain.applyRequest(() -> brake));
+
+    /*-------------------------------------Robot Controls-------------------------------------*/
     
-    
-        //moves intake to position ready to pick up fuel, and runs intake motor
-        //moves back to home position in robot and shuts off motors when releasing left trigger
-        m_operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
-            m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
-            Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))))
-            .whileFalse(new ParallelCommandGroup(
-            m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
-            Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
 
-        //Moves the hood of the shooter
-        m_ShooterSubsystem.setDefaultCommand(Commands.run(() -> m_ShooterSubsystem.setHoodMotor(m_operatorController.getRightY() * 0.1)
-        , m_ShooterSubsystem));
-        
 
-        //Parallel command to run the shooter , 
-        m_operatorController.rightTrigger()
-        .whileTrue(Commands.run(() -> m_ShooterSubsystem.setShooterMotor(-1))
-        .alongWith(Commands.waitSeconds(1.5)
-            .andThen(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(-1), m_ShooterSubsystem)))
-        .alongWith(Commands.waitSeconds(1.5).andThen(Commands.run(() -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem)))
-            .finallyDo(() -> {
-            m_ShooterSubsystem.setKickerMotor(0);
-            m_ShooterSubsystem.setShooterMotor(0);
-            m_SpindexerSubsystem.SetMotor(0);
-        }));
+    /*-------------------------------------Operator Controls-------------------------------------*/
 
-        m_operatorController.povLeft().whileTrue(
+      //Climb controls   
+      P2B.whileTrue(m_ClimbSubsystem.climbUp());
+      P2A.whileTrue(m_ClimbSubsystem.climbDown());
+      // P2X.whileTrue(m_ClimbSubsystem.climbRelease());
+
+      // Command to run the spindexer at a full speed, stops once you let go of the button y
+      P2Y.whileTrue(Commands.run(
+        () -> m_SpindexerSubsystem.SetMotor(1.0), 
+        m_SpindexerSubsystem
+      )
+      .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0)));
+
+      // Regurgitate the fuel ;)
+      P2leftBumper.whileTrue(Commands.run(
+      () -> m_SpindexerSubsystem.SetMotor(-0.5), m_SpindexerSubsystem
+      )
+      .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0))
+      .alongWith(Commands.run(() -> m_ShooterSubsystem.setKickerMotor(-0.5), m_ShooterSubsystem)
+      .finallyDo(() -> m_ShooterSubsystem.setKickerMotor(0))));
+
+      P2leftTrigger
+      .whileTrue(
+        new ParallelCommandGroup(
+          m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
+          Commands.run(
+            () -> m_IntakeSubsystem.setIntakingMotor(0)
+          )
+        )
+      )
+      .whileFalse(
+        new ParallelCommandGroup(
+          m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
+          Commands.run(
+            () -> m_IntakeSubsystem.setIntakingMotor(0)
+          )
+        )
+      );
+      
+      m_operatorController.povLeft().whileTrue(
             Commands.run(
                 () -> {
                     m_ShooterSubsystem.setFlywheelToSpeed(SmartDashboard.getNumber("Flywheel Setpoint", 0));
@@ -195,13 +260,10 @@ public class RobotContainer {
                 },
                  m_ShooterSubsystem
             )
-        );
+      );
+  } 
 
-        m_operatorController.povUp().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.35), m_IntakeSubsystem)
-        .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));     
-    } 
-
-    public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
-    }
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();              
+  }
 }
