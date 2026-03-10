@@ -23,8 +23,12 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class ControllerConstants {
     public static final int P1_CONTROLLER_PORT = 0;
-    public static final int OPERATOR_CONTROLLER_PORT = 1;
+    public static final int P2_CONTROLLER_PORT = 1;
     public static final int EVERYTHING_CONTROLLER_PORT = 2;
+    public static final int TESTING_CONTROLLER_PORT = 3;
+    public static final int LEFT_Y_AXIS = 0;
+    public static final int LEFT_X_AXIS = 0;
+    public static final int RIGHT_X_AXIS = 0;
   }
 
   public static class PathPlannerConstants {

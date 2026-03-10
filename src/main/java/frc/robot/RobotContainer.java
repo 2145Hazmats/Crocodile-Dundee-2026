@@ -90,20 +90,20 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-P1Controller.getRawAxis(ControllerConstants.LEFT_Y_AXIS) * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-P1Controller.getRawAxis(ControllerConstants.LEFT_X_AXIS) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-P1Controller.getRawAxis(ControllerConstants.RIGHT_X_AXIS) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-P1Controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
        // m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToHub());
 
         // Slow mode
-        m_driverController.rightBumper().whileTrue(
+        P1CommandController.rightBumper().whileTrue(
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
-                    .withVelocityY(-m_driverController.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
-                    .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
+                drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
+                    .withVelocityY(-P1Controller.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
+                    .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
             )
         );
 
@@ -151,7 +151,7 @@ public class RobotContainer {
         P2CommandController.leftTrigger()
         .whileTrue(
             new ParallelCommandGroup(
-                m_IntakeSubsystem.MoveActuatorDown(IntakeConstants.ACTUATOR_DOWN_POSITION),
+                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
                 Commands.run(
                     () -> m_IntakeSubsystem.setIntakingMotor(0)
                 )
@@ -159,7 +159,7 @@ public class RobotContainer {
         )
         .whileFalse(
             new ParallelCommandGroup(
-                m_IntakeSubsystem.MoveActuatorHome(IntakeConstants.ACTUATOR_HOME_POSITION),
+                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
                 Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))
             )
         );
@@ -252,7 +252,7 @@ public class RobotContainer {
         )
       );
       
-      m_operatorController.povLeft().whileTrue(
+      P2CommandController.povLeft().whileTrue(
             Commands.run(
                 () -> {
                     m_ShooterSubsystem.setFlywheelToSpeed(SmartDashboard.getNumber("Flywheel Setpoint", 0));
