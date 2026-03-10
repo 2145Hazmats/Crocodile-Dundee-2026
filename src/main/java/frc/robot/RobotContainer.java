@@ -163,12 +163,19 @@ public class RobotContainer {
     
         //moves intake to position ready to pick up fuel, and runs intake motor
         //moves back to home position in robot and shuts off motors when releasing left trigger
-        m_operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
-            m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
-            Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))))
-            .whileFalse(new ParallelCommandGroup(
-            m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
-            Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
+        m_operatorController.leftTrigger()
+            .whileTrue(
+                new ParallelCommandGroup(
+                    m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
+                    Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))
+                )
+            )
+            .whileFalse(
+                new ParallelCommandGroup(
+                    m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
+                    Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))
+                )
+            );
 
         //Moves the hood of the shooter
         m_ShooterSubsystem.setDefaultCommand(Commands.run(() -> m_ShooterSubsystem.setHoodMotor(m_operatorController.getRightY() * 0.1)
