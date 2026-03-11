@@ -91,17 +91,7 @@ public class RobotContainer {
         
     }
 
-    private void registerNamedCommands() {
-        NamedCommands.registerCommand("TTTH", m_TurretSubsystem.turnTurretToHub());
-        NamedCommands.registerCommand("Shoot", shootCommand().withTimeout(4));
-        NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeUP());
-        NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeDOWN());
-    }
-
     private void configureBindings() {
-
-     
-
     /*-------------------------------------------Driver Controls-------------------------------------------*/  
 
         // Note that X is defined as forward according to WPILib convention,
@@ -203,7 +193,7 @@ public class RobotContainer {
       final Trigger P2l4 = new Trigger(() -> P2Controller.getRawButton(3));
       final Trigger P2X = new Trigger(() -> P2Controller.getRawButton(4));
       final Trigger P2Y = new Trigger(() -> P2Controller.getRawButton(5));
-      final Trigger P2l4 = new Trigger(() -> P2Controller.getRawButton(6));
+      //final Trigger P2l4 = new Trigger(() -> P2Controller.getRawButton(6));
       final Trigger P2rightBumper = new Trigger(() -> P2Controller.getRawButton(7));
       final Trigger P2leftBumper = new Trigger(() -> P2Controller.getRawButton(8));
       final Trigger P2rightTrigger = new Trigger(() -> P2Controller.getRawButton(10));
