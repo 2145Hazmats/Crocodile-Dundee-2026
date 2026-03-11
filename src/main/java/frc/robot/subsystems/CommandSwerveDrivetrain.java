@@ -288,23 +288,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return this.getState().Pose;
     }
 
-    public double calculateAngleToHub() {
+    public double calculateAngleToFieldPosition(double fieldPositionX, double fieldPositionY) {
      try {
-       var alliance = DriverStation.getAlliance();
-       double xRelativeToHub = 1;
-       double yRelativeToHub = 1;
-       // double[] turretPosition = calculateTurretFieldPosition();
-       if(alliance.get() == Alliance.Blue) {
-         xRelativeToHub = getPose2d().getX() - PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0];
-         yRelativeToHub = getPose2d().getY() - PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1];
-       }
-       else if(alliance.get() == Alliance.Red) {
-         xRelativeToHub = getPose2d().getX() - PoseConstants.RED_ALLIANCE_HUB_LOCATION[0];
-         yRelativeToHub = getPose2d().getY() - PoseConstants.RED_ALLIANCE_HUB_LOCATION[1];
-       }
-       SmartDashboard.putNumber("XRelativeToHub", xRelativeToHub);
-       SmartDashboard.putNumber("YRelativeToHub", yRelativeToHub);
-       angleToHub = Math.atan(yRelativeToHub/xRelativeToHub);
+       double xRelativeToPosition = 1;
+       double yRelativeToPosition = 1;
+
+       xRelativeToPosition = getPose2d().getX() - fieldPositionX;
+       yRelativeToPosition = getPose2d().getY() - fieldPositionY;
+       
+       SmartDashboard.putNumber("XRelativeToHub", xRelativeToPosition);
+       SmartDashboard.putNumber("YRelativeToHub", yRelativeToPosition);
+       angleToHub = Math.atan(yRelativeToPosition/xRelativeToPosition);
        return angleToHub;
      } catch (Exception e) {
        return angleToHub;

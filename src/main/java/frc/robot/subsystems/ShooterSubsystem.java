@@ -9,14 +9,27 @@ import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+<<<<<<< Updated upstream
+=======
+import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.Velocity;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+>>>>>>> Stashed changes
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ErrorConstants;
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
   // Creates new motors
   private TalonFX shooterMotor; 
-  private TalonFX kickerMotor;
+  private TalonFX feederMotor;
   private TalonFX hoodMotor;
   private final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0);
   private final PositionVoltage m_hoodRequest = new PositionVoltage(0).withSlot(1);
@@ -26,7 +39,7 @@ public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
    shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
-   kickerMotor = new TalonFX(ShooterConstants.KICKER_MOTOR_ID);
+   feederMotor = new TalonFX(ShooterConstants.FEEDER_MOTOR_ID);
    hoodMotor = new TalonFX(ShooterConstants.HOOD_MOTOR_ID);
    var slot0Configs = new Slot0Configs();
    slot0Configs.kS = 0;
@@ -49,9 +62,9 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterMotor.set(speed);
   }
 
-  // Sets the kicker motor to a speed
-  public void setKickerMotor(double speed) {
-    kickerMotor.set(speed);
+  // Sets the feeder motor to a speed
+  public void setFeederMotor(double speed) {
+    feederMotor.set(speed);
   }
 
   public void setHoodMotor(double speed) {
@@ -61,6 +74,10 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setFlywheelToSpeed(double RPM){
     shooterMotor.setControl(m_flywheelRequest.withVelocity(MathConstants.RPMtoRPS(RPM))
     .withFeedForward(0.5));
+  }
+
+  public boolean isFlywheelNearSetpoint(double RPM) {
+    return MathUtil.isNear(RPM, MathConstants.RPStoRPM(shooterMotor.getVelocity().getValueAsDouble()), ErrorConstants.TURRET_RPM_TOLERANCE);
   }
 
   public void setHoodMotorPosition(double angle) {

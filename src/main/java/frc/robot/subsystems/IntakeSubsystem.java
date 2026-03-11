@@ -65,7 +65,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public Command setIntakePosition(double position){
-     return Commands.run(() -> actuatorMotor.setControl(m_actuatorRequest.withPosition(position)), this);
+     return Commands.runOnce(() -> actuatorMotor.setControl(m_actuatorRequest.withPosition(position)), this);
   }
 
   

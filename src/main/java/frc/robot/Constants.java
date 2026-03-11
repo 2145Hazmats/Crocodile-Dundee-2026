@@ -26,9 +26,14 @@ public final class Constants {
     public static final int P2_CONTROLLER_PORT = 1;
     public static final int EVERYTHING_CONTROLLER_PORT = 2;
     public static final int TESTING_CONTROLLER_PORT = 3;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final int LEFT_Y_AXIS = 0;
     public static final int LEFT_X_AXIS = 0;
     public static final int RIGHT_X_AXIS = 0;
+=======
+=======
+>>>>>>> Stashed changes
   }
 
   public static class PathPlannerConstants {
@@ -52,6 +57,7 @@ public final class Constants {
     public static final double TURRET_I = 0.00000;
     public static final double TURRET_D = 0.001;
     public static final double TURRET_GEAR_RATIO = 14.285714285714286;
+    public static final double TURRET_STARTING_ANGLE = 0;
   }
   
   public static class SpindexerConstants {
@@ -72,7 +78,7 @@ public final class Constants {
 
   public static class ShooterConstants {
     public static final int SHOOTER_MOTOR_ID = 28;
-    public static final int KICKER_MOTOR_ID = 21;
+    public static final int FEEDER_MOTOR_ID = 21;
     public static final double FLYWHEEL_P = 0.1;
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.00000;
@@ -85,8 +91,13 @@ public final class Constants {
   }
 
   public static class PoseConstants {
-    public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.62534, 4.034536};
-    public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.91514, 4.034536};
+    public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.625, 4.035};
+    public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.915, 4.035};
+    
+    public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {1, 1};
+    public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {1, 7.069};
+    public static final double[] RED_ALLIANCE_RIGHT_CORNER = {15.541, 7.069};
+    public static final double[] RED_ALLIANCE_LEFT_CORNER = {15.541, 1};
   }
   public static class VisionConstants{
     public static final Transform3d FRONT_CAMERA_POSITION = 
@@ -97,6 +108,7 @@ public final class Constants {
   
   public static class ErrorConstants {
     public static final double ACTUATOR_HOME_ERROR = 3.0;
+    public static final double TURRET_RPM_TOLERANCE = 25;
   }
 
   public static class MathConstants {
@@ -106,6 +118,10 @@ public final class Constants {
 
     public static double RPMtoRPS(double RPM) {
       return RPM / 60;
+    }
+
+    public static double RPStoRPM(double RPS) {
+      return RPS * 60;
     }
   }
 }
