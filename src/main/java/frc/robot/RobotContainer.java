@@ -11,6 +11,7 @@ import java.util.jar.Attributes.Name;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -63,7 +64,7 @@ public class RobotContainer {
     private final XboxController m_EverythingController = new XboxController(ControllerConstants.EVERYTHING_CONTROLLER_PORT);
     private final XboxController m_TestingController = new XboxController(ControllerConstants.TESTING_CONTROLLER_PORT);
 
-
+    //Subsystems are defined here
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
     private final TurretSubsystem m_TurretSubsystem = new TurretSubsystem(drivetrain);
@@ -73,12 +74,21 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
 
+     private void registerNamedCommands() {
+        NamedCommands.registerCommand("ATTC", m_TurretSubsystem.autoTurnTurretCommand());
+        NamedCommands.registerCommand("Shoot", shootCommand().withTimeout(4));
+        NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeDOWN());
+        NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeHOME());
+    }
+
     public RobotContainer() {
         
         configureBindings();
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
+        m_IntakeSubsystem.resetIntakePosition();
+        
     }
 
     private void registerNamedCommands() {
@@ -89,6 +99,8 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+
+     
 
     /*-------------------------------------------Driver Controls-------------------------------------------*/  
 
@@ -144,7 +156,7 @@ public class RobotContainer {
         //Climb controls   
         P2CommandController.b().whileTrue(m_ClimbSubsystem.climbUp());
         P2CommandController.a().whileTrue(m_ClimbSubsystem.climbDown());
-        // m_driverController.x().whileTrue(m_ClimbSubsystem.climbRelease());
+        // P2CommandController.x().whileTrue(m_ClimbSubsystem.climbRelease());
     
     
         // Command to run the spindexer at a set speed, stops once you let go of the button y
@@ -156,21 +168,65 @@ public class RobotContainer {
     
         //moves intake to position ready to pick up fuel, and runs intake motor
         //moves back to home position in robot and shuts off motors when releasing left trigger
-        m_operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
-            m_IntakeSubsystem.moveActuatorToPositionCommand(IntakeConstants.ACTUATOR_DOWN_POSITION),
-            Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))))
-            .whileFalse(new ParallelCommandGroup(
-            m_IntakeSubsystem.moveActuatorToPositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION),
-            Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
+        P2CommandController.leftTrigger()
+        .whileTrue(
+            new ParallelCommandGroup(
+                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
+                Commands.run(
+                    () -> m_IntakeSubsystem.setIntakingMotor(0)
+                )
+            )
+        )
+        .whileFalse(
+            new ParallelCommandGroup(
+                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
+                Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))
+            )
+        );
+  
+      /*-----------------------------------New Controller Configs----------------------------------- */
 
-        //puts the flywheel at a setpoint of 2000 RPM, 
-        m_operatorController.rightTrigger().whileTrue(Commands.run(()-> m_ShooterSubsystem.flywheelRevUp
-        (ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem));
-        m_operatorController.rightTrigger().whileTrue(Commands.waitSeconds(1.5).andThen(Commands.run(() -> 
-        m_ShooterSubsystem.setKickerMotor(0.5))));
+      /*-------------------------------P1 Controller-------------------------------- */
 
-        m_operatorController.povUp().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.35), m_IntakeSubsystem)
-        .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));
+      final Trigger P1A = new Trigger(() -> P1Controller.getRawButton(1));
+      final Trigger P1B = new Trigger(() -> P1Controller.getRawButton(2));
+      final Trigger P1l4 = new Trigger(() -> P1Controller.getRawButton(3));
+      final Trigger P1X = new Trigger(() -> P1Controller.getRawButton(4));
+      final Trigger P1Y = new Trigger(() -> P1Controller.getRawButton(5));
+      final Trigger P1r4 = new Trigger(() -> P1Controller.getRawButton(6));
+      final Trigger P1leftBumper = new Trigger(() -> P1Controller.getRawButton(7));
+      final Trigger P1rightBumper = new Trigger(() -> P1Controller.getRawButton(8));
+      final Trigger P1leftTrigger = new Trigger(() -> P1Controller.getRawButton(9));
+      final Trigger P1rightTrigger = new Trigger(() -> P1Controller.getRawButton(10));
+      final Trigger P1minus = new Trigger(() -> P1Controller.getRawButton(11));
+      final Trigger P1Plus = new Trigger(() -> P1Controller.getRawButton(12));
+
+      /*-------------------------------P2 Controller-------------------------------- */
+
+
+      final Trigger P2A = new Trigger(() -> P2Controller.getRawButton(1));
+      final Trigger P2B = new Trigger(() -> P2Controller.getRawButton(2));
+      final Trigger P2l4 = new Trigger(() -> P2Controller.getRawButton(3));
+      final Trigger P2X = new Trigger(() -> P2Controller.getRawButton(4));
+      final Trigger P2Y = new Trigger(() -> P2Controller.getRawButton(5));
+      final Trigger P2r4 = new Trigger(() -> P2Controller.getRawButton(6));
+      final Trigger P2leftBumper = new Trigger(() -> P2Controller.getRawButton(7));
+      final Trigger P2rightBumper = new Trigger(() -> P2Controller.getRawButton(8));
+      final Trigger P2leftTrigger = new Trigger(() -> P2Controller.getRawButton(9));
+      final Trigger P2rightTrigger = new Trigger(() -> P2Controller.getRawButton(10));
+      final Trigger P2minus = new Trigger(() -> P2Controller.getRawButton(11));
+      final Trigger P2Plus = new Trigger(() -> P2Controller.getRawButton(12));
+
+    /*--------------------------------New Controller Commands-------------------------------- */
+      // slow mode
+
+      P1rightBumper.whileTrue(drivetrain.applyRequest(() ->
+        drive.withVelocityX(-P1Controller.getLeftY() * 0.5) // Drive forward with negative Y (forward)
+        .withVelocityY(-P1Controller.getLeftX() * 0.5) // Drive left with negative X (left)
+        .withRotationalRate(-P1Controller.getRightX() * 0.5) // Drive counterclockwise with negative X (left)
+      ));
+
+      P1A.whileTrue(drivetrain.applyRequest(() -> brake));
 
     
         /*-------------------------------------------Driver Controls-------------------------------------------*/  
@@ -205,7 +261,7 @@ public class RobotContainer {
         new ParallelCommandGroup(
           m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
           Commands.run(
-            () -> m_IntakeSubsystem.setIntakingMotor(0)
+            () -> m_IntakeSubsystem.setIntakingMotor(-0.5)
           )
         )
       )
@@ -249,7 +305,32 @@ public class RobotContainer {
                  m_ShooterSubsystem
             )
       );
+    
+      //Moves hood motor up or down when moving right stick on operator            
+      m_ShooterSubsystem.setDefaultCommand(Commands.run(
+        () -> m_ShooterSubsystem.setHoodMotor(P2Controller.getRightY() * 0.1)));
+     
+    
   } 
+  //Command for autonomous control to shoot
+   private Command shootCommand(){
+     return new ParallelCommandGroup(
+            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(2000), m_ShooterSubsystem),
+            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(2000))
+                .andThen(Commands.run(() -> {
+                    m_ShooterSubsystem.setFeederMotor(1);
+                    m_SpindexerSubsystem.SetMotor(-1);
+                    }, m_ShooterSubsystem, m_SpindexerSubsystem)
+                )
+        )
+      .finallyDo(() ->
+        Commands.runOnce(() -> {
+            m_ShooterSubsystem.setFeederMotor(0);
+            m_ShooterSubsystem.setFlywheelToSpeed(0);
+            m_SpindexerSubsystem.SetMotor(0);
+        }, m_ShooterSubsystem, m_SpindexerSubsystem)
+      );
+    }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();              
