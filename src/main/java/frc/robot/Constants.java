@@ -69,9 +69,10 @@ public final class Constants {
   public static class ShooterConstants {
     public static final int SHOOTER_MOTOR_ID = 29;
     public static final int FEEDER_MOTOR_ID = 21;
-    public static final double FLYWHEEL_P = 0.5;
+    public static final double FLYWHEEL_P = 0.4;
     public static final double FLYWHEEL_I = 0.00000;
-    public static final double FLYWHEEL_D = 0.00000;
+    public static final double FLYWHEEL_D = 0.01;
+    public static final double FLYWHEEL_V = 0.05;
     public static final double FLYWHEEL_RPM_SETPOINT = 2000;
 
     public static final int HOOD_MOTOR_ID = 28;

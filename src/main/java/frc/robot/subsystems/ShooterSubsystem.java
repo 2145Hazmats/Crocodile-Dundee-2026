@@ -34,7 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
    hoodMotor = new TalonFX(ShooterConstants.HOOD_MOTOR_ID);
    var slot0Configs = new Slot0Configs();
    slot0Configs.kS = 0;
-   slot0Configs.kV = SmartDashboard.getNumber("Flywheel kV", 0);
+   slot0Configs.kV = ShooterConstants.FLYWHEEL_V;
    slot0Configs.kP = ShooterConstants.FLYWHEEL_P;
    slot0Configs.kI = ShooterConstants.FLYWHEEL_I;
    slot0Configs.kD = ShooterConstants.FLYWHEEL_D;
