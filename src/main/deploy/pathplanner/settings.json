@@ -4,7 +4,8 @@
   "holonomicMode": true,
   "pathFolders": [
     "Left 3 Cycles",
-    "Left 4 Cycles"
+    "Left 4 Cycles",
+    "Right 3 Cycles"
   ],
   "autoFolders": [
     "Left Autos",
