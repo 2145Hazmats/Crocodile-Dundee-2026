@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -70,15 +71,25 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
 
+     private void registerNamedCommands() {
+        NamedCommands.registerCommand("ATTC", m_TurretSubsystem.autoTurnTurretCommand());
+        NamedCommands.registerCommand("Shoot", shootCommand().withTimeout(4));
+        NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeDOWN());
+        NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeHOME());
+    }
+
     public RobotContainer() {
         
         configureBindings();
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
+        
     }
 
     private void configureBindings() {
+
+     
 
     /*-------------------------------------------Driver Controls-------------------------------------------*/  
 
@@ -282,7 +293,28 @@ public class RobotContainer {
                  m_ShooterSubsystem
             )
       );
+     
+    
   } 
+  //Command for autonomous control to shoot
+   private Command shootCommand(){
+     return new ParallelCommandGroup(
+            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(2000), m_ShooterSubsystem),
+            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(2000))
+                .andThen(Commands.run(() -> {
+                    m_ShooterSubsystem.setFeederMotor(1);
+                    m_SpindexerSubsystem.SetMotor(-1);
+                    }, m_ShooterSubsystem, m_SpindexerSubsystem)
+                )
+        )
+      .finallyDo(() ->
+        Commands.runOnce(() -> {
+            m_ShooterSubsystem.setFeederMotor(0);
+            m_ShooterSubsystem.setFlywheelToSpeed(0);
+            m_SpindexerSubsystem.SetMotor(0);
+        }, m_ShooterSubsystem, m_SpindexerSubsystem)
+      );
+    }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();              
