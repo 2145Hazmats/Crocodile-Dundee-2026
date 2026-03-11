@@ -3,9 +3,9 @@
   "robotLength": 0.6858,
   "holonomicMode": true,
   "pathFolders": [
-    "Left 3 Cycles",
-    "Left 4 Cycles",
-    "Right 3 Cycles"
+    "Left 2 Cycles 1 Preload",
+    "Middle 1 Preload",
+    "Right 2 Cycles 1 Preload"
   ],
   "autoFolders": [
     "Left Autos",

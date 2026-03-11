@@ -3,42 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.744352272727273,
-        "y": 4.498806818181818
+        "x": 1.478046511627907,
+        "y": 4.0139069767441855
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.661897727272727,
-        "y": 6.518943181818182
+        "x": 2.4780465116279062,
+        "y": 4.0139069767441855
       },
       "isLocked": false,
-      "linkedName": "2"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.683,
-        "y": 7.395022727272727
+        "x": 2.469418604651163,
+        "y": 4.0139069767441855
       },
       "prevControl": {
-        "x": 7.105329545454545,
-        "y": 7.456863636363637
+        "x": 2.205755813953488,
+        "y": 4.0139069767441855
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "0"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "IntakeUP",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -49,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Left 3 Cycles",
+  "folder": "Middle 1 Preload",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

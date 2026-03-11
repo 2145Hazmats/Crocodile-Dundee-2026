@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left To Middle Pick Up 3"
+            "pathName": "Middle 1 Preload"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Left Autos",
+  "folder": "Middle Autos",
   "choreoAuto": false
 }
