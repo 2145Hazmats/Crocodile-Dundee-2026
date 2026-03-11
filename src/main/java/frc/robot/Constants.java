@@ -100,6 +100,9 @@ public final class Constants {
     new Transform3d(Units.inchesToMeters(8.804), Units.inchesToMeters(-12.735), Units.inchesToMeters(9.407),
     new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(10), Units.degreesToRadians(0)));
     public static final double AMBIGUITY_RATIO_CUTOFF = 0.2;
+    public static final Transform3d SIDE_CAMERA_POSITION = 
+    new Transform3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0),
+    new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)));
   }
   
   public static class ErrorConstants {
@@ -110,6 +113,10 @@ public final class Constants {
   public static class MathConstants {
     public static double DegreesToRotations(double angle) {
       return angle / 360;
+    }
+
+    public static double RadiansToRotations(double angle) {
+      return angle / 2 * Math.PI;
     }
 
     public static double RPMtoRPS(double RPM) {

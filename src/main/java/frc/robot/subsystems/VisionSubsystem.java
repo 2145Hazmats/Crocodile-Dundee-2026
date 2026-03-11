@@ -38,6 +38,16 @@ public class VisionSubsystem extends SubsystemBase {
    );
    private EstimatedRobotPose frontEstimatedRobotPose = null;
 
+     PhotonCamera sideCamera = new PhotonCamera("FrontCamera");
+   private PhotonPipelineResult sideResult = null;
+   private PhotonTrackedTarget sideTrackedTarget = null;
+   private PhotonPoseEstimator sidePoseEstimator = new PhotonPoseEstimator(
+     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded),
+     PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+     VisionConstants.SIDE_CAMERA_POSITION
+   );
+   private EstimatedRobotPose sideEstimatedRobotPose = null;
+
    private Matrix<N3, N1> curStdDevs;
    private final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 6); //1.5, 1.5, 6  VecBuilder.fill(4, 4, 8); (2 , 2 , 8)
    private final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.01, 0.01); //0.3, 0.3, .75   0.5,0.5,1
@@ -102,7 +112,26 @@ public class VisionSubsystem extends SubsystemBase {
      } catch (Exception e) {
        frontEstimatedRobotPose = null;
      }
-     // Same thing but for the left camera
+
+    // Same thing but for the side camera
+      sideResult = sideCamera.getLatestResult();
+
+      try {
+       // Only accepts camera results if they see more than 1 april tag, or if it sees 1 april tag and the poseAmbiguity is low
+       // COMMENT OUT THE LINE BELOW THIS AND IT'S CLOSING BRACKETS IF THIS DOESN'T WORK
+       if ((sideResult.getTargets().size() == 1 && sideResult.getBestTarget().poseAmbiguity < VisionConstants.AMBIGUITY_RATIO_CUTOFF) 
+       || sideResult.getTargets().size() > 1) {
+         sideEstimatedRobotPose = sidePoseEstimator.update(sideResult).get();
+         //updateEstimationStdDevs(leftPoseEstimator.update(leftResult), cameraLeft.getAllUnreadResults().get(0).getTargets());
+         addVisionPose2d(sideEstimatedRobotPose.estimatedPose.toPose2d(), sideEstimatedRobotPose.timestampSeconds);
+         visionField.setRobotPose(sideEstimatedRobotPose.estimatedPose.toPose2d());
+       }
+     } catch (Exception e) {
+       sideEstimatedRobotPose = null;
+     }
+
+      
+    
      
   }
 }
