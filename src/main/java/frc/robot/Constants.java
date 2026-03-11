@@ -6,8 +6,6 @@ package frc.robot;
 
 import com.pathplanner.lib.config.PIDConstants;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
@@ -26,18 +24,6 @@ public final class Constants {
     public static final int P2_CONTROLLER_PORT = 1;
     public static final int EVERYTHING_CONTROLLER_PORT = 2;
     public static final int TESTING_CONTROLLER_PORT = 3;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public static final int LEFT_Y_AXIS = 0;
-    public static final int LEFT_X_AXIS = 0;
-    public static final int RIGHT_X_AXIS = 0;
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   }
 
   public static class PathPlannerConstants {
@@ -97,11 +83,15 @@ public final class Constants {
   public static class PoseConstants {
     public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.625, 4.035};
     public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.915, 4.035};
-    
+
     public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {1, 1};
     public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {1, 7.069};
     public static final double[] RED_ALLIANCE_RIGHT_CORNER = {15.541, 7.069};
     public static final double[] RED_ALLIANCE_LEFT_CORNER = {15.541, 1};
+    
+    public static final double RED_ALLIANCE_ZONE_X = 11.913;
+    public static final double CENTER_FIELD_Y = 4.035; 
+    public static final double BLUE_ALLIANCE_ZONE_X = 4.629;
   }
   public static class VisionConstants{
     public static final Transform3d FRONT_CAMERA_POSITION = 

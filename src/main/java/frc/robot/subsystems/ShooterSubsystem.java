@@ -9,18 +9,8 @@ import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-<<<<<<< Updated upstream
-=======
-import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.units.measure.Velocity;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
->>>>>>> Stashed changes
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ErrorConstants;
 import frc.robot.Constants.MathConstants;

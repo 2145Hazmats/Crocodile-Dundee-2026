@@ -6,31 +6,22 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.lang.ModuleLayer.Controller;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.PoseConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -102,31 +93,15 @@ public class RobotContainer {
 
         // Turn turret where we want it
         m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.autoTurnTurretCommand());
+        // Turn turret where we want it
+        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.autoTurnTurretCommand());
 
         // Slow mode
         P1CommandController.rightBumper().whileTrue(
             drivetrain.applyRequest(() ->
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                 drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
                     .withVelocityY(-P1Controller.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
                     .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
-=======
-                drive.withVelocityX(-P1CommandController.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
-                    .withVelocityY(-P1CommandController.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
-                    .withRotationalRate(-P1CommandController.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
->>>>>>> Stashed changes
-=======
-                drive.withVelocityX(-P1CommandController.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
-                    .withVelocityY(-P1CommandController.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
-                    .withRotationalRate(-P1CommandController.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
->>>>>>> Stashed changes
-=======
-                drive.withVelocityX(-P1CommandController.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
-                    .withVelocityY(-P1CommandController.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
-                    .withRotationalRate(-P1CommandController.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
->>>>>>> Stashed changes
             )
         );
 
@@ -171,9 +146,12 @@ public class RobotContainer {
     
         //moves intake to position ready to pick up fuel, and runs intake motor
         //moves back to home position in robot and shuts off motors when releasing left trigger
+        //moves intake to position ready to pick up fuel, and runs intake motor
+        //moves back to home position in robot and shuts off motors when releasing left trigger
         P2CommandController.leftTrigger()
         .whileTrue(
             new ParallelCommandGroup(
+                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
                 m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
                 Commands.run(
                     () -> m_IntakeSubsystem.setIntakingMotor(0)
@@ -182,6 +160,7 @@ public class RobotContainer {
         )
         .whileFalse(
             new ParallelCommandGroup(
+                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
                 m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
                 Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))
             )
@@ -275,15 +254,6 @@ public class RobotContainer {
           )
         )
       );
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-      
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
       // Shoot command -- Sets the flywheel speed, waits for it to spin up before starting the spindexer and feeder
       P2rightTrigger
@@ -307,13 +277,6 @@ public class RobotContainer {
       );
 
       // Quick PID stuff for testing
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
       P2CommandController.povLeft().whileTrue(
             Commands.run(
                 () -> {
