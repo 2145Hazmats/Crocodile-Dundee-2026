@@ -34,11 +34,10 @@ public class IntakeSubsystem extends SubsystemBase {
     slot0Configs.kD = IntakeConstants.ACTUATOR_D;
     actuatorMotor.getConfigurator().apply(slot0Configs);
     
-    
-    resetIntakePosition();
   }
   public Command resetIntakePosition(){
-    return Commands.runOnce(() -> actuatorMotor.setPosition(IntakeConstants.ACTUATOR_HOME_POSITION), this);
+    return Commands.runOnce(
+      () -> actuatorMotor.setControl(m_actuatorRequest.withPosition(IntakeConstants.ACTUATOR_HOME_POSITION)), this);
   }
 
 
@@ -66,6 +65,18 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public Command setIntakePosition(double position){
      return Commands.runOnce(() -> actuatorMotor.setControl(m_actuatorRequest.withPosition(position)), this);
+  }
+
+   public Command autoIntakeDOWN() {
+    return Commands.parallel(
+      setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
+      Commands.run(() -> setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), this));
+  }
+  
+  public Command autoIntakeHOME() {
+    return Commands.parallel(
+      setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
+      Commands.run(() -> setIntakingMotor(0), this));
   }
 
   

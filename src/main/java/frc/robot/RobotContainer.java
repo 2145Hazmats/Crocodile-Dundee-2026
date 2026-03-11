@@ -6,7 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.jar.Attributes.Name;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -78,6 +81,13 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
+    private void registerNamedCommands() {
+        NamedCommands.registerCommand("TTTH", m_TurretSubsystem.turnTurretToHub());
+        NamedCommands.registerCommand("Shoot", shootCommand().withTimeout(4));
+        NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeUP());
+        NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeDOWN());
+    }
+
     private void configureBindings() {
 
     /*-------------------------------------------Driver Controls-------------------------------------------*/  
@@ -146,67 +156,24 @@ public class RobotContainer {
     
         //moves intake to position ready to pick up fuel, and runs intake motor
         //moves back to home position in robot and shuts off motors when releasing left trigger
-        P2CommandController.leftTrigger()
-        .whileTrue(
-            new ParallelCommandGroup(
-                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
-                Commands.run(
-                    () -> m_IntakeSubsystem.setIntakingMotor(0)
-                )
-            )
-        )
-        .whileFalse(
-            new ParallelCommandGroup(
-                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
-                Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))
-            )
-        );
-  
-      /*-----------------------------------New Controller Configs----------------------------------- */
+        m_operatorController.leftTrigger().whileTrue(new ParallelCommandGroup(
+            m_IntakeSubsystem.moveActuatorToPositionCommand(IntakeConstants.ACTUATOR_DOWN_POSITION),
+            Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))))
+            .whileFalse(new ParallelCommandGroup(
+            m_IntakeSubsystem.moveActuatorToPositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION),
+            Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))));
 
-      /*-------------------------------P1 Controller-------------------------------- */
+        //puts the flywheel at a setpoint of 2000 RPM, 
+        m_operatorController.rightTrigger().whileTrue(Commands.run(()-> m_ShooterSubsystem.flywheelRevUp
+        (ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem));
+        m_operatorController.rightTrigger().whileTrue(Commands.waitSeconds(1.5).andThen(Commands.run(() -> 
+        m_ShooterSubsystem.setKickerMotor(0.5))));
 
-      final Trigger P1A = new Trigger(() -> P1Controller.getRawButton(1));
-      final Trigger P1B = new Trigger(() -> P1Controller.getRawButton(2));
-      final Trigger P1r4 = new Trigger(() -> P1Controller.getRawButton(3));
-      final Trigger P1X = new Trigger(() -> P1Controller.getRawButton(4));
-      final Trigger P1Y = new Trigger(() -> P1Controller.getRawButton(5));
-      final Trigger P1l4 = new Trigger(() -> P1Controller.getRawButton(6));
-      final Trigger P1rightBumper = new Trigger(() -> P1Controller.getRawButton(7));
-      final Trigger P1leftBumper = new Trigger(() -> P1Controller.getRawButton(8));
-      final Trigger P1rightTrigger = new Trigger(() -> P1Controller.getRawButton(9));
-      final Trigger P1leftTrigger = new Trigger(() -> P1Controller.getRawButton(10));
-      final Trigger P1minus = new Trigger(() -> P1Controller.getRawButton(11));
-      final Trigger P1Plus = new Trigger(() -> P1Controller.getRawButton(12));
+        m_operatorController.povUp().whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0.35), m_IntakeSubsystem)
+        .finallyDo(()-> m_IntakeSubsystem.setIntakingMotor(0)));
 
-      /*-------------------------------P2 Controller-------------------------------- */
-
-
-      final Trigger P2A = new Trigger(() -> P2Controller.getRawButton(1));
-      final Trigger P2B = new Trigger(() -> P2Controller.getRawButton(2));
-      final Trigger P2r4 = new Trigger(() -> P2Controller.getRawButton(3));
-      final Trigger P2X = new Trigger(() -> P2Controller.getRawButton(4));
-      final Trigger P2Y = new Trigger(() -> P2Controller.getRawButton(5));
-      final Trigger P2l4 = new Trigger(() -> P2Controller.getRawButton(6));
-      final Trigger P2rightBumper = new Trigger(() -> P2Controller.getRawButton(7));
-      final Trigger P2leftBumper = new Trigger(() -> P2Controller.getRawButton(8));
-      final Trigger P2rightTrigger = new Trigger(() -> P2Controller.getRawButton(9));
-      final Trigger P2leftTrigger = new Trigger(() -> P2Controller.getRawButton(10));
-      final Trigger P2minus = new Trigger(() -> P2Controller.getRawButton(11));
-      final Trigger P2Plus = new Trigger(() -> P2Controller.getRawButton(12));
-
-    /*--------------------------------New Controller Commands-------------------------------- */
-      // slow mode
-
-      P1rightBumper.whileTrue(drivetrain.applyRequest(() ->
-        drive.withVelocityX(-P1Controller.getLeftY() * 0.5) // Drive forward with negative Y (forward)
-        .withVelocityY(-P1Controller.getLeftX() * 0.5) // Drive left with negative X (left)
-        .withRotationalRate(-P1Controller.getRightX() * 0.5) // Drive counterclockwise with negative X (left)
-      ));
-
-      P1A.whileTrue(drivetrain.applyRequest(() -> brake));
-
-    /*-------------------------------------Robot Controls-------------------------------------*/
+    
+        /*-------------------------------------------Driver Controls-------------------------------------------*/  
     
 
 
