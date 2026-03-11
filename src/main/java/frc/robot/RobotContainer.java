@@ -11,11 +11,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -93,8 +95,6 @@ public class RobotContainer {
 
         // Turn turret where we want it
         m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.autoTurnTurretCommand());
-        // Turn turret where we want it
-        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.autoTurnTurretCommand());
 
         // Slow mode
         P1CommandController.rightBumper().whileTrue(
@@ -146,12 +146,9 @@ public class RobotContainer {
     
         //moves intake to position ready to pick up fuel, and runs intake motor
         //moves back to home position in robot and shuts off motors when releasing left trigger
-        //moves intake to position ready to pick up fuel, and runs intake motor
-        //moves back to home position in robot and shuts off motors when releasing left trigger
         P2CommandController.leftTrigger()
         .whileTrue(
             new ParallelCommandGroup(
-                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
                 m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
                 Commands.run(
                     () -> m_IntakeSubsystem.setIntakingMotor(0)
@@ -160,7 +157,6 @@ public class RobotContainer {
         )
         .whileFalse(
             new ParallelCommandGroup(
-                m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
                 m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
                 Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0))
             )
