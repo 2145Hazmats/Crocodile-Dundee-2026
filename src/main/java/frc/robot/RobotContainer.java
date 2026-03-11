@@ -195,14 +195,14 @@ public class RobotContainer {
 
       final Trigger P2A = new Trigger(() -> P2Controller.getRawButton(1));
       final Trigger P2B = new Trigger(() -> P2Controller.getRawButton(2));
-      final Trigger P2r4 = new Trigger(() -> P2Controller.getRawButton(3));
+      final Trigger P2r4 = new Trigger(() -> P2Controller.getRawButton(6));
       final Trigger P2X = new Trigger(() -> P2Controller.getRawButton(4));
       final Trigger P2Y = new Trigger(() -> P2Controller.getRawButton(5));
-      final Trigger P2l4 = new Trigger(() -> P2Controller.getRawButton(6));
-      final Trigger P2rightBumper = new Trigger(() -> P2Controller.getRawButton(7));
-      final Trigger P2leftBumper = new Trigger(() -> P2Controller.getRawButton(8));
-      final Trigger P2rightTrigger = new Trigger(() -> P2Controller.getRawButton(9));
-      final Trigger P2leftTrigger = new Trigger(() -> P2Controller.getRawButton(10));
+      final Trigger P2l4 = new Trigger(() -> P2Controller.getRawButton(3));
+      final Trigger P2rightBumper = new Trigger(() -> P2Controller.getRawButton(8));
+      final Trigger P2leftBumper = new Trigger(() -> P2Controller.getRawButton(7));
+      final Trigger P2rightTrigger = new Trigger(() -> P2Controller.getRawButton(10));
+      final Trigger P2leftTrigger = new Trigger(() -> P2Controller.getRawButton(9));
       final Trigger P2minus = new Trigger(() -> P2Controller.getRawButton(11));
       final Trigger P2Plus = new Trigger(() -> P2Controller.getRawButton(12));
 
