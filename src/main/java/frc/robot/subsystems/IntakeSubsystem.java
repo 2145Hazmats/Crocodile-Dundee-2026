@@ -34,8 +34,6 @@ public class IntakeSubsystem extends SubsystemBase {
     slot0Configs.kD = IntakeConstants.ACTUATOR_D;
     actuatorMotor.getConfigurator().apply(slot0Configs);
     
-    
-    resetIntakePosition();
   }
   public Command resetIntakePosition(){
     return Commands.runOnce(

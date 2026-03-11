@@ -6,7 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.jar.Attributes.Name;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -86,6 +89,13 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
         m_IntakeSubsystem.resetIntakePosition();
         
+    }
+
+    private void registerNamedCommands() {
+        NamedCommands.registerCommand("TTTH", m_TurretSubsystem.turnTurretToHub());
+        NamedCommands.registerCommand("Shoot", shootCommand().withTimeout(4));
+        NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeUP());
+        NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeDOWN());
     }
 
     private void configureBindings() {
@@ -218,7 +228,8 @@ public class RobotContainer {
 
       P1A.whileTrue(drivetrain.applyRequest(() -> brake));
 
-    /*-------------------------------------Robot Controls-------------------------------------*/
+    
+        /*-------------------------------------------Driver Controls-------------------------------------------*/  
     
 
 
