@@ -61,7 +61,7 @@ public class RobotContainer {
     private final XboxController m_EverythingController = new XboxController(ControllerConstants.EVERYTHING_CONTROLLER_PORT);
     private final XboxController m_TestingController = new XboxController(ControllerConstants.TESTING_CONTROLLER_PORT);
 
-
+    //Subsystems are defined here
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
     private final TurretSubsystem m_TurretSubsystem = new TurretSubsystem(drivetrain);
@@ -293,6 +293,10 @@ public class RobotContainer {
                  m_ShooterSubsystem
             )
       );
+    
+      //Moves hood motor up or down when moving right stick on operator            
+      m_ShooterSubsystem.setDefaultCommand(Commands.run(
+        () -> m_ShooterSubsystem.setHoodMotor(P2Controller.getRightY() * 0.1)));
      
     
   } 
