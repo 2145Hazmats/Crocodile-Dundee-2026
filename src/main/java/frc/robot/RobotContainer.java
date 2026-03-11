@@ -108,9 +108,15 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
                     .withVelocityY(-P1Controller.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
                     .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
+=======
+                drive.withVelocityX(-P1CommandController.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
+                    .withVelocityY(-P1CommandController.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
+                    .withRotationalRate(-P1CommandController.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
+>>>>>>> Stashed changes
 =======
                 drive.withVelocityX(-P1CommandController.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
                     .withVelocityY(-P1CommandController.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
@@ -271,8 +277,11 @@ public class RobotContainer {
       );
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -299,6 +308,9 @@ public class RobotContainer {
 
       // Quick PID stuff for testing
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
