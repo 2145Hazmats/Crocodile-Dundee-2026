@@ -84,6 +84,7 @@ public class RobotContainer {
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
+        m_IntakeSubsystem.resetIntakePosition();
         
     }
 
@@ -145,7 +146,7 @@ public class RobotContainer {
         //Climb controls   
         P2CommandController.b().whileTrue(m_ClimbSubsystem.climbUp());
         P2CommandController.a().whileTrue(m_ClimbSubsystem.climbDown());
-        // m_driverController.x().whileTrue(m_ClimbSubsystem.climbRelease());
+        // P2CommandController.x().whileTrue(m_ClimbSubsystem.climbRelease());
     
     
         // Command to run the spindexer at a set speed, stops once you let go of the button y
@@ -249,7 +250,7 @@ public class RobotContainer {
         new ParallelCommandGroup(
           m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
           Commands.run(
-            () -> m_IntakeSubsystem.setIntakingMotor(0)
+            () -> m_IntakeSubsystem.setIntakingMotor(-0.5)
           )
         )
       )
