@@ -36,6 +36,7 @@ public class TurretSubsystem extends SubsystemBase {
    turretMotor = new TalonFX(TurretConstants.TURRET_MOTOR_ID);
    turretPID = new PIDController(TurretConstants.TURRET_P,TurretConstants.TURRET_I, TurretConstants.TURRET_D);
    var slot0Configs = new Slot0Configs();
+   slot0Configs.kS = 0;
    slot0Configs.kP = TurretConstants.TURRET_P;
    slot0Configs.kI = TurretConstants.TURRET_I;
    slot0Configs.kD = TurretConstants.TURRET_D;
@@ -49,7 +50,7 @@ public class TurretSubsystem extends SubsystemBase {
   public void setMotor(double speed) {
     turretMotor.set(speed);
   }
-
+  //Turret Command that uses PID, clamped between setpoint of -90 and 90 degrees
   public Command turnTurretToAngle(DoubleSupplier angleToPointTo) {
     return Commands.run(
       () -> {

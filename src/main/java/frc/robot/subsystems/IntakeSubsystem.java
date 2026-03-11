@@ -38,7 +38,8 @@ public class IntakeSubsystem extends SubsystemBase {
     resetIntakePosition();
   }
   public Command resetIntakePosition(){
-    return Commands.runOnce(() -> actuatorMotor.setPosition(IntakeConstants.ACTUATOR_HOME_POSITION), this);
+    return Commands.runOnce(
+      () -> actuatorMotor.setControl(m_actuatorRequest.withPosition(IntakeConstants.ACTUATOR_HOME_POSITION)), this);
   }
 
 
