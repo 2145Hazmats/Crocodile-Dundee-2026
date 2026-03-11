@@ -33,16 +33,15 @@ public class IntakeSubsystem extends SubsystemBase {
     slot0Configs.kI = IntakeConstants.ACTUATOR_I;
     slot0Configs.kD = IntakeConstants.ACTUATOR_D;
     actuatorMotor.getConfigurator().apply(slot0Configs);
-    
-    
+
     resetIntakePosition();
   }
-  public Command resetIntakePosition(){
-    return Commands.runOnce(() -> actuatorMotor.setPosition(IntakeConstants.ACTUATOR_HOME_POSITION), this);
+  public void resetIntakePosition() {
+    actuatorMotor.setPosition(0);
   }
 
 
-  public boolean isIntakeInRobot(){
+  public boolean isIntakeInRobot() {
     return MathUtil.isNear(IntakeConstants.ACTUATOR_HOME_POSITION, getActuatorPosition(), ErrorConstants.ACTUATOR_HOME_ERROR );
   }
 

@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ErrorConstants;
 import frc.robot.Constants.MathConstants;
@@ -33,7 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
    hoodMotor = new TalonFX(ShooterConstants.HOOD_MOTOR_ID);
    var slot0Configs = new Slot0Configs();
    slot0Configs.kS = 0;
-   slot0Configs.kV = 0;
+   slot0Configs.kV = SmartDashboard.getNumber("Flywheel kV", 0);
    slot0Configs.kP = ShooterConstants.FLYWHEEL_P;
    slot0Configs.kI = ShooterConstants.FLYWHEEL_I;
    slot0Configs.kD = ShooterConstants.FLYWHEEL_D;
@@ -77,6 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Measured Flywheel Speed", MathConstants.RPStoRPM(shooterMotor.getVelocity().getValueAsDouble()));
   }
 
   @Override

@@ -53,7 +53,7 @@ public class TurretSubsystem extends SubsystemBase {
   public Command turnTurretToAngle(DoubleSupplier angleToPointTo) {
     return Commands.run(
       () -> {
-        double setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
+        double setpoint = -angleToPointTo.getAsDouble() /*+ m_drivetrain.getPose2d().getRotation().getRadians()*/;
         setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, -90, 90)));
       },
       this
@@ -65,7 +65,7 @@ public class TurretSubsystem extends SubsystemBase {
   public Command turnTurretToAngleNew(DoubleSupplier angleToPointTo){
     return Commands.run(
       ()->{
-        double setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
+        double setpoint = -angleToPointTo.getAsDouble() /*+ m_drivetrain.getPose2d().getRotation().getRadians()*/;
         turretMotor.setControl(m_turretRequest.withPosition(MathConstants.DegreesToRotations(MathUtil.clamp(setpoint, -90, 90))));
       });
   }

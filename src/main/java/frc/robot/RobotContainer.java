@@ -87,28 +87,22 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-P1Controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-P1Controller.getRawAxis(1) * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-P1Controller.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-P1Controller.getRawAxis(3) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
         // Turn turret where we want it
-        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.autoTurnTurretCommand());
+        // m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.autoTurnTurretCommand());
+        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngle(() -> 0));
 
         // Slow mode
         P1CommandController.rightBumper().whileTrue(
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
-                    .withVelocityY(-P1Controller.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
-                    .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
-            )
-        );
-
-        P1CommandController.y().whileTrue(drivetrain.applyRequest(() ->
-            drive.withVelocityX(-P1CommandController.getLeftY() * 0.5) // Drive forward with negative Y (forward)
-                 .withVelocityY(-P1CommandController.getLeftX() * 0.5) // Drive left with negative X (left)
-                 .withRotationalRate(-P1CommandController.getRightX() * 0.5) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-P1Controller.getRawAxis(1) * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
+                    .withVelocityY(-P1Controller.getRawAxis(0)  * MaxSpeed * 0.5) // Drive left with negative X (left)
+                    .withRotationalRate(-P1Controller.getRawAxis(3) * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left))
             )
         );
             
@@ -190,8 +184,8 @@ public class RobotContainer {
       final Trigger P2l4 = new Trigger(() -> P2Controller.getRawButton(6));
       final Trigger P2rightBumper = new Trigger(() -> P2Controller.getRawButton(7));
       final Trigger P2leftBumper = new Trigger(() -> P2Controller.getRawButton(8));
-      final Trigger P2rightTrigger = new Trigger(() -> P2Controller.getRawButton(9));
-      final Trigger P2leftTrigger = new Trigger(() -> P2Controller.getRawButton(10));
+      final Trigger P2rightTrigger = new Trigger(() -> P2Controller.getRawButton(10));
+      final Trigger P2leftTrigger = new Trigger(() -> P2Controller.getRawButton(9));
       final Trigger P2minus = new Trigger(() -> P2Controller.getRawButton(11));
       final Trigger P2Plus = new Trigger(() -> P2Controller.getRawButton(12));
 
@@ -238,7 +232,7 @@ public class RobotContainer {
         new ParallelCommandGroup(
           m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
           Commands.run(
-            () -> m_IntakeSubsystem.setIntakingMotor(0)
+            () -> m_IntakeSubsystem.setIntakingMotor(-0.5)
           )
         )
       )
@@ -255,15 +249,15 @@ public class RobotContainer {
       P2rightTrigger
       .whileTrue(
         new ParallelCommandGroup(
-            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(2000), m_ShooterSubsystem),
-            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(2000))
-                .andThen(Commands.run(() -> {
-                    m_ShooterSubsystem.setFeederMotor(1);
-                    m_SpindexerSubsystem.SetMotor(-1);
+            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(4000)),
+            /*Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(2000))
+                .andThen(*/Commands.run(() -> {
+                    m_ShooterSubsystem.setFeederMotor(-1);
+                    m_SpindexerSubsystem.SetMotor(0.5);
                     }, m_ShooterSubsystem, m_SpindexerSubsystem)
                 )
         )
-      )
+      //)
       .onFalse(
         Commands.runOnce(() -> {
             m_ShooterSubsystem.setFeederMotor(0);
