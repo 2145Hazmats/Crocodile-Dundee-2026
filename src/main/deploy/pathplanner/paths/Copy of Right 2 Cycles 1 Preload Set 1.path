@@ -3,34 +3,34 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.35,
-        "y": 0.65
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 8.575848837209303,
-        "y": 0.31208139534883683
-      },
-      "isLocked": false,
-      "linkedName": "Right 3 Set 0"
-    },
-    {
-      "anchor": {
         "x": 7.827046511627907,
         "y": 3.486581395348837
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.827046511627907,
+        "y": 1.1558023255813952
+      },
+      "isLocked": true,
+      "linkedName": "Right 3 Set 1"
+    },
+    {
+      "anchor": {
+        "x": 0.35,
+        "y": 0.65
+      },
       "prevControl": {
-        "x": 7.805953488372092,
-        "y": 1.1768953488372094
+        "x": 8.339036278036595,
+        "y": 0.23131235005644946
       },
       "nextControl": null,
       "isLocked": true,
-      "linkedName": "Right 3 Set 1"
+      "linkedName": "Right 3 Set 0"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.31,
+      "waypointRelativePos": 0.69,
       "rotationDegrees": -90.0
     }
   ],
@@ -38,8 +38,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "IntakeDOWN",
-      "waypointRelativePos": 0.2590570719603146,
+      "name": "IntakeUP",
+      "waypointRelativePos": 0.06650124069479785,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -54,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Right 2 Cycles 1 Preload",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

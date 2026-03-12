@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.generated.TunerConstants;
@@ -75,15 +75,17 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
      private void registerNamedCommands() {
-        NamedCommands.registerCommand("ATTC", m_TurretSubsystem.autoTurnTurretCommand());
-        NamedCommands.registerCommand("Shoot", shootCommand().withTimeout(4));
+        NamedCommands.registerCommand("Shoot", shootCommand());
         NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeDOWN());
         NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeHOME());
+        NamedCommands.registerCommand("ClimbDown", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
+        NamedCommands.registerCommand("ClimbUp", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
     }
 
     public RobotContainer() {
         
         configureBindings();
+        registerNamedCommands();
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -138,8 +140,8 @@ public class RobotContainer {
     
     
         //Climb controls   
-        P2CommandController.b().whileTrue(m_ClimbSubsystem.climbUp());
-        P2CommandController.a().whileTrue(m_ClimbSubsystem.climbDown());
+        P2CommandController.b().whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
+        P2CommandController.a().whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
         // P2CommandController.x().whileTrue(m_ClimbSubsystem.climbRelease());
     
     
@@ -220,8 +222,8 @@ public class RobotContainer {
     /*-------------------------------------Operator Controls-------------------------------------*/
 
       //Climb controls   
-      P2B.whileTrue(m_ClimbSubsystem.climbUp());
-      P2A.whileTrue(m_ClimbSubsystem.climbDown());
+      P2B.whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
+      P2A.whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
       // P2X.whileTrue(m_ClimbSubsystem.climbRelease());
 
       // Command to run the spindexer at a full speed, stops once you let go of the button y

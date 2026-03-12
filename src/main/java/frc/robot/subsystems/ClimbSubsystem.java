@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -17,44 +19,30 @@ import frc.robot.Constants.ClimbConstants;
 
 public class ClimbSubsystem extends SubsystemBase {
   private TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID);
-  private Servo lockServo = new Servo(ClimbConstants.SERVO_CHANNEL);
-  private PIDController climbPID = new PIDController(.001, 0, 0);
+  private PositionVoltage m_climbRequest = new PositionVoltage(0).withSlot(0);
+
   /** Creates a new ExampleSubsystem. */
   public ClimbSubsystem() {}
 
   public void setMotor(double speed){
     climbMotor.set(speed);
+    var slot0Configs = new Slot0Configs();
+    slot0Configs.kP = 0.01;
+    slot0Configs.kI = 0.0;
+    slot0Configs.kD = 0.0;
+
+    climbMotor.getConfigurator().apply(slot0Configs);
   }
 
-  public void setServo(double angle) {
-    lockServo.setAngle(angle);
-  }
+
 
   public boolean climbIsClose(double position){
     return MathUtil.isNear(position, climbMotor.getPosition().getValueAsDouble(), .1);
   }
 
   public Command moveClimbToPosition(double position){
-    return Commands.run(()-> climbMotor.set(climbPID.calculate(climbMotor.getPosition().getValueAsDouble(), 
-    position)), this)
+    return Commands.run(()-> climbMotor.setControl(m_climbRequest.withPosition(position)), this)
     .until(() -> climbIsClose(position));
-  }
-  public Command moveServoToPosition(double angle){
-    return Commands.run(()-> setServo(angle));
-  }
-
-  public Command climbDown(){
-    return new SequentialCommandGroup(
-      moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION),
-      moveServoToPosition(ClimbConstants.SERVO_UNLOCK_POSITION),
-      moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
-  }
-
-  public Command climbUp(){
-    return new SequentialCommandGroup(
-      moveServoToPosition(ClimbConstants.SERVO_LOCK_POSITION),
-      moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION),
-      moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
   }
  // public Command climbRelease(){
   //  return Commands.run(()-> moveServoToPosition(ClimbConstants.SERVO_UNLOCK_POSITION), this);

@@ -36,9 +36,6 @@ public final class Constants {
     public static final int CLIMB_MOTOR_ID = 24;
     public static final double CLIMB_UP_POSITION = 5;
     public static final double CLIMB_HOME_POSITION = 0;
-    public static final double SERVO_LOCK_POSITION = 5;
-    public static final double SERVO_UNLOCK_POSITION = 0;
-    public static final int SERVO_CHANNEL = 1;
   }
   
   public static class TurretConstants {

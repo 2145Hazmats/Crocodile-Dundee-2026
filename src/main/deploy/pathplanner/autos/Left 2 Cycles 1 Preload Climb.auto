@@ -35,12 +35,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Left 2 Cycles 1 Preload Set 3"
@@ -50,6 +44,18 @@
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left 2 Cycles 1 Preload Set 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ClimbUp"
           }
         }
       ]
