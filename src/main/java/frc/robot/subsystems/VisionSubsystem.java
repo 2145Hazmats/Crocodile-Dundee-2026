@@ -13,6 +13,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -54,9 +55,8 @@ public class VisionSubsystem extends SubsystemBase {
   /** Creates a new VisionSubsystem. */
   public VisionSubsystem(CommandSwerveDrivetrain drivetrain) {
     m_drivetrain = drivetrain;
-
     
-    
+    CameraServer.startAutomaticCapture();
   }
 
   public void addVisionPose2d(Pose2d pose2d, double timestampSeconds) {
