@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -229,6 +230,8 @@ public class RobotContainer {
         .withVelocityY(-P1Controller.getLeftX() * MaxSpeed)
         .withRotationalRate(rotationPID.calculate(drivetrain.getPose2d().getRotation().getRadians(), drivetrain.getAngleToTarget()) * MaxAngularRate)));
 
+      P1Y.whileTrue(drivetrain.pathfindToShootPose());
+
       
 
     
@@ -278,7 +281,7 @@ public class RobotContainer {
         new ParallelCommandGroup(
             Commands.runOnce(() -> { 
               m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
-              m_ShooterSubsystem.setHoodMotorPosition(MathConstants.DegreesToRotations(m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget())) * ShooterConstants.HOOD_GEAR_RATIO);
+              m_ShooterSubsystem.setHoodMotorPosition(MathConstants.DegreesToRotations(MathUtil.clamp(m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget()), 12, 40)) * ShooterConstants.HOOD_GEAR_RATIO);
             }),
             Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(SmartDashboard.getNumber("Flywheel Setpoint", 0)))
                 .andThen(Commands.run(() -> {

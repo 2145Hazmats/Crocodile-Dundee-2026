@@ -6,9 +6,16 @@ package frc.robot;
 
 import com.pathplanner.lib.config.PIDConstants;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearAcceleration;
+import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Voltage;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -30,6 +37,12 @@ public final class Constants {
     // PID Autobuilder
     public static final PIDConstants TRANSLATIONAL_PID = new PIDConstants(5, 0, 0);
     public static final PIDConstants ROTATIONAL_PID = new PIDConstants(5, 0, 0);
+
+    public static final double MAX_VELOCITY_MPS = 3.5;
+    public static final double MAX_ACCELERATION_MPS = 3;
+    public static final double MAX_ANGULAR_ACCELERATION_RAD = Units.degreesToRadians(75);
+    public static final double MAX_ANGULAR_VELOCITY_RAD = Units.degreesToRadians(360);
+    public static final double NOMINAL_VOLTAGE_VOLTS = 11.5;
   }
   
   public static class ClimbConstants {
@@ -92,6 +105,8 @@ public final class Constants {
     public static final double RED_ALLIANCE_ZONE_X = 11.913;
     public static final double CENTER_FIELD_Y = 4.035; 
     public static final double BLUE_ALLIANCE_ZONE_X = 4.629;
+
+    public static final Pose2d SHOOT_POSE = new Pose2d(2.115, 4.003, new Rotation2d(0));
   }
   public static class VisionConstants{
     public static final Transform3d FRONT_CAMERA_POSITION = 
