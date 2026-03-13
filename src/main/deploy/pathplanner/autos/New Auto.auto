@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Middle 1 Preload"
+            "pathName": "Left Preload"
           }
         },
         {
@@ -15,23 +15,11 @@
           "data": {
             "name": "Shoot"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Middle Climb"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ClimbUp"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Middle Autos",
+  "folder": "Left Autos",
   "choreoAuto": false
 }

@@ -85,7 +85,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
      private void registerNamedCommands() {
-        NamedCommands.registerCommand("Shoot", shootCommand());
+        NamedCommands.registerCommand("Shoot", shootCommand().withTimeout(10));
         NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeDOWN());
         NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeHOME());
         NamedCommands.registerCommand("IntakeUnjam", m_IntakeSubsystem.autoIntakeUnjam());
@@ -332,11 +332,11 @@ public class RobotContainer {
   //Command for autonomous control to shoot
    private Command shootCommand(){
      return new ParallelCommandGroup(
-            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(2000)),
-            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(2000))
+            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()))),
+            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget())))
                 .andThen(Commands.run(() -> {
-                    m_ShooterSubsystem.setFeederMotor(1);
-                    m_SpindexerSubsystem.SetMotor(-1);
+                    m_ShooterSubsystem.setFeederMotor(-1);
+                    m_SpindexerSubsystem.SetMotor(1);
                     }, m_ShooterSubsystem, m_SpindexerSubsystem)
                 )
         )
@@ -346,7 +346,7 @@ public class RobotContainer {
             m_ShooterSubsystem.setFlywheelToSpeed(0);
             m_SpindexerSubsystem.SetMotor(0);
         }, m_ShooterSubsystem, m_SpindexerSubsystem)
-      );
+      ).withTimeout(10);
     }
 
   public Command getAutonomousCommand() {
