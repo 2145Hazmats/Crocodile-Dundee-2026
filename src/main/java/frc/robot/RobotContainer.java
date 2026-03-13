@@ -248,6 +248,7 @@ public class RobotContainer {
       P2A.whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
       P2l4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(1), m_IntakeSubsystem)
       .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0)));
+      P2X.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakePosition(0)));
       
       //manual mode toggle
       P2minus.onTrue(Commands.runOnce(() -> manualMode = !manualMode));
@@ -285,11 +286,11 @@ public class RobotContainer {
       P2rightTrigger
       .whileTrue(
         new ParallelCommandGroup(
-            Commands.runOnce(() -> { 
+            Commands.run(() -> { 
               m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
               //m_ShooterSubsystem.setHoodMotorPosition(MathConstants.DegreesToRotations(MathUtil.clamp(m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget()), 12, 40)) * ShooterConstants.HOOD_GEAR_RATIO);
             }),
-            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget())))
+            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()))).withTimeout(2.5)
                 .andThen(Commands.run(() -> {
                     m_ShooterSubsystem.setFeederMotor(-0.75);
                     m_SpindexerSubsystem.SetMotor(0.75);
@@ -300,7 +301,7 @@ public class RobotContainer {
       .whileFalse(
         Commands.runOnce(() -> {
             m_ShooterSubsystem.setFeederMotor(0);
-            m_ShooterSubsystem.setFlywheelMotor(0);
+            m_ShooterSubsystem.setFlywheelMotor(0.15);
             m_SpindexerSubsystem.SetMotor(0);
         }, m_ShooterSubsystem, m_SpindexerSubsystem)
       );
@@ -333,7 +334,7 @@ public class RobotContainer {
    private Command shootCommand(){
      return new ParallelCommandGroup(
             Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()))),
-            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget())))
+            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()))).withTimeout(2.5)
                 .andThen(Commands.run(() -> {
                     m_ShooterSubsystem.setFeederMotor(-1);
                     m_SpindexerSubsystem.SetMotor(1);

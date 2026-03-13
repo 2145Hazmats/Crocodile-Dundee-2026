@@ -67,8 +67,8 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int ACTUATOR_INTAKE_MOTOR_ID = 30;
     public static final int INTAKING_MOTOR_ID = 31;
-    public static final double ACTUATOR_HOME_POSITION = 0;      // TODO: Set home and down positions for the intake
-    public static final double ACTUATOR_DOWN_POSITION = -30.19; // <-----------------------------------------------
+    public static final double ACTUATOR_HOME_POSITION = -11.14;   // TODO: Set home and down positions for the intake
+    public static final double ACTUATOR_DOWN_POSITION = -30.19;   // <-----------------------------------------------
     public static final double INTAKE_MOTOR_SPEED = 1;
     public static final double ACTUATOR_P = 0.25;
     public static final double ACTUATOR_I = 0.0000;
@@ -106,8 +106,9 @@ public final class Constants {
     public static final double CENTER_FIELD_Y = 4.035; 
     public static final double BLUE_ALLIANCE_ZONE_X = 4.629;
 
-    public static final Pose2d SHOOT_POSE = new Pose2d(2.115, 4.003, new Rotation2d(0));
+    public static final Pose2d SHOOT_POSE = new Pose2d(1.93, 4.02, new Rotation2d(0));
   }
+  
   public static class VisionConstants{
     public static final Transform3d FRONT_CAMERA_POSITION = 
     new Transform3d(Units.inchesToMeters(8.804), Units.inchesToMeters(-12.735), Units.inchesToMeters(9.407),
@@ -120,7 +121,7 @@ public final class Constants {
   
   public static class ErrorConstants {
     public static final double ACTUATOR_HOME_ERROR = 3.0;
-    public static final double TURRET_RPM_TOLERANCE = 25;
+    public static final double TURRET_RPM_TOLERANCE = 100;
   }
 
   public static class MathConstants {

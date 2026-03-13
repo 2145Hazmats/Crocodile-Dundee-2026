@@ -89,7 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double distanceToFlywheelSpeed(double distance) {
-    return 1393 * Math.pow(Math.E, 0.39 * distance);
+    return 1370 * Math.pow(Math.E, 0.39 * distance);
   }
 
   public double distanceToHoodAngleDegrees(double distance) {
