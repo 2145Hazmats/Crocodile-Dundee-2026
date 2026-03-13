@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.686928571428573,
+        "x": 7.686928571428572,
         "y": 0.49338095238095536
       },
       "isLocked": false,
@@ -41,7 +41,12 @@
       "name": "IntakeDOWN",
       "waypointRelativePos": 0.2590570719603146,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": null
+        }
+      }
     }
   ],
   "globalConstraints": {

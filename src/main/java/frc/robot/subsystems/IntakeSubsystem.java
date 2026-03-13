@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -27,6 +28,11 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     actuatorMotor = new TalonFX(IntakeConstants.ACTUATOR_INTAKE_MOTOR_ID);
     intakingMotor = new TalonFX(IntakeConstants.INTAKING_MOTOR_ID);
+    
+    var intakingCurrentLimitConfig = new CurrentLimitsConfigs();
+    intakingCurrentLimitConfig.withSupplyCurrentLimit(40).withSupplyCurrentLimitEnable(true);
+    intakingMotor.getConfigurator().apply(intakingCurrentLimitConfig);
+
     var slot0Configs = new Slot0Configs();
     slot0Configs.kG = 0.1;
     slot0Configs.kP = IntakeConstants.ACTUATOR_P;
@@ -80,6 +86,10 @@ public class IntakeSubsystem extends SubsystemBase {
       setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION);
       setIntakingMotor(0);
     }, this);
+  }
+
+  public Command autoIntakeUnjam() {
+    return Commands.run(() -> setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)).withTimeout(1);
   }
 }
 

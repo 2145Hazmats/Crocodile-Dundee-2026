@@ -48,6 +48,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private Field2d generalField = new Field2d();
+    private Field2d targetField = new Field2d();
 
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
@@ -154,6 +155,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     
             configureAutoBuilder();
             SmartDashboard.putData("GeneralField", generalField);
+            SmartDashboard.putData("Target Field", targetField);
         }
     
         /**
@@ -181,6 +183,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     
             configureAutoBuilder();
             SmartDashboard.putData("General Field", generalField);
+            SmartDashboard.putData("Target Field", targetField);
         }
     
         /**
@@ -216,6 +219,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     
             configureAutoBuilder();
             SmartDashboard.putData("General Field", generalField);
+            SmartDashboard.putData("Target Field", targetField);
         }
     
         /**
@@ -359,8 +363,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[1];
         }
         else if(alliance.get() == Alliance.Red && getPose2d().getX() < PoseConstants.RED_ALLIANCE_ZONE_X && getPose2d().getY() > PoseConstants.CENTER_FIELD_Y){
-            targetPose[0] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[0];
-            targetPose[1] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[1];
+            targetPose[0] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0];
+            targetPose[1] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[1];
         }
         else if(alliance.get() == Alliance.Red && getPose2d().getX() < PoseConstants.RED_ALLIANCE_ZONE_X && getPose2d().getY() < PoseConstants.CENTER_FIELD_Y) {
             targetPose[0] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[0];
@@ -370,7 +374,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         calculateAngleToFieldPosition(targetPose[0], targetPose[1]);
 
         generalField.setRobotPose(getPose2d());
-        SmartDashboard.putNumber("Angle to Target", Units.radiansToDegrees(angleToTarget));
+        targetField.setRobotPose(new Pose2d(targetPose[0], targetPose[1], new Rotation2d(angleToTarget)));
+        SmartDashboard.putNumber("Angle to Target", Units.radiansToDegrees(0));
     }
 
     private void startSimThread() {
@@ -389,7 +394,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public Command pathfindToShootPose(){
-        return AutoBuilder.pathfindToPose(PoseConstants.SHOOT_POSE, pathFindingConstraints);
+        return AutoBuilder.pathfindToPose(PoseConstants.SHOOT_POSE, pathFindingConstraints, 0);
     }
 
     /**

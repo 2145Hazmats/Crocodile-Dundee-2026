@@ -8,40 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.779928571428573,
-        "y": 6.777595238095238
+        "x": 7.697726190476192,
+        "y": 7.641404761904761
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.3894761904761905,
-        "y": 7.522630952380952
+        "x": 4.037333333333334,
+        "y": 7.576619047619047
       },
       "prevControl": {
-        "x": 6.040790490100456,
-        "y": 7.572188229009446
+        "x": 6.6890626297859725,
+        "y": 7.560644774748852
       },
       "nextControl": {
-        "x": 2.234130952380953,
-        "y": 7.501035714285713
+        "x": 2.2449285714285723,
+        "y": 7.587416666666666
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.989964285714287,
-        "y": 5.255130952380953
+        "x": 2.313774928774929,
+        "y": 4.009159544159545
       },
       "prevControl": {
-        "x": 2.968369047619048,
-        "y": 6.18372619047619
+        "x": 2.29217969067969,
+        "y": 4.937754782254783
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shoot Pose"
     }
   ],
   "rotationTargets": [
@@ -56,6 +56,12 @@
     {
       "name": "IntakeUP",
       "waypointRelativePos": 0.06650124069479785,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "IntakeUnjam",
+      "waypointRelativePos": 0.5736972704714608,
       "endWaypointRelativePos": null,
       "command": null
     }

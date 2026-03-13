@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -34,6 +35,11 @@ public class TurretSubsystem extends SubsystemBase {
   /** Creates a new Turret. */
   public TurretSubsystem(CommandSwerveDrivetrain drivetrain) {
    turretMotor = new TalonFX(TurretConstants.TURRET_MOTOR_ID);
+
+   var turretCurrentLimitsConfig = new CurrentLimitsConfigs();
+   turretCurrentLimitsConfig.withSupplyCurrentLimit(20).withSupplyCurrentLimitEnable(true);
+   turretMotor.getConfigurator().apply(turretCurrentLimitsConfig);
+
    turretPID = new PIDController(TurretConstants.TURRET_P,TurretConstants.TURRET_I, TurretConstants.TURRET_D);
    var slot0Configs = new Slot0Configs();
    slot0Configs.kS = 0;
@@ -54,7 +60,15 @@ public class TurretSubsystem extends SubsystemBase {
   public Command turnTurretToAngle(DoubleSupplier angleToPointTo) {
     return Commands.run(
       () -> {
-        double setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
+        var alliance = DriverStation.getAlliance();
+        double setpoint = 0;
+        if(alliance.get() == Alliance.Blue) {
+           setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
+        }
+        else if (alliance.get() == Alliance.Red) {
+          setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
+        }
+
         setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, Math.toRadians(-80), Math.toRadians(80))));
       },
       this

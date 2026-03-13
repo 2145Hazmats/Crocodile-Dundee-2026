@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -32,6 +33,11 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
    shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
    feederMotor = new TalonFX(ShooterConstants.FEEDER_MOTOR_ID);
+
+   var flywheelCurrentLimitsConfigs = new CurrentLimitsConfigs();
+   flywheelCurrentLimitsConfigs.withSupplyCurrentLimit(40).withSupplyCurrentLimitEnable(true);
+   shooterMotor.getConfigurator().apply(flywheelCurrentLimitsConfigs);
+
    hoodMotor = new TalonFX(ShooterConstants.HOOD_MOTOR_ID);
    var slot0Configs = new Slot0Configs();
    slot0Configs.kS = 0;
