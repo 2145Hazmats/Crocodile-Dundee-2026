@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ErrorConstants;
@@ -25,7 +26,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0);
   private final PositionVoltage m_hoodRequest = new PositionVoltage(0).withSlot(1);
   
-  
+  private PIDController hoodPID = new PIDController(ShooterConstants.HOOD_P, ShooterConstants.HOOD_I, ShooterConstants.HOOD_D);
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
@@ -45,11 +46,13 @@ public class ShooterSubsystem extends SubsystemBase {
    slot1Configs.kI = ShooterConstants.HOOD_I;
    slot1Configs.kD = ShooterConstants.HOOD_D;
    hoodMotor.getConfigurator().apply(slot1Configs);
+
+   hoodMotor.setPosition(MathConstants.DegreesToRotations(12) * ShooterConstants.HOOD_GEAR_RATIO);
   
  }
 
   // Sets the shooter motor to a speed
-  public void setShooterMotor(double speed) {
+  public void setFlywheelMotor(double speed) {
     shooterMotor.set(speed);
   }
 
@@ -64,7 +67,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setFlywheelToSpeed(double RPM){
     shooterMotor.setControl(m_flywheelRequest.withVelocity(MathConstants.RPMtoRPS(RPM))
-    .withFeedForward(0.5));
+    .withFeedForward(0.00));
   }
 
   public boolean isFlywheelNearSetpoint(double RPM) {
@@ -72,13 +75,28 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setHoodMotorPosition(double angle) {
-    hoodMotor.setControl(m_hoodRequest.withPosition(MathConstants.DegreesToRotations(angle)));
+    hoodMotor.setControl(m_hoodRequest.withPosition(MathConstants.DegreesToRotations(angle) * ShooterConstants.HOOD_GEAR_RATIO));
+  }
+
+  public void setHoodMotorPositionNEW(double angle) {
+    hoodMotor.set(hoodPID.calculate(hoodMotor.getPosition().getValueAsDouble() / ShooterConstants.HOOD_GEAR_RATIO, MathConstants.DegreesToRotations(angle)));
+  }
+
+  public double distanceToFlywheelSpeed(double distance) {
+    return 1393 * Math.pow(Math.E, 0.39 * distance);
+  }
+
+  public double distanceToHoodAngleDegrees(double distance) {
+    return 8.88 * Math.pow(Math.E, 0.21 * distance);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Measured Flywheel Speed", MathConstants.RPStoRPM(shooterMotor.getVelocity().getValueAsDouble()));
+    SmartDashboard.putNumber("Measured Hood Angle", (hoodMotor.getPosition().getValueAsDouble() / ShooterConstants.HOOD_GEAR_RATIO * 360));
+
+    setHoodMotorPosition(SmartDashboard.getNumber("Hood Setpoint", 12));
   }
 
   @Override

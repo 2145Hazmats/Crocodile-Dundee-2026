@@ -50,7 +50,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    private double angleToHub = 0;
+    private double angleToTarget = 0;
+    private double[] targetPose = new double[2];
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -146,7 +147,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         configureAutoBuilder();
-        SmartDashboard.putData(generalField);
+        SmartDashboard.putData("GeneralField", generalField);
     }
 
     /**
@@ -173,7 +174,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         configureAutoBuilder();
-        SmartDashboard.putData(generalField);
+        SmartDashboard.putData("General Field", generalField);
     }
 
     /**
@@ -208,7 +209,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         configureAutoBuilder();
-        SmartDashboard.putData(generalField);
+        SmartDashboard.putData("General Field", generalField);
     }
 
     /**
@@ -298,10 +299,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
        
        SmartDashboard.putNumber("XRelativeToHub", xRelativeToPosition);
        SmartDashboard.putNumber("YRelativeToHub", yRelativeToPosition);
-       angleToHub = Math.atan(yRelativeToPosition/xRelativeToPosition);
-       return angleToHub;
+       angleToTarget = Math.atan(yRelativeToPosition/xRelativeToPosition);
+       return angleToTarget;
      } catch (Exception e) {
-       return angleToHub;
+       return angleToTarget;
      }
    }
 
@@ -325,8 +326,37 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
+        var alliance = DriverStation.getAlliance();
+
+        if(alliance.get() == Alliance.Blue && getPose2d().getX() < PoseConstants.BLUE_ALLIANCE_ZONE_X) {
+            targetPose[0] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0];
+            targetPose[1] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1];
+        }
+        else if(alliance.get() == Alliance.Red && getPose2d().getX() > PoseConstants.RED_ALLIANCE_ZONE_X) {
+            targetPose[0] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[0];
+            targetPose[1] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[1];
+        }
+        else if(alliance.get() == Alliance.Blue && getPose2d().getX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && getPose2d().getY() < PoseConstants.CENTER_FIELD_Y) {
+            targetPose[0] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[0];
+            targetPose[1] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[1];
+        }
+        else if(alliance.get() == Alliance.Blue && getPose2d().getX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && getPose2d().getY() > PoseConstants.CENTER_FIELD_Y) {
+            targetPose[0] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[0];
+            targetPose[1] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[1];
+        }
+        else if(alliance.get() == Alliance.Red && getPose2d().getX() < PoseConstants.RED_ALLIANCE_ZONE_X && getPose2d().getY() > PoseConstants.CENTER_FIELD_Y){
+            targetPose[0] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[0];
+            targetPose[1] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[1];
+        }
+        else if(alliance.get() == Alliance.Red && getPose2d().getX() < PoseConstants.RED_ALLIANCE_ZONE_X && getPose2d().getY() < PoseConstants.CENTER_FIELD_Y) {
+            targetPose[0] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[0];
+            targetPose[1] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0];
+        }      
+
+        calculateAngleToFieldPosition(targetPose[0], targetPose[1]);
+
         generalField.setRobotPose(getPose2d());
-        SmartDashboard.putNumber("Angle to Hub", Units.radiansToDegrees(angleToHub));
+        SmartDashboard.putNumber("Angle to Target", Units.radiansToDegrees(angleToTarget));
     }
 
     private void startSimThread() {
@@ -387,5 +417,23 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+    public double getAngleToTarget() {
+        return angleToTarget;
+    }
+
+    public double getDistanceToTarget() {
+        double robotX = getPose2d().getX();
+        double robotY = getPose2d().getY();
+
+        double targetX = targetPose[0];
+        double targetY = targetPose[1];
+
+        double relativeX = robotX - targetX;
+        double relativeY = robotY - targetY;
+
+        double distance = Math.sqrt(relativeX * relativeX + relativeY * relativeY);
+        return distance;
     }
 }

@@ -55,7 +55,7 @@ public class TurretSubsystem extends SubsystemBase {
     return Commands.run(
       () -> {
         double setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
-        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, Math.toRadians(-90), Math.toRadians(90))));
+        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, Math.toRadians(-80), Math.toRadians(80))));
       },
       this
     ).finallyDo(

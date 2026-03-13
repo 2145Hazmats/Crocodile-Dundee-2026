@@ -8,32 +8,43 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.827046511627907,
-        "y": 1.1558023255813952
+        "x": 6.607166666666667,
+        "y": 0.6877380952380951
       },
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "Right 3 Set 1"
     },
     {
       "anchor": {
-        "x": 0.35,
-        "y": 0.65
+        "x": 4.3828571428571435,
+        "y": 0.5797619047619049
       },
       "prevControl": {
-        "x": 8.339036278036595,
-        "y": 0.23131235005644946
+        "x": 5.078700729104259,
+        "y": 0.5019372931421616
+      },
+      "nextControl": {
+        "x": 2.741619047619048,
+        "y": 0.7633214285714289
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.5688571428571443,
+        "y": 3.376345238095238
+      },
+      "prevControl": {
+        "x": 2.3960952380952394,
+        "y": 2.307380952380953
       },
       "nextControl": null,
-      "isLocked": true,
-      "linkedName": "Right 3 Set 0"
+      "isLocked": false,
+      "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.69,
-      "rotationDegrees": -90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [

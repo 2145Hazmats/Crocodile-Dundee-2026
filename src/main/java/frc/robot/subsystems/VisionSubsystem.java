@@ -33,7 +33,7 @@ public class VisionSubsystem extends SubsystemBase {
    private PhotonPipelineResult frontResult = null;
    private PhotonTrackedTarget frontTrackedTarget = null;
    private PhotonPoseEstimator frontPoseEstimator = new PhotonPoseEstimator(
-     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded),
+     AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded),
      PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
      VisionConstants.FRONT_CAMERA_POSITION
    );
@@ -43,7 +43,7 @@ public class VisionSubsystem extends SubsystemBase {
    private PhotonPipelineResult sideResult = null;
    private PhotonTrackedTarget sideTrackedTarget = null;
    private PhotonPoseEstimator sidePoseEstimator = new PhotonPoseEstimator(
-     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded),
+     AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded),
      PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
      VisionConstants.SIDE_CAMERA_POSITION
    );
@@ -51,12 +51,14 @@ public class VisionSubsystem extends SubsystemBase {
 
    private Matrix<N3, N1> curStdDevs;
    private final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.5, 1.5, 6); //1.5, 1.5, 6  VecBuilder.fill(4, 4, 8); (2 , 2 , 8)
-   private final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.1, 0.01, 0.01); //0.3, 0.3, .75   0.5,0.5,1
+   private final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.3, 0.3, 0.75); //0.3, 0.3, .75   0.5,0.5,1
   /** Creates a new VisionSubsystem. */
   public VisionSubsystem(CommandSwerveDrivetrain drivetrain) {
     m_drivetrain = drivetrain;
+
+    SmartDashboard.putData("Vision Field", visionField);
     
-    CameraServer.startAutomaticCapture();
+    //CameraServer.startAutomaticCapture();
   }
 
   public void addVisionPose2d(Pose2d pose2d, double timestampSeconds) {
@@ -128,10 +130,13 @@ public class VisionSubsystem extends SubsystemBase {
        }
      } catch (Exception e) {
        sideEstimatedRobotPose = null;
-     }
+     } 
 
-      
-    
+     try {
+      visionField.setRobotPose(frontEstimatedRobotPose.estimatedPose.toPose2d());
+     } catch(Exception e) {
+
+     }
      
   }
 }

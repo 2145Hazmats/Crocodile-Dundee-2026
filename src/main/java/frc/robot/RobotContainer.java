@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -28,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.MathConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -35,6 +38,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -46,6 +50,8 @@ public class RobotContainer {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+    private final PIDController rotationPID = new PIDController(1, 0, 0);
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
     
@@ -71,6 +77,7 @@ public class RobotContainer {
     private final SpindexerSubsystem m_SpindexerSubsystem = new SpindexerSubsystem();
     private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
     private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
+    private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(drivetrain);
 
     private final SendableChooser<Command> autoChooser;
 
@@ -90,6 +97,9 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
         m_IntakeSubsystem.resetIntakePosition();
+
+        SmartDashboard.putNumber("Flywheel Setpoint", 0);
+        SmartDashboard.putNumber("Hood Setpoint", 12);
         
     }
 
@@ -108,8 +118,8 @@ public class RobotContainer {
         );
 
         // Turn turret where we want it
-        // m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.autoTurnTurretCommand());
-        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngle(() -> 0));
+        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngle(() -> drivetrain.getAngleToTarget()));
+        //m_TurretSubsystem.setDefaultCommand());
 
         // Slow mode
         P1CommandController.rightBumper().whileTrue(
@@ -207,12 +217,19 @@ public class RobotContainer {
       // slow mode
 
       P1rightBumper.whileTrue(drivetrain.applyRequest(() ->
-        drive.withVelocityX(-P1Controller.getLeftY() * 0.5) // Drive forward with negative Y (forward)
-        .withVelocityY(-P1Controller.getLeftX() * 0.5) // Drive left with negative X (left)
-        .withRotationalRate(-P1Controller.getRightX() * 0.5) // Drive counterclockwise with negative X (left)
+        drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
+        .withVelocityY(-P1Controller.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
+        .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left)
       ));
 
       P1A.whileTrue(drivetrain.applyRequest(() -> brake));
+      
+      P1X.whileTrue(drivetrain.applyRequest(() -> 
+        drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed)
+        .withVelocityY(-P1Controller.getLeftX() * MaxSpeed)
+        .withRotationalRate(rotationPID.calculate(drivetrain.getPose2d().getRotation().getRadians(), drivetrain.getAngleToTarget()) * MaxAngularRate)));
+
+      
 
     
         /*-------------------------------------------Driver Controls-------------------------------------------*/  
@@ -224,14 +241,9 @@ public class RobotContainer {
       //Climb controls   
       P2B.whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
       P2A.whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
-      // P2X.whileTrue(m_ClimbSubsystem.climbRelease());
+      P2l4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(1), m_IntakeSubsystem));
 
       // Command to run the spindexer at a full speed, stops once you let go of the button y
-      P2Y.whileTrue(Commands.run(
-        () -> m_SpindexerSubsystem.SetMotor(1.0), 
-        m_SpindexerSubsystem
-      )
-      .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0)));
 
       // Regurgitate the fuel
       P2leftBumper.whileTrue(Commands.run(
@@ -247,7 +259,7 @@ public class RobotContainer {
         new ParallelCommandGroup(
           m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
           Commands.run(
-            () -> m_IntakeSubsystem.setIntakingMotor(-0.5)
+            () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)
           )
         )
       )
@@ -264,25 +276,28 @@ public class RobotContainer {
       P2rightTrigger
       .whileTrue(
         new ParallelCommandGroup(
-            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(4000)),
-            /*Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(2000))
-                .andThen(*/Commands.run(() -> {
-                    m_ShooterSubsystem.setFeederMotor(-1);
-                    m_SpindexerSubsystem.SetMotor(0.5);
+            Commands.runOnce(() -> { 
+              m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
+              m_ShooterSubsystem.setHoodMotorPosition(MathConstants.DegreesToRotations(m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget())) * ShooterConstants.HOOD_GEAR_RATIO);
+            }),
+            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(SmartDashboard.getNumber("Flywheel Setpoint", 0)))
+                .andThen(Commands.run(() -> {
+                    m_ShooterSubsystem.setFeederMotor(-0.75);
+                    m_SpindexerSubsystem.SetMotor(0.75);
                     }, m_ShooterSubsystem, m_SpindexerSubsystem)
                 )
+            )
         )
-      //)
-      .onFalse(
+      .whileFalse(
         Commands.runOnce(() -> {
             m_ShooterSubsystem.setFeederMotor(0);
-            m_ShooterSubsystem.setFlywheelToSpeed(0);
+            m_ShooterSubsystem.setFlywheelMotor(0);
             m_SpindexerSubsystem.SetMotor(0);
         }, m_ShooterSubsystem, m_SpindexerSubsystem)
       );
 
       // Quick PID stuff for testing
-      P2CommandController.povLeft().whileTrue(
+      P1B.whileTrue(
             Commands.run(
                 () -> {
                     m_ShooterSubsystem.setFlywheelToSpeed(SmartDashboard.getNumber("Flywheel Setpoint", 0));
@@ -294,14 +309,16 @@ public class RobotContainer {
     
       //Moves hood motor up or down when moving right stick on operator            
       m_ShooterSubsystem.setDefaultCommand(Commands.run(
-        () -> m_ShooterSubsystem.setHoodMotor(P2Controller.getRightY() * 0.1)));
+        () -> m_ShooterSubsystem.setHoodMotor(P2Controller.getRightY() * 0.1), m_ShooterSubsystem));
+
+      
      
     
   } 
   //Command for autonomous control to shoot
    private Command shootCommand(){
      return new ParallelCommandGroup(
-            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(2000), m_ShooterSubsystem),
+            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(2000)),
             Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(2000))
                 .andThen(Commands.run(() -> {
                     m_ShooterSubsystem.setFeederMotor(1);

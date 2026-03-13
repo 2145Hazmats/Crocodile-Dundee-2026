@@ -8,10 +8,10 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.467163396122102,
-        "y": 7.438722606216411
+        "x": 6.1428690476190475,
+        "y": 7.706190476190477
       },
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "Left 3 Set 0"
     },
     {
@@ -20,8 +20,8 @@
         "y": 4.582
       },
       "prevControl": {
-        "x": 7.827046511627907,
-        "y": 6.829825581395348
+        "x": 8.183619047619048,
+        "y": 7.295880952380952
       },
       "nextControl": null,
       "isLocked": false,

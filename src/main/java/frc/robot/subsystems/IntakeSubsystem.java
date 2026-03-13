@@ -36,6 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     resetIntakePosition();
   }
+  
   public void resetIntakePosition() {
     actuatorMotor.setPosition(0);
   }
@@ -68,18 +69,18 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
    public Command autoIntakeDOWN() {
-    return Commands.parallel(
-      setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
-      Commands.run(() -> setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), this));
+    return Commands.run(() -> {
+      setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION);
+      setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED);
+    }, this);
   }
   
   public Command autoIntakeHOME() {
-    return Commands.parallel(
-      setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
-      Commands.run(() -> setIntakingMotor(0), this));
+    return Commands.run(() -> {
+      setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION);
+      setIntakingMotor(0);
+    }, this);
   }
-
-  
 }
 
 
