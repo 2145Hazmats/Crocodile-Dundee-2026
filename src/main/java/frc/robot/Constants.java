@@ -68,7 +68,7 @@ public final class Constants {
     public static final int ACTUATOR_INTAKE_MOTOR_ID = 30;
     public static final int INTAKING_MOTOR_ID = 31;
     public static final double ACTUATOR_ALL_THE_WAY_IN = 0;
-    public static final double ACTUATOR_HOME_POSITION = -11.14;   // TODO: Set home and down positions for the intake
+    public static final double ACTUATOR_HOME_POSITION = -1;   // TODO: Set home and down positions for the intake
     public static final double ACTUATOR_DOWN_POSITION = -30.19;   // <-----------------------------------------------
     public static final double INTAKE_MOTOR_SPEED = 1;
     public static final double ACTUATOR_P = 0.25;
@@ -85,13 +85,15 @@ public final class Constants {
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.0;
     public static final double FLYWHEEL_V = 0.15;
-    public static final double FLYWHEEL_RPM_SETPOINT = 2000;
+    public static final double FLYWHEEL_RPM_SETPOINT = 2500; 
 
     public static final int HOOD_MOTOR_ID = 28;
     public static final double HOOD_P = 2;
     public static final double HOOD_I = 0.00000;
     public static final double HOOD_D = 0.00000;
     public static final double HOOD_GEAR_RATIO = 71.5714;
+    public static final double HOOD_MAX_ANGLE = 25;
+    public static final double HOOD_HOME_ANGLE = 12;
   }
 
   public static class PoseConstants {
