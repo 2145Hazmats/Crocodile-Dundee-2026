@@ -67,6 +67,7 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int ACTUATOR_INTAKE_MOTOR_ID = 30;
     public static final int INTAKING_MOTOR_ID = 31;
+    public static final double ACTUATOR_ALL_THE_WAY_IN = 0;
     public static final double ACTUATOR_HOME_POSITION = -11.14;   // TODO: Set home and down positions for the intake
     public static final double ACTUATOR_DOWN_POSITION = -30.19;   // <-----------------------------------------------
     public static final double INTAKE_MOTOR_SPEED = 1;
@@ -106,7 +107,8 @@ public final class Constants {
     public static final double CENTER_FIELD_Y = 4.035; 
     public static final double BLUE_ALLIANCE_ZONE_X = 4.629;
 
-    public static final Pose2d SHOOT_POSE = new Pose2d(1.93, 4.02, new Rotation2d(0));
+    public static final Pose2d BLUE_SHOOT_POSE = new Pose2d(1.590, 4.02, new Rotation2d(0));
+    public static final Pose2d RED_SHOOT_POSE = new Pose2d(14.45, 4.02, new Rotation2d(180));
   }
   
   public static class VisionConstants{

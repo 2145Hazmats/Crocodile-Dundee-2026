@@ -35,7 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakingMotor.getConfigurator().apply(intakingCurrentLimitConfig);
 
     var slot0Configs = new Slot0Configs();
-    slot0Configs.kG = 0.1;
+    slot0Configs.kG = 0.2;
     slot0Configs.kP = IntakeConstants.ACTUATOR_P;
     slot0Configs.kI = IntakeConstants.ACTUATOR_I;
     slot0Configs.kD = IntakeConstants.ACTUATOR_D;
@@ -50,7 +50,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
   public boolean isIntakeInRobot() {
-    return MathUtil.isNear(IntakeConstants.ACTUATOR_HOME_POSITION, getActuatorPosition(), ErrorConstants.ACTUATOR_HOME_ERROR );
+    return MathUtil.isNear(IntakeConstants.ACTUATOR_ALL_THE_WAY_IN, getActuatorPosition(), ErrorConstants.ACTUATOR_HOME_ERROR );
   }
 
   @Override

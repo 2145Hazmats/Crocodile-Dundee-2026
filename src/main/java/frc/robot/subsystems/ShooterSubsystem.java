@@ -14,9 +14,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ErrorConstants;
 import frc.robot.Constants.MathConstants;
+import frc.robot.Constants.PoseConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -26,13 +29,16 @@ public class ShooterSubsystem extends SubsystemBase {
   private TalonFX hoodMotor;
   private final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0);
   private final PositionVoltage m_hoodRequest = new PositionVoltage(0).withSlot(1);
+  private CommandSwerveDrivetrain m_drivetrain ;
   
   private PIDController hoodPID = new PIDController(ShooterConstants.HOOD_P, ShooterConstants.HOOD_I, ShooterConstants.HOOD_D);
 
   /** Creates a new ShooterSubsystem. */
-  public ShooterSubsystem() {
+  public ShooterSubsystem(CommandSwerveDrivetrain drivetrain) {
    shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
    feederMotor = new TalonFX(ShooterConstants.FEEDER_MOTOR_ID);
+   m_drivetrain = drivetrain;
+   
 
    var flywheelCurrentLimitsConfigs = new CurrentLimitsConfigs();
    flywheelCurrentLimitsConfigs.withSupplyCurrentLimit(40).withSupplyCurrentLimitEnable(true);
@@ -89,11 +95,22 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double distanceToFlywheelSpeed(double distance) {
-    return 1370 * Math.pow(Math.E, 0.39 * distance);
+    return 1100 * Math.pow(Math.E, 0.32 * distance);
   }
 
   public double distanceToHoodAngleDegrees(double distance) {
     return 8.88 * Math.pow(Math.E, 0.21 * distance);
+  }
+
+  public Command shootFromShootPose(){
+    return Commands.run(() -> {
+      if (MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getX(), m_drivetrain.getPose2d().getX() , 0.1 )
+      && MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getY(), m_drivetrain.getPose2d().getY() , 0.1))
+      {
+        setFlywheelToSpeed(1750);
+      }
+
+    }, this);
   }
 
   @Override

@@ -19,6 +19,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,6 +34,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.PathPlannerConstants;
@@ -376,6 +378,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         generalField.setRobotPose(getPose2d());
         targetField.setRobotPose(new Pose2d(targetPose[0], targetPose[1], new Rotation2d(angleToTarget)));
         SmartDashboard.putNumber("Angle to Target", Units.radiansToDegrees(0));
+        SmartDashboard.putNumber("Distance to Target", getDistanceToTarget());
     }
 
     private void startSimThread() {
@@ -393,8 +396,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    public Command pathfindToShootPose(){
-        return AutoBuilder.pathfindToPose(PoseConstants.SHOOT_POSE, pathFindingConstraints, 0);
+    public void pathfindToShootPose() {
+        
+        var alliance = DriverStation.getAlliance();
+        SmartDashboard.putString("Alliance", alliance.toString());
+        if (alliance.get() == Alliance.Blue)
+             Commands.run(
+                () -> AutoBuilder.pathfindToPose(PoseConstants.BLUE_SHOOT_POSE, pathFindingConstraints, 0))
+            .onlyIf(() -> alliance.get() == Alliance.Blue);
+        else if (alliance.get() == Alliance.Red)
+            Commands.run(
+                () -> AutoBuilder.pathfindToPose(PoseConstants.RED_SHOOT_POSE, pathFindingConstraints, 0))
+            .onlyIf(() -> alliance.get() == Alliance.Red);
     }
 
     /**
