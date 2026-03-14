@@ -208,8 +208,8 @@ public class RobotContainer {
         .withVelocityY(-P1Controller.getLeftX() * MaxSpeed)
         .withRotationalRate(rotationPID.calculate(drivetrain.getPose2d().getRotation().getRadians(), drivetrain.getAngleToTarget()) * MaxAngularRate)));
 
-      P1Y.whileTrue(Commands.run(() -> drivetrain.pathfindToShootPose()));
-
+      P1Y.and(drivetrain::isAllianceBlue).whileTrue(drivetrain.pathfindToPose(PoseConstants.BLUE_SHOOT_POSE));
+      P1Y.and(drivetrain::isAllianceRed).whileTrue(drivetrain.pathfindToPose(PoseConstants.RED_SHOOT_POSE));
       
 
     
@@ -265,8 +265,8 @@ public class RobotContainer {
       );
 
       // Shoot command -- Sets the flywheel speed, waits for it to spin up before starting the spindexer and feeder
-      P2rightTrigger
-      .whileTrue(
+      /*P2rightTrigger
+       .whileTrue(
         new ParallelCommandGroup(
             Commands.run(() -> { 
               m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
@@ -278,16 +278,14 @@ public class RobotContainer {
                     m_SpindexerSubsystem.SetMotor(-0.75);
                     }, m_ShooterSubsystem, m_SpindexerSubsystem)
                 )
-            ).beforeStarting(m_ShooterSubsystem.shootFromShootPose()).onlyIf(() -> MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getX(), drivetrain.getPose2d().getX() , 0.1 )
-            && MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getY(), drivetrain.getPose2d().getY() , 0.1))
+            )*/P2rightTrigger.whileTrue(m_ShooterSubsystem.shootFromShootPose()
             .alongWith(
               Commands.waitSeconds(2.5)
               .andThen(Commands.run(() -> {
                 m_ShooterSubsystem.setFeederMotor(0.75);
                 m_SpindexerSubsystem.SetMotor(-0.75);
-              }))
-            )
-      );
+              }, m_SpindexerSubsystem))
+            ));
 
       /*
 

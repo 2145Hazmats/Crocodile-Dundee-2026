@@ -58,6 +58,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double angleToTarget = 0;
     private double[] targetPose = new double[2];
 
+    private boolean isAllianceBlue = false;
+
     private PathConstraints pathFindingConstraints;
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
@@ -396,18 +398,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    public void pathfindToShootPose() {
+    public Command pathfindToPose(Pose2d pose){
+        return AutoBuilder.pathfindToPose(pose, pathFindingConstraints, 0);
+    }
+
+    public Command pathfindToShootPose() {
         
         var alliance = DriverStation.getAlliance();
         SmartDashboard.putString("Alliance", alliance.toString());
         if (alliance.get() == Alliance.Blue)
-             Commands.run(
+            return Commands.run(
                 () -> AutoBuilder.pathfindToPose(PoseConstants.BLUE_SHOOT_POSE, pathFindingConstraints, 0))
             .onlyIf(() -> alliance.get() == Alliance.Blue);
         else if (alliance.get() == Alliance.Red)
-            Commands.run(
+            return Commands.run(
                 () -> AutoBuilder.pathfindToPose(PoseConstants.RED_SHOOT_POSE, pathFindingConstraints, 0))
             .onlyIf(() -> alliance.get() == Alliance.Red);
+
+        return Commands.none();
     }
 
     /**
@@ -471,5 +479,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         double distance = Math.sqrt(relativeX * relativeX + relativeY * relativeY);
         return distance;
+    }
+
+    public boolean isAllianceBlue(){
+        return DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue;
+    }
+
+    public boolean isAllianceRed() {
+        return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
     }
 }

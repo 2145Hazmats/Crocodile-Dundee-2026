@@ -30,8 +30,8 @@ public class IntakeSubsystem extends SubsystemBase {
     intakingMotor = new TalonFX(IntakeConstants.INTAKING_MOTOR_ID);
 
     var intakingCurrentLimitConfig = new CurrentLimitsConfigs();
-    intakingCurrentLimitConfig.withStatorCurrentLimit(50).withStatorCurrentLimitEnable(true);
-    intakingCurrentLimitConfig.withSupplyCurrentLimit(30).withSupplyCurrentLimitEnable(true);
+    intakingCurrentLimitConfig.withStatorCurrentLimit(60).withStatorCurrentLimitEnable(true);
+    intakingCurrentLimitConfig.withSupplyCurrentLimit(40).withSupplyCurrentLimitEnable(true);
     intakingMotor.getConfigurator().apply(intakingCurrentLimitConfig);
 
     var slot0Configs = new Slot0Configs();
