@@ -184,8 +184,8 @@ public class RobotContainer {
       final Trigger P2X = new Trigger(() -> P2Controller.getRawButton(4));
       final Trigger P2Y = new Trigger(() -> P2Controller.getRawButton(5));
       final Trigger P2r4 = new Trigger(() -> P2Controller.getRawButton(6));
-      final Trigger P2rightBumper = new Trigger(() -> P2Controller.getRawButton(7));
-      final Trigger P2leftBumper = new Trigger(() -> P2Controller.getRawButton(8));
+      final Trigger P2rightBumper = new Trigger(() -> P2Controller.getRawButton(8));
+      final Trigger P2leftBumper = new Trigger(() -> P2Controller.getRawButton(7));
       final Trigger P2rightTrigger = new Trigger(() -> P2Controller.getRawButton(10));
       final Trigger P2leftTrigger = new Trigger(() -> P2Controller.getRawButton(9));
       final Trigger P2minus = new Trigger(() -> P2Controller.getRawButton(11));
@@ -207,8 +207,8 @@ public class RobotContainer {
         .withVelocityY(-P1Controller.getLeftX() * MaxSpeed)
         .withRotationalRate(rotationPID.calculate(drivetrain.getPose2d().getRotation().getRadians(), drivetrain.getAngleToTarget()) * MaxAngularRate)));
 
-      P1Y.whileTrue(Commands.run(() -> drivetrain.pathfindToShootPose()));
-
+      P1Y.and(drivetrain::isAllianceBlue).whileTrue(drivetrain.pathfindToPose(PoseConstants.BLUE_SHOOT_POSE));
+      P1Y.and(drivetrain::isAllianceRed).whileTrue(drivetrain.pathfindToPose(PoseConstants.RED_SHOOT_POSE));
       
 
     
@@ -228,10 +228,10 @@ public class RobotContainer {
 
       // Regurgitate the fuel
       P2leftBumper.whileTrue(Commands.run(
-      () -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem
+      () -> m_SpindexerSubsystem.SetMotor(-1), m_SpindexerSubsystem
       )
       .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0))
-      .alongWith(Commands.run(() -> m_ShooterSubsystem.setFeederMotor(-1), m_ShooterSubsystem)
+      .alongWith(Commands.run(() -> m_ShooterSubsystem.setFeederMotor(1), m_ShooterSubsystem)
       .finallyDo(() -> m_ShooterSubsystem.setFeederMotor(0))));
 
       // Intake command -- Puts intake down when pressing down LT, and puts it back up when you let go
@@ -254,8 +254,8 @@ public class RobotContainer {
       );
 
       // Shoot command -- Sets the flywheel speed, waits for it to spin up before starting the spindexer and feeder
-      P2rightTrigger
-      .whileTrue(
+      /*P2rightTrigger
+       .whileTrue(
         new ParallelCommandGroup(
             Commands.run(() -> { 
               m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
@@ -267,16 +267,14 @@ public class RobotContainer {
                     m_SpindexerSubsystem.SetMotor(-0.75);
                     }, m_ShooterSubsystem, m_SpindexerSubsystem)
                 )
-            ).beforeStarting(m_ShooterSubsystem.shootFromShootPose()).onlyIf(() -> MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getX(), drivetrain.getPose2d().getX() , 0.1 )
-            && MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getY(), drivetrain.getPose2d().getY() , 0.1))
+            )*/P2rightTrigger.whileTrue(m_ShooterSubsystem.shootFromShootPose()
             .alongWith(
               Commands.waitSeconds(2.5)
               .andThen(Commands.run(() -> {
                 m_ShooterSubsystem.setFeederMotor(0.75);
                 m_SpindexerSubsystem.SetMotor(-0.75);
-              }))
-            )
-      );
+              }, m_SpindexerSubsystem))
+            ));
 
       /*
 
