@@ -10,12 +10,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.subsystems.TurretSubsystem;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -58,7 +60,24 @@ public final class Constants {
     public static final double TURRET_D = 0.01;
     public static final double TURRET_GEAR_RATIO = 14.285714285714286;
     public static final double TURRET_STARTING_ANGLE = 0;
+    public static final Transform3d TURRET_FROM_CENTER = 
+      new Transform3d(Units.inchesToMeters(0),Units.inchesToMeters(0), Units.inchesToMeters(0),
+      new Rotation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)));
+    public static final double TURRET_ANGLE_FROM_CENTER = Math.atan(TURRET_FROM_CENTER.getX()/ TURRET_FROM_CENTER.getY());
+
+    public static final double TURRET_MAGNITUDE_FROM_CENTER = Math.sqrt(TURRET_FROM_CENTER.getX() * TURRET_FROM_CENTER.getX() +
+                                                                        TURRET_FROM_CENTER.getY() *TURRET_FROM_CENTER.getY());
+
+    
+    
+    
+    
+
+    
+    
+
   }
+  
   
   public static class SpindexerConstants {
     public static final int SPINDEXER_MOTOR_ID = 20;
