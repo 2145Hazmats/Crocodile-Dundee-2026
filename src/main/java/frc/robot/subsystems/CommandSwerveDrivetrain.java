@@ -471,8 +471,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public double getDistanceToTarget() {
-        double robotX = getPose2d().getX();
-        double robotY = getPose2d().getY();
+        double robotX = m_turret.calculateTurretFieldPositionX();
+        double robotY = m_turret.calculateTurretFieldPositionY();
 
         double targetX = targetPose[0];
         double targetY = targetPose[1];

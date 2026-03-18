@@ -125,8 +125,8 @@ public class RobotContainer {
         );
 
         // Turn turret where we want it
-       /* m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngle(
-          () -> drivetrain.getAngleToTarget()));*/
+        //m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngle(
+          //() -> drivetrain.getAngleToTarget()));
           /*
           .onlyIf(() -> !manualMode)
         .beforeStarting(Commands.run(() -> m_TurretSubsystem.turnTurretToAngle(
@@ -134,7 +134,7 @@ public class RobotContainer {
           .onlyIf(() -> manualMode));
         //m_TurretSubsystem.setDefaultCommand());
         */
-        m_TurretSubsystem.setDefaultCommand(Commands.run(() -> m_TurretSubsystem.setMotor(0), m_TurretSubsystem));
+        /*m_TurretSubsystem.setDefaultCommand(Commands.run(() -> m_TurretSubsystem.setMotor(0), m_TurretSubsystem)); */
 
         m_SpindexerSubsystem.setDefaultCommand(Commands.run(() -> m_SpindexerSubsystem.SetMotor(0), m_SpindexerSubsystem));
         
