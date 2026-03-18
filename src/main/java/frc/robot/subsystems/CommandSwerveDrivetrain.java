@@ -314,13 +314,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return this.getState().Pose;
     }
 
-    public double calculateAngleToFieldPosition() {
+    public double calculateAngleToFieldPosition(double FieldPositionX, double FieldPositionY) {
      try {
        double xRelativeToPosition = 1;
        double yRelativeToPosition = 1;
 
-       xRelativeToPosition = m_turret.calculateTurretFieldPositionX();
-       yRelativeToPosition = m_turret.calculateTurretFieldPositionY();
+       xRelativeToPosition = m_turret.calculateTurretFieldPositionX() - FieldPositionX;
+       yRelativeToPosition = m_turret.calculateTurretFieldPositionY() - FieldPositionY;
        
        SmartDashboard.putNumber("XRelativeToHub", xRelativeToPosition);
        SmartDashboard.putNumber("YRelativeToHub", yRelativeToPosition);
