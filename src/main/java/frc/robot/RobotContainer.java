@@ -88,7 +88,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
      private void registerNamedCommands() {
-        NamedCommands.registerCommand("Shoot", autoShootCommand().withTimeout(10));
+        NamedCommands.registerCommand("Shoot", autoShootCommand().withTimeout(15));
         NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeDOWN());
         NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeHOME());
         NamedCommands.registerCommand("IntakeUnjam", m_IntakeSubsystem.autoIntakeUnjam());
@@ -218,7 +218,8 @@ public class RobotContainer {
 
 
     /*-------------------------------------Operator Controls-------------------------------------*/
-    
+      P2Plus.whileTrue(Commands.run(() -> m_SpindexerSubsystem.SetMotor(-1), m_SpindexerSubsystem).finallyDo(
+        () -> m_SpindexerSubsystem.SetMotor(0)));
 
       // Manual Stuffs
       P2minus.onTrue(Commands.runOnce(() -> P2manualMode = !P2manualMode));
@@ -231,8 +232,12 @@ public class RobotContainer {
         m_ShooterSubsystem.setFeederMotor(0.75);
       }));
 
-      P2Y.whileTrue(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_MAX_ANGLE)))
-      .whileFalse(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE)));
+      P2Y.whileTrue(Commands.run(
+        () -> m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_MAX_ANGLE)).alongWith(Commands.run(
+        () -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_PASS_SETPOINT), m_ShooterSubsystem)))
+      .whileFalse(Commands.run(
+        () -> m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE)));
+      
 
       //Climb controls   
       //P2B.whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
@@ -259,8 +264,10 @@ public class RobotContainer {
         new ParallelCommandGroup(
           m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
           Commands.run(
-            () -> m_IntakeSubsystem.setIntakingMotor(0)
-          )         
+            () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)
+          )
+          .withTimeout(3)
+          .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0))
         )
       );
 
@@ -278,14 +285,7 @@ public class RobotContainer {
                     m_SpindexerSubsystem.SetMotor(-0.75);
                     }, m_ShooterSubsystem, m_SpindexerSubsystem)
                 )
-            )*/P2rightTrigger.whileTrue(m_ShooterSubsystem.shootFromShootPose()
-            .alongWith(
-              Commands.waitSeconds(2.5)
-              .andThen(Commands.run(() -> {
-                m_ShooterSubsystem.setFeederMotor(0.75);
-                m_SpindexerSubsystem.SetMotor(-0.75);
-              }, m_SpindexerSubsystem))
-            ));
+            )*/
 
       /*
 
@@ -321,34 +321,11 @@ public class RobotContainer {
       .finallyDo(() -> m_ShooterSubsystem.setFeederMotor(0)));
   }
 
-  private Command shootCommand() {
-    return new ParallelCommandGroup(
-            Commands.run(() -> { 
-              m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
-              //m_ShooterSubsystem.setHoodMotorPosition(MathConstants.DegreesToRotations(MathUtil.clamp(m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget()), 12, 40)) * ShooterConstants.HOOD_GEAR_RATIO);
-            }),
-            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()))).withTimeout(2.5)
-                .andThen(Commands.run(() -> {
-                    m_ShooterSubsystem.setFeederMotor(0.75);
-                    m_SpindexerSubsystem.SetMotor(-0.75);
-                    }, m_ShooterSubsystem, m_SpindexerSubsystem)
-                )
-            ).beforeStarting(m_ShooterSubsystem.shootFromShootPose()).onlyIf(() -> MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getX(), drivetrain.getPose2d().getX() , 0.1 )
-            && MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getY(), drivetrain.getPose2d().getY() , 0.1))
-            .alongWith(
-              Commands.waitSeconds(2.5)
-              .andThen(Commands.run(() -> {
-                m_ShooterSubsystem.setFeederMotor(0.75);
-                m_SpindexerSubsystem.SetMotor(-0.75);
-              }))
-            );
-
-  }
   //Command for autonomous control to shoot
   private Command autoShootCommand(){
      return new ParallelCommandGroup(
-            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()))),
-            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()))).withTimeout(2.5)
+            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_RPM_SETPOINT)),
+            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(ShooterConstants.FLYWHEEL_RPM_SETPOINT)).withTimeout(2.5)
                 .andThen(Commands.run(() -> {
                     m_ShooterSubsystem.setFeederMotor(0.75);
                     m_SpindexerSubsystem.SetMotor(-0.75);
