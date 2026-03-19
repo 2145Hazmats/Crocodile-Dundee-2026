@@ -51,6 +51,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private Field2d generalField = new Field2d();
     private Field2d targetField = new Field2d();
+    private TurretSubsystem m_turret = new TurretSubsystem(this);
 
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
@@ -161,6 +162,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SmartDashboard.putData("GeneralField", generalField);
             SmartDashboard.putData("Target Field", targetField);
         }
+        
     
         /**
          * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -179,6 +181,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SwerveDrivetrainConstants drivetrainConstants,
             double odometryUpdateFrequency,
             SwerveModuleConstants<?, ?, ?>... modules
+
         ) {
             super(drivetrainConstants, odometryUpdateFrequency, modules);
             if (Utils.isSimulation()) {
@@ -311,16 +314,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return this.getState().Pose;
     }
 
-    public double calculateAngleToFieldPosition(double fieldPositionX, double fieldPositionY) {
+    public double calculateAngleToFieldPosition(double FieldPositionX, double FieldPositionY) {
      try {
-       double xRelativeToPosition = 1;
-       double yRelativeToPosition = 1;
+       double xRelativeToPosition = 0;
+       double yRelativeToPosition = 0;
 
-       xRelativeToPosition = getPose2d().getX() - fieldPositionX;
-       yRelativeToPosition = getPose2d().getY() - fieldPositionY;
+       xRelativeToPosition = m_turret.calculateTurretFieldPositionX() - FieldPositionX;
+       yRelativeToPosition = m_turret.calculateTurretFieldPositionY() - FieldPositionY;
+
+       SmartDashboard.putNumber("XRelativeToPos", xRelativeToPosition);
+       SmartDashboard.putNumber("YRelativeToPos", yRelativeToPosition);
        
-       SmartDashboard.putNumber("XRelativeToHub", xRelativeToPosition);
-       SmartDashboard.putNumber("YRelativeToHub", yRelativeToPosition);
+      
        angleToTarget = Math.atan(yRelativeToPosition/xRelativeToPosition);
        return angleToTarget;
      } catch (Exception e) {
@@ -330,6 +335,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
+    
+        
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
@@ -348,34 +355,34 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-        var alliance = DriverStation.getAlliance();
+        
 
-        if(alliance.get() == Alliance.Blue && getPose2d().getX() < PoseConstants.BLUE_ALLIANCE_ZONE_X) {
+        if(this.isAllianceBlue() && m_turret.calculateTurretFieldPositionX() < PoseConstants.BLUE_ALLIANCE_ZONE_X) {
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1];
         }
-        else if(alliance.get() == Alliance.Red && getPose2d().getX() > PoseConstants.RED_ALLIANCE_ZONE_X) {
+        else if(this.isAllianceRed() && m_turret.calculateTurretFieldPositionX() > PoseConstants.RED_ALLIANCE_ZONE_X) {
             targetPose[0] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[1];
         }
-        else if(alliance.get() == Alliance.Blue && getPose2d().getX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && getPose2d().getY() < PoseConstants.CENTER_FIELD_Y) {
+        else if(this.isAllianceBlue() && m_turret.calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[1];
         }
-        else if(alliance.get() == Alliance.Blue && getPose2d().getX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && getPose2d().getY() > PoseConstants.CENTER_FIELD_Y) {
+        else if(this.isAllianceBlue() && m_turret.calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y) {
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[1];
         }
-        else if(alliance.get() == Alliance.Red && getPose2d().getX() < PoseConstants.RED_ALLIANCE_ZONE_X && getPose2d().getY() > PoseConstants.CENTER_FIELD_Y){
+        else if(this.isAllianceRed() && m_turret.calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y){
             targetPose[0] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[1];
         }
-        else if(alliance.get() == Alliance.Red && getPose2d().getX() < PoseConstants.RED_ALLIANCE_ZONE_X && getPose2d().getY() < PoseConstants.CENTER_FIELD_Y) {
+        else if(this.isAllianceRed() && m_turret.calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
             targetPose[0] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0];
         }      
 
-        calculateAngleToFieldPosition(targetPose[0], targetPose[1]);
+        
 
         generalField.setRobotPose(getPose2d());
         targetField.setRobotPose(new Pose2d(targetPose[0], targetPose[1], new Rotation2d(angleToTarget)));
@@ -468,8 +475,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public double getDistanceToTarget() {
-        double robotX = getPose2d().getX();
-        double robotY = getPose2d().getY();
+        double robotX = m_turret.calculateTurretFieldPositionX();
+        double robotY = m_turret.calculateTurretFieldPositionY();
 
         double targetX = targetPose[0];
         double targetY = targetPose[1];

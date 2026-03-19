@@ -32,6 +32,7 @@ public class TurretSubsystem extends SubsystemBase {
   private final PositionVoltage m_turretRequest = new PositionVoltage(0).withSlot(0);
 
   private CommandSwerveDrivetrain m_drivetrain;
+
   /** Creates a new Turret. */
   public TurretSubsystem(CommandSwerveDrivetrain drivetrain) {
    turretMotor = new TalonFX(TurretConstants.TURRET_MOTOR_ID);
@@ -60,16 +61,15 @@ public class TurretSubsystem extends SubsystemBase {
   public Command turnTurretToAngle(DoubleSupplier angleToPointTo) {
     return Commands.run(
       () -> {
-        var alliance = DriverStation.getAlliance();
         double setpoint = 0;
-        if(alliance.get() == Alliance.Blue) {
+        if(m_drivetrain.isAllianceBlue()) {
            setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
         }
-        else if (alliance.get() == Alliance.Red) {
+        else if (m_drivetrain.isAllianceRed()) {
           setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
         }
 
-        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, Math.toRadians(-80), Math.toRadians(80))));
+        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, Math.toRadians(-90), Math.toRadians(90))));
       },
       this
     ).finallyDo(
@@ -85,87 +85,35 @@ public class TurretSubsystem extends SubsystemBase {
       });
   }
 
-  public Command autoTurnTurretCommand() {
-    var alliance = DriverStation.getAlliance();
+ 
 
-    return 
+  public double calculateTurretFieldPositionX(){
+    
+    //this is the original position of the drivetrain from the center of the robot
+    double drivetrainFieldPositionX = m_drivetrain.getPose2d().getX();
+    
+    // This vector is the position of the turret in the robot  on the X axis
+    // Compensates for the initial angle of the turret relative to the robot
+    double positionOfTurretX = Math.cos(m_drivetrain.getPose2d().getRotation().getRadians()) * TurretConstants.TURRET_MAGNITUDE_FROM_CENTER;
+    
+    // Adding the two together gets you the turret's position on the field
+    double turretFieldPositionX = drivetrainFieldPositionX + positionOfTurretX;
+    
+    return turretFieldPositionX;
+  }
 
-    // Point to Blue Alliance Hub if inside Blue Alliance zone and on Blue Alliance
-    turnTurretToAngle(
-      () -> m_drivetrain.calculateAngleToFieldPosition(
-        PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0], 
-        PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1]
-      )
-    ).onlyIf(
-      () -> alliance.get() == Alliance.Blue 
-      && m_drivetrain.getPose2d().getX() < PoseConstants.BLUE_ALLIANCE_ZONE_X)
-    .beforeStarting(
+  public double calculateTurretFieldPositionY(){
+    //this is the original position of the drivetrain from the center of the robot
+    double drivetrainFieldPositionY = m_drivetrain.getPose2d().getY();
 
-      // Point to Red Alliance Hub if inside Red Alliance zone and on Red Alliance
-      turnTurretToAngle(
-        () -> m_drivetrain.calculateAngleToFieldPosition(
-          PoseConstants.RED_ALLIANCE_HUB_LOCATION[0], 
-          PoseConstants.RED_ALLIANCE_HUB_LOCATION[1]
-        )
-      ).onlyIf(
-        () -> alliance.get() == Alliance.Red 
-        && m_drivetrain.getPose2d().getX() > PoseConstants.RED_ALLIANCE_ZONE_X)
-    .beforeStarting(
+    // This vector is the position of the turret in the robot  on the X axis
+    // Compensates for the initial angle of the turret relative to the robot
+    double positionOfTurretY = Math.sin(m_drivetrain.getPose2d().getRotation().getRadians()) * TurretConstants.TURRET_MAGNITUDE_FROM_CENTER;
+    
+    // Adding the two together gets you the turret's position on the field
+    double turretFieldPositionY = drivetrainFieldPositionY + positionOfTurretY;
 
-      // Point to Blue Alliance right corner if in neutral zone and on right side of the field
-      turnTurretToAngle(
-        () -> m_drivetrain.calculateAngleToFieldPosition(
-          PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[0],
-          PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[1] 
-        )
-      ).onlyIf(
-        () -> alliance.get() == Alliance.Blue 
-        && m_drivetrain.getPose2d().getX() > PoseConstants.BLUE_ALLIANCE_ZONE_X 
-        && m_drivetrain.getPose2d().getY() < PoseConstants.CENTER_FIELD_Y
-      )
-    )
-    .beforeStarting(
-
-      // Point to Blue Alliance left corner if in neutral zone and on left side of the field
-      turnTurretToAngle(
-        () -> m_drivetrain.calculateAngleToFieldPosition(
-          PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[0],
-          PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[1] 
-        )
-      ).onlyIf(
-        () -> alliance.get() == Alliance.Blue 
-        && m_drivetrain.getPose2d().getX() > PoseConstants.BLUE_ALLIANCE_ZONE_X 
-        && m_drivetrain.getPose2d().getY() > PoseConstants.CENTER_FIELD_Y
-      )
-    )
-    .beforeStarting(
-
-      // Point to Red Alliance right corner if in neutral zone and on right side of the field
-      turnTurretToAngle(
-        () -> m_drivetrain.calculateAngleToFieldPosition(
-          PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0],
-          PoseConstants.RED_ALLIANCE_RIGHT_CORNER[1] 
-        )
-      ).onlyIf(
-        () -> alliance.get() == Alliance.Red 
-        && m_drivetrain.getPose2d().getX() < PoseConstants.RED_ALLIANCE_ZONE_X 
-        && m_drivetrain.getPose2d().getY() > PoseConstants.CENTER_FIELD_Y
-      )
-    )
-    .beforeStarting(
-
-      // Point to Red Alliance left corner if in neutral zone and on left side of the field
-      turnTurretToAngle(
-        () -> m_drivetrain.calculateAngleToFieldPosition(
-          PoseConstants.RED_ALLIANCE_LEFT_CORNER[0],
-          PoseConstants.RED_ALLIANCE_LEFT_CORNER[1] 
-        )
-      ).onlyIf(
-        () -> alliance.get() == Alliance.Red 
-        && m_drivetrain.getPose2d().getX() < PoseConstants.RED_ALLIANCE_ZONE_X 
-        && m_drivetrain.getPose2d().getY() < PoseConstants.CENTER_FIELD_Y)
-    )
-    );
+    return turretFieldPositionY;
   }
   
   @Override

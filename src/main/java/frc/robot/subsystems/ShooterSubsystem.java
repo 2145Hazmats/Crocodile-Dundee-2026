@@ -104,6 +104,26 @@ public class ShooterSubsystem extends SubsystemBase {
     return 8.88 * Math.pow(Math.E, 0.21 * distance);
   }
 
+  public Command shootFromShootPose(){
+  
+    return Commands.run(() -> {
+      if (MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getX(), m_drivetrain.getPose2d().getX() , 0.3 )
+      && MathUtil.isNear(PoseConstants.BLUE_SHOOT_POSE.getY(), m_drivetrain.getPose2d().getY() , 0.3) && m_drivetrain.isAllianceBlue())
+      {
+        setFlywheelToSpeed(1750);
+      }
+
+    }, this)
+    .beforeStarting(Commands.run(() -> {
+      if (MathUtil.isNear(PoseConstants.RED_SHOOT_POSE.getX(), m_drivetrain.getPose2d().getX() , 0.1 )
+      && MathUtil.isNear(PoseConstants.RED_SHOOT_POSE.getY(), m_drivetrain.getPose2d().getY() , 0.1) && m_drivetrain.isAllianceRed())
+      {
+        setFlywheelToSpeed(1750);
+      }
+      
+    }, this));
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
