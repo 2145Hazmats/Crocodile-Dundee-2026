@@ -104,10 +104,11 @@ public final class Constants {
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.0;
     public static final double FLYWHEEL_V = 0.15;
-    public static final double FLYWHEEL_RPM_SETPOINT = 2500; 
+    public static final double FLYWHEEL_RPM_SETPOINT = 2350; 
+    public static final double FLYWHEEL_PASS_SETPOINT = 5000;
 
     public static final int HOOD_MOTOR_ID = 28;
-    public static final double HOOD_P = 2;
+    public static final double HOOD_P = 1.75;
     public static final double HOOD_I = 0.00000;
     public static final double HOOD_D = 0.00000;
     public static final double HOOD_GEAR_RATIO = 71.5714;
