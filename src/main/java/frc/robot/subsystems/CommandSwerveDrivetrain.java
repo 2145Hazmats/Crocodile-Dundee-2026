@@ -316,8 +316,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public double calculateAngleToFieldPosition(double FieldPositionX, double FieldPositionY) {
      try {
-       double xRelativeToPosition = 1;
-       double yRelativeToPosition = 1;
+       double xRelativeToPosition = 0;
+       double yRelativeToPosition = 0;
 
        xRelativeToPosition = m_turret.calculateTurretFieldPositionX() - FieldPositionX;
        yRelativeToPosition = m_turret.calculateTurretFieldPositionY() - FieldPositionY;

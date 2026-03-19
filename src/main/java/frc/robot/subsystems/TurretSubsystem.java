@@ -63,10 +63,10 @@ public class TurretSubsystem extends SubsystemBase {
       () -> {
         double setpoint = 0;
         if(m_drivetrain.isAllianceBlue()) {
-           setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.calculateAngleToFieldPosition(m_drivetrain.getPose2d().getX(), m_drivetrain.getPose2d().getY());
+           setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
         }
         else if (m_drivetrain.isAllianceRed()) {
-          setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.calculateAngleToFieldPosition(m_drivetrain.getPose2d().getX(), m_drivetrain.getPose2d().getY());
+          setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
         }
 
         setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, Math.toRadians(-90), Math.toRadians(90))));
@@ -80,7 +80,7 @@ public class TurretSubsystem extends SubsystemBase {
   public Command turnTurretToAngleNew(DoubleSupplier angleToPointTo){
     return Commands.run(
       ()->{
-        double setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.calculateAngleToFieldPosition(m_drivetrain.getPose2d().getX(), m_drivetrain.getPose2d().getY());
+        double setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
         turretMotor.setControl(m_turretRequest.withPosition(MathConstants.RadiansToRotations(MathUtil.clamp(setpoint, Math.toRadians(-90), Math.toRadians(90)))));
       });
   }
