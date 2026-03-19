@@ -321,9 +321,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
        xRelativeToPosition = m_turret.calculateTurretFieldPositionX() - FieldPositionX;
        yRelativeToPosition = m_turret.calculateTurretFieldPositionY() - FieldPositionY;
+
+       SmartDashboard.putNumber("XRelativeToPos", xRelativeToPosition);
+       SmartDashboard.putNumber("YRelativeToPos", yRelativeToPosition);
        
-       SmartDashboard.putNumber("XRelativeToHub", xRelativeToPosition);
-       SmartDashboard.putNumber("YRelativeToHub", yRelativeToPosition);
+      
        angleToTarget = Math.atan(yRelativeToPosition/xRelativeToPosition);
        return angleToTarget;
      } catch (Exception e) {
@@ -333,6 +335,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
+    
+        
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
