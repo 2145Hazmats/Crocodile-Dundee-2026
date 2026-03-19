@@ -225,7 +225,8 @@ public class RobotContainer {
       //P2minus.onTrue(Commands.runOnce(() -> P2manualMode = !P2manualMode));
       
       P2rightBumper.whileTrue(
-        Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(1750), m_ShooterSubsystem));
+        Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(7500))
+        .alongWith(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(17), m_ShooterSubsystem)));
 
       P2rightTrigger.whileTrue(Commands.run(() -> {
         m_SpindexerSubsystem.SetMotor(-0.75);

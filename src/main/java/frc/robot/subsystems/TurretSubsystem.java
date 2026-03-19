@@ -43,7 +43,7 @@ public class TurretSubsystem extends SubsystemBase {
 
    turretPID = new PIDController(TurretConstants.TURRET_P,TurretConstants.TURRET_I, TurretConstants.TURRET_D);
    var slot0Configs = new Slot0Configs();
-   slot0Configs.kS = 0;
+   slot0Configs.kS = 0.01;
    slot0Configs.kP = TurretConstants.TURRET_P;
    slot0Configs.kI = TurretConstants.TURRET_I;
    slot0Configs.kD = TurretConstants.TURRET_D;
@@ -69,7 +69,7 @@ public class TurretSubsystem extends SubsystemBase {
           setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
         }
 
-        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, Math.toRadians(-90), Math.toRadians(90))));
+        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, Math.toRadians(-93), Math.toRadians(93))));
       },
       this
     ).finallyDo(
