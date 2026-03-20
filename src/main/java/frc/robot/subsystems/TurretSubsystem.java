@@ -14,6 +14,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -30,6 +31,7 @@ public class TurretSubsystem extends SubsystemBase {
   private TalonFX turretMotor;
   private PIDController turretPID;
   private final PositionVoltage m_turretRequest = new PositionVoltage(0).withSlot(0);
+  private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(3 * TurretConstants.TURRET_GEAR_RATIO, 2));
 
   private CommandSwerveDrivetrain m_drivetrain;
 
@@ -42,8 +44,10 @@ public class TurretSubsystem extends SubsystemBase {
    turretMotor.getConfigurator().apply(turretCurrentLimitsConfig);
 
    turretPID = new PIDController(TurretConstants.TURRET_P,TurretConstants.TURRET_I, TurretConstants.TURRET_D);
+
+
    var slot0Configs = new Slot0Configs();
-   slot0Configs.kS = 0.01;
+   slot0Configs.kS = 0.05;
    slot0Configs.kP = TurretConstants.TURRET_P;
    slot0Configs.kI = TurretConstants.TURRET_I;
    slot0Configs.kD = TurretConstants.TURRET_D;
@@ -61,15 +65,9 @@ public class TurretSubsystem extends SubsystemBase {
   public Command turnTurretToAngle(DoubleSupplier angleToPointTo) {
     return Commands.run(
       () -> {
-        double setpoint = 0;
-        if(m_drivetrain.isAllianceBlue()) {
-           setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
-        }
-        else if (m_drivetrain.isAllianceRed()) {
-          setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
-        }
-
-        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(setpoint, Math.toRadians(-93), Math.toRadians(93))));
+        double goal = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
+        
+        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(goal, Math.toRadians(-93), Math.toRadians(93))));
       },
       this
     ).finallyDo(
@@ -80,9 +78,22 @@ public class TurretSubsystem extends SubsystemBase {
   public Command turnTurretToAngleNew(DoubleSupplier angleToPointTo){
     return Commands.run(
       ()->{
-        double setpoint = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
-        turretMotor.setControl(m_turretRequest.withPosition(MathConstants.RadiansToRotations(MathUtil.clamp(setpoint, Math.toRadians(-90), Math.toRadians(90)))));
-      });
+        
+        double angle = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
+
+        TrapezoidProfile.State goal = new TrapezoidProfile.State(MathUtil.clamp(angle, Math.toRadians(-93), Math.toRadians(93)) / (Math.PI * 2) * TurretConstants.TURRET_GEAR_RATIO, 0);
+        TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
+
+        setpoint = m_profile.calculate(0.020, setpoint, goal);
+        SmartDashboard.putNumber("Actual Turret Setpoint", setpoint.position);
+        m_turretRequest.Position = setpoint.position;
+        m_turretRequest.Velocity = setpoint.velocity;
+
+        turretMotor.setControl(m_turretRequest);
+      }, this)
+      .finallyDo(
+        () -> setMotor(0)
+      );
   }
 
  

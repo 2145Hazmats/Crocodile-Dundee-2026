@@ -329,6 +329,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
        angleToTarget = Math.atan(yRelativeToPosition/xRelativeToPosition);
        return angleToTarget;
      } catch (Exception e) {
+       e.printStackTrace(); 
+       
        return angleToTarget;
      }
    }
@@ -382,7 +384,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             targetPose[1] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0];
         }      
 
-        
+        calculateAngleToFieldPosition(targetPose[0], targetPose[1]);
 
         generalField.setRobotPose(getPose2d());
         targetField.setRobotPose(new Pose2d(targetPose[0], targetPose[1], new Rotation2d(angleToTarget)));

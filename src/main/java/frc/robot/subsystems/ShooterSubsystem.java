@@ -89,6 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setHoodMotorPosition(double angle) {
+    SmartDashboard.putNumber("Actual Hood Setpoint", angle);
     hoodMotor.setControl(m_hoodRequest.withPosition(MathConstants.DegreesToRotations(angle) * ShooterConstants.HOOD_GEAR_RATIO));
   }
 
@@ -130,7 +131,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Measured Flywheel Speed", MathConstants.RPStoRPM(shooterMotor.getVelocity().getValueAsDouble()));
     SmartDashboard.putNumber("Measured Hood Angle", (hoodMotor.getPosition().getValueAsDouble() / ShooterConstants.HOOD_GEAR_RATIO * 360));
 
-    setHoodMotorPosition(SmartDashboard.getNumber("Hood Setpoint", 12));
+    //setHoodMotorPosition(SmartDashboard.getNumber("Hood Setpoint", 12));
   }
 
   @Override

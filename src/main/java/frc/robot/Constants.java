@@ -55,14 +55,14 @@ public final class Constants {
   
   public static class TurretConstants {
     public static final int TURRET_MOTOR_ID = 22;
-    public static final double TURRET_P = 0.4;
+    public static final double TURRET_P = 0.8;
     public static final double TURRET_I = 0.00000;
     public static final double TURRET_D = 0.01;
     public static final double TURRET_GEAR_RATIO = 14.285714285714286;
     public static final double TURRET_STARTING_ANGLE = 0;
     public static final Transform3d TURRET_FROM_CENTER = 
       new Transform3d(Units.inchesToMeters(-6),Units.inchesToMeters(6), Units.inchesToMeters(0),
-      new Rotation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)));
+        new Rotation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)));
     public static final double TURRET_ANGLE_FROM_CENTER = Math.atan(TURRET_FROM_CENTER.getX()/ TURRET_FROM_CENTER.getY());
 
     public static final double TURRET_MAGNITUDE_FROM_CENTER = Math.sqrt(TURRET_FROM_CENTER.getX() * TURRET_FROM_CENTER.getX() +
