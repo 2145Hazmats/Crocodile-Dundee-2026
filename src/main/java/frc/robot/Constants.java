@@ -55,27 +55,18 @@ public final class Constants {
   
   public static class TurretConstants {
     public static final int TURRET_MOTOR_ID = 22;
-    public static final double TURRET_P = 0.8;
-    public static final double TURRET_I = 0.00000;
+    public static final double TURRET_P = 3.5;
+    public static final double TURRET_I = 0.001;
     public static final double TURRET_D = 0.01;
     public static final double TURRET_GEAR_RATIO = 14.285714285714286;
     public static final double TURRET_STARTING_ANGLE = 0;
     public static final Transform3d TURRET_FROM_CENTER = 
-      new Transform3d(Units.inchesToMeters(-6),Units.inchesToMeters(6), Units.inchesToMeters(0),
+      new Transform3d(Units.inchesToMeters(6),Units.inchesToMeters(6), Units.inchesToMeters(0),
         new Rotation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)));
     public static final double TURRET_ANGLE_FROM_CENTER = Math.atan(TURRET_FROM_CENTER.getX()/ TURRET_FROM_CENTER.getY());
 
-    public static final double TURRET_MAGNITUDE_FROM_CENTER = Math.sqrt(TURRET_FROM_CENTER.getX() * TURRET_FROM_CENTER.getX() +
-                                                                        TURRET_FROM_CENTER.getY() * TURRET_FROM_CENTER.getY());
-
-    
-    
-    
-    
-
-    
-    
-
+    public static final double TURRET_DISTANCE_FROM_CENTER = 
+    Math.sqrt(TURRET_FROM_CENTER.getX() * TURRET_FROM_CENTER.getX() + TURRET_FROM_CENTER.getY() * TURRET_FROM_CENTER.getY());
   }
   
   
@@ -99,11 +90,10 @@ public final class Constants {
   public static class ShooterConstants {
     public static final int SHOOTER_MOTOR_ID = 29;
     public static final int FEEDER_MOTOR_ID = 21;
-    public static final double FLYWHEEL_P = 0.6
-    ;
+    public static final double FLYWHEEL_P = 0.75;
     public static final double FLYWHEEL_I = 0.00000;
     public static final double FLYWHEEL_D = 0.0;
-    public static final double FLYWHEEL_V = 0.15;
+    public static final double FLYWHEEL_V = 0.11;
     public static final double FLYWHEEL_RPM_SETPOINT = 2350; 
     public static final double FLYWHEEL_PASS_SETPOINT = 5000;
 
@@ -135,7 +125,7 @@ public final class Constants {
   
   public static class VisionConstants{
     public static final Transform3d FRONT_CAMERA_POSITION = 
-    new Transform3d(Units.inchesToMeters(8.804), Units.inchesToMeters(-12.735), Units.inchesToMeters(9.407),
+    new Transform3d(Units.inchesToMeters(12.735), Units.inchesToMeters(8), Units.inchesToMeters(9.407), //8.804 y
     new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(10), Units.degreesToRadians(0)));
     public static final double AMBIGUITY_RATIO_CUTOFF = 0.2;
     public static final Transform3d SIDE_CAMERA_POSITION = 

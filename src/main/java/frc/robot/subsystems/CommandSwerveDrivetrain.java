@@ -21,6 +21,7 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -58,6 +59,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double m_lastSimTime;
     private double angleToTarget = 0;
     private double[] targetPose = new double[2];
+    private double lastRotationAngle = 0;
+    private LinearFilter angularVelocityFilter = LinearFilter.movingAverage(5);
 
     private boolean isAllianceBlue = false;
 
@@ -314,6 +317,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return this.getState().Pose;
     }
 
+    private double rawAngularVelocity(){
+        double currentRotation = getPose2d().getRotation().getRadians();
+        
+        double angularVelocity = (currentRotation- lastRotationAngle) / 0.02;
+        
+        lastRotationAngle = currentRotation;
+
+      
+        return angularVelocity;
+    }
+
+    public double getFilteredAngularVelocity(){
+        return angularVelocityFilter.calculate(rawAngularVelocity());
+    }
+    
+
     public double calculateAngleToFieldPosition(double FieldPositionX, double FieldPositionY) {
      try {
        double xRelativeToPosition = 0;
@@ -497,4 +516,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public boolean isAllianceRed() {
         return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
     }
+
+    
 }

@@ -43,7 +43,11 @@ public class ShooterSubsystem extends SubsystemBase {
    
 
    var flywheelCurrentLimitsConfigs = new CurrentLimitsConfigs();
-   flywheelCurrentLimitsConfigs.withSupplyCurrentLimit(40).withSupplyCurrentLimitEnable(true);
+   flywheelCurrentLimitsConfigs
+    .withSupplyCurrentLimit(40)
+    .withSupplyCurrentLimitEnable(true)
+    .withStatorCurrentLimit(60)
+    .withStatorCurrentLimitEnable(true);
    shooterMotor.getConfigurator().apply(flywheelCurrentLimitsConfigs);
 
    hoodMotor = new TalonFX(ShooterConstants.HOOD_MOTOR_ID);

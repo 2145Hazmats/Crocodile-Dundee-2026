@@ -111,7 +111,7 @@ public class RobotContainer {
     } 
 
     private void configureBindings() {
-    /*-------------------------------------------Driver Controls-------------------------------------------*/  
+    /*-------------------------------------------Default Commands-------------------------------------------*/  
 
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
@@ -125,7 +125,7 @@ public class RobotContainer {
         );
 
         // Turn turret where we want it
-        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngle(
+        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngleProfiled(
           drivetrain::getAngleToTarget));
           /*
           .onlyIf(() -> !manualMode)
@@ -133,14 +133,15 @@ public class RobotContainer {
           () -> P2Controller.getRightX() * Math.toRadians(80)), m_TurretSubsystem))
           .onlyIf(() -> manualMode));
         //m_TurretSubsystem.setDefaultCommand());
-        */
+        */ 
         /*m_TurretSubsystem.setDefaultCommand(Commands.run(() -> m_TurretSubsystem.setMotor(0), m_TurretSubsystem)); */
 
         m_SpindexerSubsystem.setDefaultCommand(Commands.run(() -> m_SpindexerSubsystem.SetMotor(0), m_SpindexerSubsystem));
         
         m_ShooterSubsystem.setDefaultCommand(Commands.run(() -> {
-          m_ShooterSubsystem.setFlywheelMotor(0.1);
+          m_ShooterSubsystem.setFlywheelMotor(0.2);
           m_ShooterSubsystem.setFeederMotor(0);
+          m_ShooterSubsystem.setHoodMotorPosition(12);
         }, m_ShooterSubsystem));
 
         //m_IntakeSubsystem.setDefaultCommand(m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION));
@@ -193,12 +194,14 @@ public class RobotContainer {
       final Trigger P2Plus = new Trigger(() -> P2Controller.getRawButton(12));
 
     /*--------------------------------New Controller Commands-------------------------------- */
+
+    /*-------------------------------------------Driver Controls-------------------------------------------*/  
         
     // slow mode
         P1rightBumper.whileTrue(drivetrain.applyRequest(() ->
-        drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
-        .withVelocityY(-P1Controller.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
-        .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left)
+        drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed * 0.25) // Drive forward with negative Y (forward)
+        .withVelocityY(-P1Controller.getLeftX() * MaxSpeed * 0.25) // Drive left with negative X (left)
+        .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate * 0.25) // Drive counterclockwise with negative X (left)
       ));
 
       P1A.whileTrue(drivetrain.applyRequest(() -> brake));
@@ -207,13 +210,14 @@ public class RobotContainer {
         drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed)
         .withVelocityY(-P1Controller.getLeftX() * MaxSpeed)
         .withRotationalRate(rotationPID.calculate(drivetrain.getPose2d().getRotation().getRadians(), drivetrain.getAngleToTarget()) * MaxAngularRate)));
-
+      
+      //When pressed, checks what alliance you are on, and goes to a set pose
       P1Y.and(drivetrain::isAllianceBlue).whileTrue(drivetrain.pathfindToPose(PoseConstants.BLUE_SHOOT_POSE));
       P1Y.and(drivetrain::isAllianceRed).whileTrue(drivetrain.pathfindToPose(PoseConstants.RED_SHOOT_POSE));
       
 
     
-    /*-------------------------------------------Driver Controls-------------------------------------------*/  
+    
     
 
 
@@ -222,18 +226,29 @@ public class RobotContainer {
       // Manual Stuffs
       //P2minus.onTrue(Commands.runOnce(() -> P2manualMode = !P2manualMode));
       
+      //Shoot Command
       P2rightBumper.whileTrue(
-        Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(2500))
-        .alongWith(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(16), m_ShooterSubsystem)));
-
+        Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(5000))
+        .alongWith(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(17), m_ShooterSubsystem)));
+      
+      //Sets spindexer and feeder to feed shooter
       P2rightTrigger.whileTrue(Commands.run(() -> {
         m_SpindexerSubsystem.SetMotor(-1);
         m_ShooterSubsystem.setFeederMotor(1);
-      }));
-
+      }))
+      .whileFalse(Commands.run(
+        () -> {
+          m_ShooterSubsystem.setFeederMotor(0);
+          m_SpindexerSubsystem.SetMotor(0);
+        }));
+      
+      //Pass function, different flywheel setpoint
       P2Y.whileTrue(Commands.run(
-        () -> m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_MAX_ANGLE)).alongWith(Commands.run(
-        () -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_PASS_SETPOINT), m_ShooterSubsystem)))
+        () -> {
+          m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_MAX_ANGLE);
+          m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_PASS_SETPOINT);
+        })
+      )
       .whileFalse(Commands.run(
         () -> m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE)));
       
@@ -242,12 +257,12 @@ public class RobotContainer {
       //P2B.whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
       //P2A.whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
       
+      //Intake on its own, no actuator
       P2l4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(1), m_IntakeSubsystem)
       .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0)));
-      P2X.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_ALL_THE_WAY_IN)));
 
       // Regurgitate the fuel
-      P2leftBumper.whileTrue(regurgitateCommand());
+      P2leftBumper.whileTrue(autoRegurgitateCommand());
 
       // Intake command -- Puts intake down when pressing down LT, and puts it back up when you let go
       P2leftTrigger
@@ -311,7 +326,8 @@ public class RobotContainer {
       */
   } 
 
-  private Command regurgitateCommand() {
+  //regurgitate command for auton
+  private Command autoRegurgitateCommand() {
     return Commands.run(
       () -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem
       )
