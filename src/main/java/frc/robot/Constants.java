@@ -66,7 +66,7 @@ public final class Constants {
     public static final double TURRET_ANGLE_FROM_CENTER = Math.atan(TURRET_FROM_CENTER.getX()/ TURRET_FROM_CENTER.getY());
 
     public static final double TURRET_MAGNITUDE_FROM_CENTER = Math.sqrt(TURRET_FROM_CENTER.getX() * TURRET_FROM_CENTER.getX() +
-                                                                        TURRET_FROM_CENTER.getY() *TURRET_FROM_CENTER.getY());
+                                                                        TURRET_FROM_CENTER.getY() * TURRET_FROM_CENTER.getY());
 
     
     
@@ -108,7 +108,7 @@ public final class Constants {
     public static final double FLYWHEEL_PASS_SETPOINT = 5000;
 
     public static final int HOOD_MOTOR_ID = 28;
-    public static final double HOOD_P = 1.75;
+    public static final double HOOD_P = 2;
     public static final double HOOD_I = 0.00000;
     public static final double HOOD_D = 0.00000;
     public static final double HOOD_GEAR_RATIO = 71.5714;
@@ -117,8 +117,8 @@ public final class Constants {
   }
 
   public static class PoseConstants {
-    public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.625, 4.035};
-    public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.915, 4.035};
+    public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.625594, 4.034536};
+    public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.915394, 4.034536};
 
     public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {1, 1};
     public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {1, 7.069};

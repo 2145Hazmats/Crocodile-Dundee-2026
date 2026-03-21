@@ -39,7 +39,7 @@ public class VisionSubsystem extends SubsystemBase {
    );
    private EstimatedRobotPose frontEstimatedRobotPose = null;
 
-     PhotonCamera sideCamera = new PhotonCamera("FrontCamera");
+     PhotonCamera sideCamera = new PhotonCamera("SideCamera");
    private PhotonPipelineResult sideResult = null;
    private PhotonTrackedTarget sideTrackedTarget = null;
    private PhotonPoseEstimator sidePoseEstimator = new PhotonPoseEstimator(
@@ -112,6 +112,7 @@ public class VisionSubsystem extends SubsystemBase {
          visionField.setRobotPose(frontEstimatedRobotPose.estimatedPose.toPose2d());
        }
      } catch (Exception e) {
+      
        frontEstimatedRobotPose = null;
      }
 
@@ -135,7 +136,7 @@ public class VisionSubsystem extends SubsystemBase {
      try {
       visionField.setRobotPose(frontEstimatedRobotPose.estimatedPose.toPose2d());
      } catch(Exception e) {
-
+        
      }
      
   }

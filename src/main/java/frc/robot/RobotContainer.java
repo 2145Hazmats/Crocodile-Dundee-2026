@@ -125,7 +125,7 @@ public class RobotContainer {
         );
 
         // Turn turret where we want it
-        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngleNew(
+        m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngle(
           drivetrain::getAngleToTarget));
           /*
           .onlyIf(() -> !manualMode)
@@ -224,11 +224,11 @@ public class RobotContainer {
       
       P2rightBumper.whileTrue(
         Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(2500))
-        .alongWith(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(17), m_ShooterSubsystem)));
+        .alongWith(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(16), m_ShooterSubsystem)));
 
       P2rightTrigger.whileTrue(Commands.run(() -> {
-        m_SpindexerSubsystem.SetMotor(-0.75);
-        m_ShooterSubsystem.setFeederMotor(0.75);
+        m_SpindexerSubsystem.SetMotor(-1);
+        m_ShooterSubsystem.setFeederMotor(1);
       }));
 
       P2Y.whileTrue(Commands.run(

@@ -6,18 +6,27 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import org.ejml.dense.row.mult.SubmatrixOps_FDRM;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -28,13 +37,17 @@ import frc.robot.Constants.TurretConstants;
 
 public class TurretSubsystem extends SubsystemBase {
 
+  private Field2d turretField = new Field2d();
+
   private TalonFX turretMotor;
   private PIDController turretPID;
   private final PositionVoltage m_turretRequest = new PositionVoltage(0).withSlot(0);
-  private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(3 * TurretConstants.TURRET_GEAR_RATIO, 2));
+  private TrapezoidProfile.State previousProfiledReference;
+  private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(3 * TurretConstants.TURRET_GEAR_RATIO, 12 * TurretConstants.TURRET_GEAR_RATIO));
 
   private CommandSwerveDrivetrain m_drivetrain;
 
+  private double[] turretPos = new double[2];
   /** Creates a new Turret. */
   public TurretSubsystem(CommandSwerveDrivetrain drivetrain) {
    turretMotor = new TalonFX(TurretConstants.TURRET_MOTOR_ID);
@@ -47,13 +60,16 @@ public class TurretSubsystem extends SubsystemBase {
 
 
    var slot0Configs = new Slot0Configs();
-   slot0Configs.kS = 0.05;
+   slot0Configs.kS = 0.3;
    slot0Configs.kP = TurretConstants.TURRET_P;
    slot0Configs.kI = TurretConstants.TURRET_I;
    slot0Configs.kD = TurretConstants.TURRET_D;
    turretMotor.getConfigurator().apply(slot0Configs);
 
    turretMotor.setPosition(MathConstants.DegreesToRotations(TurretConstants.TURRET_STARTING_ANGLE));
+   previousProfiledReference = new State(turretMotor.getPosition().getValueAsDouble(), turretMotor.getVelocity().getValueAsDouble());
+
+   SmartDashboard.putData("Turret Field", turretField);
 
    m_drivetrain = drivetrain;
   }
@@ -82,12 +98,12 @@ public class TurretSubsystem extends SubsystemBase {
         double angle = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
 
         TrapezoidProfile.State goal = new TrapezoidProfile.State(MathUtil.clamp(angle, Math.toRadians(-93), Math.toRadians(93)) / (Math.PI * 2) * TurretConstants.TURRET_GEAR_RATIO, 0);
-        TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
 
-        setpoint = m_profile.calculate(0.020, setpoint, goal);
-        SmartDashboard.putNumber("Actual Turret Setpoint", setpoint.position);
-        m_turretRequest.Position = setpoint.position;
-        m_turretRequest.Velocity = setpoint.velocity;
+        previousProfiledReference = m_profile.calculate(0.020, previousProfiledReference, goal);
+        SmartDashboard.putNumber("Turret Goal", goal.position);
+        SmartDashboard.putNumber("Actual Turret Setpoint", previousProfiledReference.position);
+        m_turretRequest.Position = previousProfiledReference.position;
+        m_turretRequest.Velocity = previousProfiledReference.velocity;
 
         turretMotor.setControl(m_turretRequest);
       }, this)
@@ -95,7 +111,6 @@ public class TurretSubsystem extends SubsystemBase {
         () -> setMotor(0)
       );
   }
-
  
 
   public double calculateTurretFieldPositionX(){
@@ -106,6 +121,8 @@ public class TurretSubsystem extends SubsystemBase {
     // This vector is the position of the turret in the robot  on the X axis
     // Compensates for the initial angle of the turret relative to the robot
     double positionOfTurretX = Math.cos(m_drivetrain.getPose2d().getRotation().getRadians()) * TurretConstants.TURRET_MAGNITUDE_FROM_CENTER;
+
+    turretPos[0] = positionOfTurretX;
     
     // Adding the two together gets you the turret's position on the field
     double turretFieldPositionX = drivetrainFieldPositionX + positionOfTurretX;
@@ -120,7 +137,9 @@ public class TurretSubsystem extends SubsystemBase {
     // This vector is the position of the turret in the robot  on the X axis
     // Compensates for the initial angle of the turret relative to the robot
     double positionOfTurretY = Math.sin(m_drivetrain.getPose2d().getRotation().getRadians()) * TurretConstants.TURRET_MAGNITUDE_FROM_CENTER;
-    
+
+    turretPos[1] = positionOfTurretY;
+  
     // Adding the two together gets you the turret's position on the field
     double turretFieldPositionY = drivetrainFieldPositionY + positionOfTurretY;
 
@@ -132,5 +151,7 @@ public class TurretSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Turret Angle", Units.radiansToDegrees(turretMotor.getPosition().getValueAsDouble()
      / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2));
+
+    turretField.setRobotPose(new Pose2d(turretPos[0], turretPos[1], new Rotation2d()));
   }
 }
