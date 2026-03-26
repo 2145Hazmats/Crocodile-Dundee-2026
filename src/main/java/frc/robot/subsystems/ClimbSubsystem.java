@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -21,8 +22,17 @@ public class ClimbSubsystem extends SubsystemBase {
   private TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID);
   private PositionVoltage m_climbRequest = new PositionVoltage(0).withSlot(0);
 
-  /** Creates a new ExampleSubsystem. */
-  public ClimbSubsystem() {}
+  /** Creates a new Climbsubsystem. */
+  public ClimbSubsystem() {
+    var climbCurrentLimitsConfigs = new CurrentLimitsConfigs();
+   climbCurrentLimitsConfigs
+    .withSupplyCurrentLimit(40)
+    .withSupplyCurrentLimitEnable(true)
+    .withStatorCurrentLimit(60)
+    .withStatorCurrentLimitEnable(true);
+   climbMotor.getConfigurator().apply(climbCurrentLimitsConfigs);
+
+  }
 
   public void setMotor(double speed){
     climbMotor.set(speed);

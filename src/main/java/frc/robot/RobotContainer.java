@@ -199,9 +199,9 @@ public class RobotContainer {
         
     // slow mode
         P1rightBumper.whileTrue(drivetrain.applyRequest(() ->
-        drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed * 0.25) // Drive forward with negative Y (forward)
-        .withVelocityY(-P1Controller.getLeftX() * MaxSpeed * 0.25) // Drive left with negative X (left)
-        .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate * 0.25) // Drive counterclockwise with negative X (left)
+        drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
+        .withVelocityY(-P1Controller.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
+        .withRotationalRate(-P1Controller.getRightX() * MaxAngularRate * 0.75) // Drive counterclockwise with negative X (left)
       ));
 
       P1A.whileTrue(drivetrain.applyRequest(() -> brake));
@@ -228,8 +228,8 @@ public class RobotContainer {
       
       //Shoot Command
       P2rightBumper.whileTrue(
-        Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(5000))
-        .alongWith(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(17), m_ShooterSubsystem)));
+        Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(2275))
+        .alongWith(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(13), m_ShooterSubsystem)));
       
       //Sets spindexer and feeder to feed shooter
       P2rightTrigger.whileTrue(Commands.run(() -> {
@@ -245,7 +245,7 @@ public class RobotContainer {
       //Pass function, different flywheel setpoint
       P2Y.whileTrue(Commands.run(
         () -> {
-          m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_MAX_ANGLE);
+          m_ShooterSubsystem.setHoodMotorPosition(15);
           m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_PASS_SETPOINT);
         })
       )

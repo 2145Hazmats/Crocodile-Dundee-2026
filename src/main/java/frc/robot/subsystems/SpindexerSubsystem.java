@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,6 +17,15 @@ public class SpindexerSubsystem extends SubsystemBase {
   public SpindexerSubsystem() {
     /** Creates a new TalonFX with MotorID using the name we gave the motor from earlier */
     spindexerMotor = new TalonFX(SpindexerConstants.SPINDEXER_MOTOR_ID);
+
+    var spindexerCurrentLimitsConfigs = new CurrentLimitsConfigs();
+   spindexerCurrentLimitsConfigs
+    .withSupplyCurrentLimit(40)
+    .withSupplyCurrentLimitEnable(true)
+    .withStatorCurrentLimit(60)
+    .withStatorCurrentLimitEnable(true);
+   spindexerMotor.getConfigurator().apply(spindexerCurrentLimitsConfigs);
+
   }
   
   /** Command that will be run in robot container, it sets the motor at a given speed, */

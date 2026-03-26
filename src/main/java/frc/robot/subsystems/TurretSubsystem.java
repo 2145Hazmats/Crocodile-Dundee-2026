@@ -43,7 +43,7 @@ public class TurretSubsystem extends SubsystemBase {
   private PIDController turretPID;
   private final PositionVoltage m_turretRequest = new PositionVoltage(0).withSlot(0);
   private TrapezoidProfile.State previousProfiledReference;
-  private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(3 * TurretConstants.TURRET_GEAR_RATIO, 18 * TurretConstants.TURRET_GEAR_RATIO));
+  private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(6 * TurretConstants.TURRET_GEAR_RATIO, 20 * TurretConstants.TURRET_GEAR_RATIO));
 
   private CommandSwerveDrivetrain m_drivetrain;
 
@@ -102,7 +102,7 @@ public class TurretSubsystem extends SubsystemBase {
         double angle = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians() /*+ angularVelocityToTurretOffset()*/;
 
 
-        TrapezoidProfile.State goal = new TrapezoidProfile.State(MathUtil.clamp(angle, Math.toRadians(-93), Math.toRadians(93)) / (Math.PI * 2) * TurretConstants.TURRET_GEAR_RATIO, 0);
+        TrapezoidProfile.State goal = new TrapezoidProfile.State(MathUtil.clamp(angle, Math.toRadians(-95), Math.toRadians(95)) / (Math.PI * 2) * TurretConstants.TURRET_GEAR_RATIO, 0);
 
         previousProfiledReference = m_profile.calculate(0.020, previousProfiledReference, goal);
         SmartDashboard.putNumber("Turret Goal", goal.position);
