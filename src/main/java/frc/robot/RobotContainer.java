@@ -227,6 +227,7 @@ public class RobotContainer {
       //P2minus.onTrue(Commands.runOnce(() -> P2manualMode = !P2manualMode));
       
       //Shoot Command
+      //TODO: Test regression model up to 21 feet, corner is 20.1374095108 feet to the hub
       P2rightBumper.whileTrue(
         Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(2275))
         .alongWith(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(13), m_ShooterSubsystem)));
