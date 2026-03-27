@@ -228,9 +228,14 @@ public class RobotContainer {
       
       //Shoot Command
       //TODO: Test regression model up to 21 feet, corner is 20.1374095108 feet to the hub
+      //(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget())
+      //m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget())
       P2rightBumper.whileTrue(
-        Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(2275))
-        .alongWith(Commands.run(() -> m_ShooterSubsystem.setHoodMotorPosition(13), m_ShooterSubsystem)));
+        Commands.run(
+          () -> m_ShooterSubsystem.setFlywheelToSpeed(2750))
+        .alongWith(Commands.run(
+          () -> m_ShooterSubsystem.setHoodMotorPosition(13.25)
+          , m_ShooterSubsystem)));
       
       //Sets spindexer and feeder to feed shooter
       P2rightTrigger.whileTrue(Commands.run(() -> {
