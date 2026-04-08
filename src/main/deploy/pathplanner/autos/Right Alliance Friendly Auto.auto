@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Non Alliance Friendly Path 1"
+            "pathName": "Right Alliance Friendly Path 1 "
           }
         },
         {
@@ -20,6 +20,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Left Autos",
+  "folder": "Right Autos",
   "choreoAuto": false
 }

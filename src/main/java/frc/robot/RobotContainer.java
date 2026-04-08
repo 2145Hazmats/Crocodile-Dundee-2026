@@ -101,6 +101,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ClimbUp", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
         //NamedCommands.registerCommand("PassAuto", autoPassShootCommand());
         NamedCommands.registerCommand("ShootFeeder", autoFeederCommand());
+        NamedCommands.registerCommand("IntakeRoller", m_IntakeSubsystem.autoIntakeRoll());
     }
 
     public RobotContainer() {

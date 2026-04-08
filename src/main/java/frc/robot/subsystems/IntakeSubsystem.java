@@ -75,11 +75,12 @@ public class IntakeSubsystem extends SubsystemBase {
      return Commands.runOnce(() -> actuatorMotor.setControl(m_actuatorRequest.withPosition(position)), this);
   }
 
-   public Command autoIntakeDOWN() {
-    return Commands.run(() -> {
-      setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION);
-      setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED);
-    }, this);
+  public Command autoIntakeDOWN() {
+    return Commands.run(() -> setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION), this);
+  }
+
+  public Command autoIntakeRoll(){
+    return Commands.run(() -> setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), this);
   }
   
   public Command autoIntakeHOME() {

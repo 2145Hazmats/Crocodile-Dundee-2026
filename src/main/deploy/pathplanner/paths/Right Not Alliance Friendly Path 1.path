@@ -80,12 +80,12 @@
     },
     {
       "anchor": {
-        "x": 1.4351071428571442,
-        "y": 2.10222619047619
+        "x": 2.072382310984308,
+        "y": 1.6478174037089879
       },
       "prevControl": {
-        "x": 1.7806309523809531,
-        "y": 0.3422142857142856
+        "x": 2.3958487874465044,
+        "y": 0.5480313837375181
       },
       "nextControl": null,
       "isLocked": false,
@@ -155,9 +155,27 @@
       "command": null
     },
     {
+      "name": "IntakeDOWN",
+      "waypointRelativePos": 0.2970965563808165,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "IntakeRoller",
+      "waypointRelativePos": 0.6482106684672191,
+      "endWaypointRelativePos": 1.120864280891283,
+      "command": null
+    },
+    {
       "name": "ShootFeeder",
       "waypointRelativePos": 0.6699751861042227,
       "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "IntakeRoller",
+      "waypointRelativePos": 1.8230925050640696,
+      "endWaypointRelativePos": 3.2680621201889783,
       "command": null
     },
     {
@@ -177,10 +195,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 31.561811841649416
+    "rotation": 43.025065989117984
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "Right Pass Fenton",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0
