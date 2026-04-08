@@ -50,7 +50,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
   public boolean isIntakeInRobot() {
-    return MathUtil.isNear(IntakeConstants.ACTUATOR_ALL_THE_WAY_IN, getActuatorPosition(), ErrorConstants.ACTUATOR_HOME_ERROR );
+    return MathUtil.isNear(IntakeConstants.ACTUATOR_HOME_POSITION, getActuatorPosition(), ErrorConstants.ACTUATOR_HOME_ERROR );
   }
 
   @Override
@@ -90,7 +90,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public Command autoIntakeUnjam() {
-    return Commands.run(() -> setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)).withTimeout(1);
+    return Commands.run(() -> setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)).withTimeout(2);
   }
 }
 

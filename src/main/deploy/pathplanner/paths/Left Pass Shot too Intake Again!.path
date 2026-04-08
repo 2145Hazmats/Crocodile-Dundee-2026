@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.6162261904761905,
-        "y": 0.48258333333333325
+        "x": 7.049869047619048,
+        "y": 7.2095
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.470976190476191,
-        "y": 0.48258333333333325
+        "x": 6.013297619047619,
+        "y": 6.820785714285714
       },
       "isLocked": false,
-      "linkedName": "Right Pass 1 "
+      "linkedName": "Left Pass Fenton 2"
     },
     {
       "anchor": {
-        "x": 7.8165,
-        "y": 3.4087380952380952
+        "x": 6.153666666666668,
+        "y": 3.3115595238095237
       },
       "prevControl": {
-        "x": 8.216011904761904,
-        "y": 0.6445476190476205
+        "x": 6.099678571428573,
+        "y": 5.4710833333333335
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Pass Fenton 3"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.31452282157676437,
+      "rotationDegrees": 90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "New Folder",
+  "folder": "Left Pass Fenton",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

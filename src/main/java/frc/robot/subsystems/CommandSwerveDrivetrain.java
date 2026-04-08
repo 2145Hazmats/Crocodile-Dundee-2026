@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -333,26 +334,33 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
     
 
-    public double calculateAngleToFieldPosition(double FieldPositionX, double FieldPositionY) {
-     try {
-       double xRelativeToPosition = 0;
-       double yRelativeToPosition = 0;
+    public double calculateAngleToFieldPosition(double targetX, double targetY) {
+        try {
+            double xRelativeToPosition = 0;
+            double yRelativeToPosition = 0;
 
-       xRelativeToPosition = m_turret.calculateTurretFieldPositionX() - FieldPositionX;
-       yRelativeToPosition = m_turret.calculateTurretFieldPositionY() - FieldPositionY;
+            double xRelativeToFieldOrigin = m_turret.calculateTurretFieldPositionX();
+            double yRelativeToFieldOrigin = m_turret.calculateTurretFieldPositionY();
 
-       SmartDashboard.putNumber("XRelativeToPos", xRelativeToPosition);
-       SmartDashboard.putNumber("YRelativeToPos", yRelativeToPosition);
+            xRelativeToPosition = xRelativeToFieldOrigin - targetX;
+            yRelativeToPosition = yRelativeToFieldOrigin - targetY;
+
+            SmartDashboard.putNumber("XRelativeToPos", xRelativeToPosition);
+            SmartDashboard.putNumber("YRelativeToPos", yRelativeToPosition);
+        
+            angleToTarget = Math.atan(yRelativeToPosition/xRelativeToPosition);
+
+            if(xRelativeToFieldOrigin > targetX) {
+                angleToTarget += Math.PI;
+            }
        
-      
-       angleToTarget = Math.atan(yRelativeToPosition/xRelativeToPosition);
-       return angleToTarget;
-     } catch (Exception e) {
-       e.printStackTrace(); 
+            return angleToTarget;
+        } catch (Exception e) {
+            e.printStackTrace(); 
        
-       return angleToTarget;
-     }
-   }
+            return angleToTarget;
+        }
+    }
 
     @Override
     public void periodic() {
@@ -379,35 +387,41 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
 
         if(this.isAllianceBlue() && m_turret.calculateTurretFieldPositionX() < PoseConstants.BLUE_ALLIANCE_ZONE_X) {
+            SmartDashboard.putString("Target", "Blue Alliance Hub");
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1];
         }
         else if(this.isAllianceRed() && m_turret.calculateTurretFieldPositionX() > PoseConstants.RED_ALLIANCE_ZONE_X) {
+            SmartDashboard.putString("Target", "Red Alliance Hub");
             targetPose[0] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[1];
         }
         else if(this.isAllianceBlue() && m_turret.calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
+            SmartDashboard.putString("Target", "Blue Alliance Right Corner");
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[1];
         }
         else if(this.isAllianceBlue() && m_turret.calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y) {
+            SmartDashboard.putString("Target", "Blue Alliance Left Corner");
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[1];
         }
         else if(this.isAllianceRed() && m_turret.calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y){
+            SmartDashboard.putString("Target", "Red Alliance Right Corner");
             targetPose[0] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0];
-            targetPose[1] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[1];
+            targetPose[1] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[1];
         }
         else if(this.isAllianceRed() && m_turret.calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
+            SmartDashboard.putString("Target", "Red Alliance Left Corner");
             targetPose[0] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[0];
-            targetPose[1] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0];
+            targetPose[1] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[1];
         }      
 
         calculateAngleToFieldPosition(targetPose[0], targetPose[1]);
 
         generalField.setRobotPose(getPose2d());
         targetField.setRobotPose(new Pose2d(targetPose[0], targetPose[1], new Rotation2d(angleToTarget)));
-        SmartDashboard.putNumber("Angle to Target", Units.radiansToDegrees(0));
+        SmartDashboard.putNumber("Angle to Target", Units.radiansToDegrees(angleToTarget));
         SmartDashboard.putNumber("Distance to Target", getDistanceToTarget());
     }
 

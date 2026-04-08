@@ -77,11 +77,10 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int ACTUATOR_INTAKE_MOTOR_ID = 30;
     public static final int INTAKING_MOTOR_ID = 31;
-    public static final double ACTUATOR_ALL_THE_WAY_IN = 0;
-    public static final double ACTUATOR_HOME_POSITION = -1;   // TODO: Set home and down positions for the intake
-    public static final double ACTUATOR_DOWN_POSITION = -30.19;   // <-----------------------------------------------
-    public static final double INTAKE_MOTOR_SPEED = 1;
-    public static final double ACTUATOR_P = 0.25;
+    public static final double ACTUATOR_HOME_POSITION = 0;   // TODO: Set home and down positions for the intake
+    public static final double ACTUATOR_DOWN_POSITION = -44.29;   // <-----------------------------------------------
+    public static final double INTAKE_MOTOR_SPEED = 0.35;
+    public static final double ACTUATOR_P = 0.22;
     public static final double ACTUATOR_I = 0.0000;
     public static final double ACTUATOR_D = 0.0000;
    
@@ -95,7 +94,7 @@ public final class Constants {
     public static final double FLYWHEEL_D = 0.0;
     public static final double FLYWHEEL_V = 0.11;
     public static final double FLYWHEEL_RPM_SETPOINT = 2350; 
-    public static final double FLYWHEEL_PASS_SETPOINT = 7500;
+    public static final double FLYWHEEL_PASS_SETPOINT = 5500;
 
     public static final int HOOD_MOTOR_ID = 28;
     public static final double HOOD_P = 2.5;
@@ -116,7 +115,7 @@ public final class Constants {
     public static final double[] RED_ALLIANCE_LEFT_CORNER = {15.541, 1};
     
     public static final double RED_ALLIANCE_ZONE_X = 11.913;
-    public static final double CENTER_FIELD_Y = 4.035; 
+    public static final double CENTER_FIELD_Y = 4.035;
     public static final double BLUE_ALLIANCE_ZONE_X = 4.629;
 
     public static final Pose2d BLUE_SHOOT_POSE = new Pose2d(1.590, 4.02, new Rotation2d(0));

@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.ctre.phoenix6.configs.PWM1Configs;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
@@ -19,6 +20,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +39,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.HubSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
@@ -84,16 +87,20 @@ public class RobotContainer {
     private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
     private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem(drivetrain);
     private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(drivetrain);
+    private final HubSubsystem hub = new HubSubsystem(this);
 
     private final SendableChooser<Command> autoChooser;
 
      private void registerNamedCommands() {
-        NamedCommands.registerCommand("Shoot", autoShootCommand().withTimeout(15));
+        NamedCommands.registerCommand("ShootFlywheel", autoFlywheelShootCommand());
+        NamedCommands.registerCommand("StopAllMotors", autoStopAllMotorsCommand());
         NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeDOWN());
         NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeHOME());
         NamedCommands.registerCommand("IntakeUnjam", m_IntakeSubsystem.autoIntakeUnjam());
         NamedCommands.registerCommand("ClimbDown", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
         NamedCommands.registerCommand("ClimbUp", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
+        //NamedCommands.registerCommand("PassAuto", autoPassShootCommand());
+        NamedCommands.registerCommand("ShootFeeder", autoFeederCommand());
     }
 
     public RobotContainer() {
@@ -108,7 +115,7 @@ public class RobotContainer {
         SmartDashboard.putNumber("Flywheel Setpoint", 0);
         SmartDashboard.putNumber("Hood Setpoint", 12);
         SmartDashboard.putBoolean("P2 Manual Mode", P2manualMode);
-    } 
+    }
 
     private void configureBindings() {
     /*-------------------------------------------Default Commands-------------------------------------------*/  
@@ -138,11 +145,11 @@ public class RobotContainer {
 
         m_SpindexerSubsystem.setDefaultCommand(Commands.run(() -> m_SpindexerSubsystem.SetMotor(0), m_SpindexerSubsystem));
         
-        m_ShooterSubsystem.setDefaultCommand(Commands.run(() -> {
+        /*m_ShooterSubsystem.setDefaultCommand(Commands.run(() -> {
           m_ShooterSubsystem.setFlywheelMotor(0.2);
           m_ShooterSubsystem.setFeederMotor(0);
           m_ShooterSubsystem.setHoodMotorPosition(12);
-        }, m_ShooterSubsystem));
+        }, m_ShooterSubsystem));*/
 
         //m_IntakeSubsystem.setDefaultCommand(m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION));
            
@@ -214,12 +221,8 @@ public class RobotContainer {
       //When pressed, checks what alliance you are on, and goes to a set pose
       P1Y.and(drivetrain::isAllianceBlue).whileTrue(drivetrain.pathfindToPose(PoseConstants.BLUE_SHOOT_POSE));
       P1Y.and(drivetrain::isAllianceRed).whileTrue(drivetrain.pathfindToPose(PoseConstants.RED_SHOOT_POSE));
-      
 
-    
-    
-    
-
+      P1l4.whileTrue(Commands.run(() -> setControllerRumbles(1))).whileFalse(Commands.run(() -> setControllerRumbles(0)));
 
     /*-------------------------------------Operator Controls-------------------------------------*/
 
@@ -230,28 +233,46 @@ public class RobotContainer {
       //TODO: Test regression model up to 21 feet, corner is 20.1374095108 feet to the hub
       //(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget())
       //m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget())
+      /*
       P2rightBumper.whileTrue(
         Commands.run(
           () -> m_ShooterSubsystem.setFlywheelToSpeed(2750))
         .alongWith(Commands.run(
           () -> m_ShooterSubsystem.setHoodMotorPosition(13.25)
           , m_ShooterSubsystem)));
+      */
+
+      P2rightBumper.whileTrue(
+        Commands.run(
+          () -> {
+            m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
+            m_ShooterSubsystem.setHoodMotorPosition(18/*m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget())*/);
+            m_ShooterSubsystem.setFeederMotor(1);
+          }
+        )
+      )
+      .whileFalse(
+        Commands.run(
+          () -> {
+            m_ShooterSubsystem.setFlywheelMotor(0.2);
+            m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE);
+            m_ShooterSubsystem.setFeederMotor(0);
+          }
+        )
+      );
       
       //Sets spindexer and feeder to feed shooter
-      P2rightTrigger.whileTrue(Commands.run(() -> {
-        m_SpindexerSubsystem.SetMotor(-1);
-        m_ShooterSubsystem.setFeederMotor(1);
-      }))
+      P2rightTrigger.whileTrue(Commands.run(
+        () -> m_SpindexerSubsystem.SetMotor(-1)))
       .whileFalse(Commands.run(
         () -> {
-          m_ShooterSubsystem.setFeederMotor(0);
           m_SpindexerSubsystem.SetMotor(0);
         }));
       
       //Pass function, different flywheel setpoint
       P2Y.whileTrue(Commands.run(
         () -> {
-          m_ShooterSubsystem.setHoodMotorPosition(15);
+          m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_MAX_ANGLE);
           m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_PASS_SETPOINT);
         })
       )
@@ -264,13 +285,13 @@ public class RobotContainer {
       //P2A.whileTrue(m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
       
       //Intake on its own, no actuator
-      P2l4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(1), m_IntakeSubsystem)
+      P2l4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem)
       .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0)));
 
       // Regurgitate the fuel
       P2leftBumper.whileTrue(autoRegurgitateCommand());
 
-      // Intake command -- Puts intake down when pressing down LT, and puts it back up when you let go
+      // Intake command -- Puts intake down when pressing down LT
       P2leftTrigger
       .whileTrue(
         new ParallelCommandGroup(
@@ -280,16 +301,12 @@ public class RobotContainer {
           )
         )
       )
-      .whileFalse(
-        new ParallelCommandGroup(
-          m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION),
-          Commands.run(
-            () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)
+      .whileFalse(Commands.run(
+            () -> m_IntakeSubsystem.setIntakingMotor(0)
           )
-          .withTimeout(3)
-          .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0))
-        )
-      );
+        );
+
+      
 
       // Shoot command -- Sets the flywheel speed, waits for it to spin up before starting the spindexer and feeder
       /*P2rightTrigger
@@ -332,6 +349,38 @@ public class RobotContainer {
       */
   } 
 
+
+/*-------------------------------------Auto Commands-------------------------------------*/
+
+  // Auto Pass command for auton
+  /*private Command autoPassShootCommand() {
+    return Commands.run(
+      () -> {   
+        m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_MAX_ANGLE);
+        m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_PASS_SETPOINT);
+        m_ShooterSubsystem.setFeederMotor(1.0);
+        m_SpindexerSubsystem.SetMotor(-1);
+    }  ,m_ShooterSubsystem, m_SpindexerSubsystem
+    ).withTimeout(15).finallyDo(
+      () -> Commands.runOnce( 
+        () -> {
+        m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE);
+        m_ShooterSubsystem.setFlywheelMotor(0.2);
+        m_ShooterSubsystem.setFeederMotor(0);
+        m_SpindexerSubsystem.SetMotor(0);
+    } , m_ShooterSubsystem, m_SpindexerSubsystem
+    ));
+  }
+    */
+  // Stop All Motors command for auton
+  private Command autoStopAllMotorsCommand() {
+    return Commands.run(() -> {
+      m_SpindexerSubsystem.SetMotor(0);
+      m_ShooterSubsystem.setFeederMotor(0);
+      m_ShooterSubsystem.setFlywheelMotor(0);
+    }
+    );
+  }
   //regurgitate command for auton
   private Command autoRegurgitateCommand() {
     return Commands.run(
@@ -343,24 +392,29 @@ public class RobotContainer {
   }
 
   //Command for autonomous control to shoot
-  private Command autoShootCommand(){
-     return new ParallelCommandGroup(
-            Commands.runOnce(() -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_RPM_SETPOINT)),
-            Commands.waitUntil(() -> m_ShooterSubsystem.isFlywheelNearSetpoint(ShooterConstants.FLYWHEEL_RPM_SETPOINT)).withTimeout(2.5)
-                .andThen(Commands.run(() -> {
-                    m_ShooterSubsystem.setFeederMotor(0.75);
-                    m_SpindexerSubsystem.SetMotor(-0.75);
-                    }, m_ShooterSubsystem, m_SpindexerSubsystem)
-                ).withTimeout(5)
-        )
-      .finallyDo(() ->
-        Commands.runOnce(() -> {
-            m_ShooterSubsystem.setFeederMotor(0);
-            m_ShooterSubsystem.setFlywheelToSpeed(0);
-            m_SpindexerSubsystem.SetMotor(0);
-        }, m_ShooterSubsystem, m_SpindexerSubsystem)
+  private Command autoFlywheelShootCommand(){
+     return Commands.runOnce(
+      () -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_RPM_SETPOINT),
+       m_ShooterSubsystem).withTimeout(25)
+       .finallyDo(
+      () ->
+        Commands.runOnce(() ->
+          m_ShooterSubsystem.setFlywheelMotor(0.2)
+        , m_ShooterSubsystem)
       );
     }
+  
+  private Command autoFeederCommand(){
+    return Commands.runOnce(()-> {
+      m_ShooterSubsystem.setFeederMotor(1);
+      m_SpindexerSubsystem.SetMotor(-1);
+    }, m_ShooterSubsystem, m_SpindexerSubsystem)
+    .finallyDo(
+      () -> Commands.runOnce(() -> {
+      m_ShooterSubsystem.setFeederMotor(0);
+      m_SpindexerSubsystem.SetMotor(0);
+    }, m_ShooterSubsystem, m_SpindexerSubsystem));
+  }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();              
@@ -368,5 +422,10 @@ public class RobotContainer {
 
   public boolean getP2ManualMode() {
     return P2manualMode;
+  }
+
+  public void setControllerRumbles(double value) {
+    P1Controller.setRumble(RumbleType.kBothRumble, value);
+    P2Controller.setRumble(RumbleType.kBothRumble, value);
   }
 }

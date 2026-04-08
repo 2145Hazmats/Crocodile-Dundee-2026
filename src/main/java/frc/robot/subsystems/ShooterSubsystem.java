@@ -50,6 +50,15 @@ public class ShooterSubsystem extends SubsystemBase {
     .withStatorCurrentLimitEnable(true);
    shooterMotor.getConfigurator().apply(flywheelCurrentLimitsConfigs);
 
+   var feederCurrentLimitsConfigs = new CurrentLimitsConfigs();
+   feederCurrentLimitsConfigs
+    .withStatorCurrentLimit(60)
+    .withStatorCurrentLimitEnable(true)
+    .withSupplyCurrentLimit(40)
+    .withSupplyCurrentLimitEnable(true);
+    
+    feederMotor.getConfigurator().apply(feederCurrentLimitsConfigs);
+
    hoodMotor = new TalonFX(ShooterConstants.HOOD_MOTOR_ID);
    var slot0Configs = new Slot0Configs();
    slot0Configs.kS = 0;
@@ -102,11 +111,11 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double distanceToFlywheelSpeed(double distance) {
-    return 1443.12889 *(Math.pow(1.19315, distance));
+    return 1286.72408 *(Math.pow(1.2316, distance));
   }
 
   public double distanceToHoodAngleDegrees(double distance) {
-    return (0.82021* distance)+10.25;
+    return 0.82021 * distance + 10.25; // 9.56449 * Math.pow(1.09654, distance) <---- this was to test exponential regression on the hood because it was hitting the ceiling from 21 feet
   }
 
   public Command shootFromShootPose(){
@@ -136,6 +145,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Measured Hood Angle", (hoodMotor.getPosition().getValueAsDouble() / ShooterConstants.HOOD_GEAR_RATIO * 360));
 
     //setHoodMotorPosition(SmartDashboard.getNumber("Hood Setpoint", 12));
+    
   }
 
   @Override

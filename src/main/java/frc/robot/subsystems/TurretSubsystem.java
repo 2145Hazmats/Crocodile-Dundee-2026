@@ -77,13 +77,14 @@ public class TurretSubsystem extends SubsystemBase {
   public void setMotor(double speed) {
     turretMotor.set(speed);
   }
+
   //Turret Command that uses PID, clamped between setpoint of -90 and 90 degrees
   public Command turnTurretToAngle(DoubleSupplier angleToPointTo) {
     return Commands.run(
       () -> {
         double goal = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians();
         
-        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(goal, Math.toRadians(-95), Math.toRadians(93))));
+        setMotor(turretPID.calculate(turretMotor.getPosition().getValueAsDouble() / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2, MathUtil.clamp(goal, Math.toRadians(-93), Math.toRadians(93))));
       },
       this
     ).finallyDo(
@@ -95,24 +96,35 @@ public class TurretSubsystem extends SubsystemBase {
     return -m_drivetrain.getFilteredAngularVelocity() * 0.15;
   }
 
-  public Command turnTurretToAngleProfiled(DoubleSupplier angleToPointTo){
+  public Command turnTurretToAngleProfiled(DoubleSupplier angleToPointTo) {
     return Commands.run(
-      ()->{
+      () -> {
         
         double angle = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians() /*+ angularVelocityToTurretOffset()*/;
 
+        
+        if(angle > Math.PI) {
+          angle -= (Math.PI * 2);
+        }
+        else if(angle < -Math.PI) {
+          angle += (Math.PI * 2);
+        }
 
         TrapezoidProfile.State goal = new TrapezoidProfile.State(MathUtil.clamp(angle, Math.toRadians(-95), Math.toRadians(95)) / (Math.PI * 2) * TurretConstants.TURRET_GEAR_RATIO, 0);
 
         previousProfiledReference = m_profile.calculate(0.020, previousProfiledReference, goal);
-        SmartDashboard.putNumber("Turret Goal", goal.position);
-        SmartDashboard.putNumber("Actual Turret Setpoint", previousProfiledReference.position);
-        SmartDashboard.putNumber("Rotation of Robot", m_drivetrain.getPose2d().getRotation().getDegrees());
-        SmartDashboard.putNumber("Angular Velocity", Units.radiansToDegrees(m_drivetrain.getFilteredAngularVelocity()));
+
         m_turretRequest.Position = previousProfiledReference.position;
         m_turretRequest.Velocity = previousProfiledReference.velocity;
 
         turretMotor.setControl(m_turretRequest);
+
+        SmartDashboard.putNumber("Turret Goal", Units.radiansToDegrees(goal.position));
+        SmartDashboard.putNumber("Desired Turret Angle", angle);
+        SmartDashboard.putNumber("Actual Turret Setpoint", previousProfiledReference.position);
+        SmartDashboard.putNumber("Rotation of Robot", m_drivetrain.getPose2d().getRotation().getDegrees());
+        SmartDashboard.putNumber("Angular Velocity", Units.radiansToDegrees(m_drivetrain.getFilteredAngularVelocity()));
+
       }, this)
       .finallyDo(
         () -> setMotor(0)
@@ -127,7 +139,7 @@ public class TurretSubsystem extends SubsystemBase {
     
     // This vector is the position of the turret in the robot  on the X axis
     // Compensates for the initial angle of the turret relative to the robot
-    double robotRelativePositionOfTurretX = Math.cos(m_drivetrain.getPose2d().getRotation().getRadians()) * TurretConstants.TURRET_DISTANCE_FROM_CENTER;
+    double robotRelativePositionOfTurretX = Math.cos(m_drivetrain.getPose2d().getRotation().getRadians() - TurretConstants.TURRET_ANGLE_FROM_CENTER) * TurretConstants.TURRET_DISTANCE_FROM_CENTER;
     
     // Adding the two together gets you the turret's position on the field
     double turretFieldPositionX = drivetrainFieldPositionX + robotRelativePositionOfTurretX;
@@ -142,7 +154,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     // This vector is the position of the turret in the robot  on the X axis
     // Compensates for the initial angle of the turret relative to the robot
-    double robotRelativePositionOfTurretY = Math.sin(m_drivetrain.getPose2d().getRotation().getRadians()) * TurretConstants.TURRET_DISTANCE_FROM_CENTER;
+    double robotRelativePositionOfTurretY = Math.sin(m_drivetrain.getPose2d().getRotation().getRadians() - TurretConstants.TURRET_ANGLE_FROM_CENTER) * TurretConstants.TURRET_DISTANCE_FROM_CENTER;
   
     // Adding the two together gets you the turret's position on the field
     double turretFieldPositionY = drivetrainFieldPositionY + robotRelativePositionOfTurretY;
