@@ -79,7 +79,7 @@ public final class Constants {
     public static final int INTAKING_MOTOR_ID = 31;
     public static final double ACTUATOR_HOME_POSITION = 0;   // TODO: Set home and down positions for the intake
     public static final double ACTUATOR_DOWN_POSITION = -44.29;   // <-----------------------------------------------
-    public static final double INTAKE_MOTOR_SPEED = 0.35;
+    public static final double INTAKE_MOTOR_SPEED = 0.4;
     public static final double ACTUATOR_P = 0.22;
     public static final double ACTUATOR_I = 0.0000;
     public static final double ACTUATOR_D = 0.0000;

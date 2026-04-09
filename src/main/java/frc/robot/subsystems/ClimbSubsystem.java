@@ -32,16 +32,17 @@ public class ClimbSubsystem extends SubsystemBase {
     .withStatorCurrentLimitEnable(true);
    climbMotor.getConfigurator().apply(climbCurrentLimitsConfigs);
 
-  }
-
-  public void setMotor(double speed){
-    climbMotor.set(speed);
-    var slot0Configs = new Slot0Configs();
+   var slot0Configs = new Slot0Configs();
     slot0Configs.kP = 0.01;
     slot0Configs.kI = 0.0;
     slot0Configs.kD = 0.0;
 
     climbMotor.getConfigurator().apply(slot0Configs);
+
+  }
+
+  public void setMotor(double speed){
+    climbMotor.set(speed);
   }
 
 

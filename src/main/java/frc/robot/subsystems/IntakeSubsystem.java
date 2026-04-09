@@ -35,7 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakingMotor.getConfigurator().apply(intakingCurrentLimitConfig);
 
     var slot0Configs = new Slot0Configs();
-    slot0Configs.kG = 0.2;
+    slot0Configs.kG = 0.4;
     slot0Configs.kP = IntakeConstants.ACTUATOR_P;
     slot0Configs.kI = IntakeConstants.ACTUATOR_I;
     slot0Configs.kD = IntakeConstants.ACTUATOR_D;
@@ -49,9 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
 
-  public boolean isIntakeInRobot() {
-    return MathUtil.isNear(IntakeConstants.ACTUATOR_HOME_POSITION, getActuatorPosition(), ErrorConstants.ACTUATOR_HOME_ERROR );
-  }
+  
 
   @Override
   public void periodic() {
@@ -74,25 +72,17 @@ public class IntakeSubsystem extends SubsystemBase {
   public Command setIntakePosition(double position){
      return Commands.runOnce(() -> actuatorMotor.setControl(m_actuatorRequest.withPosition(position)), this);
   }
-
-  public Command autoIntakeDOWN() {
-    return Commands.run(() -> setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION), this);
-  }
-
-  public Command autoIntakeRoll(){
-    return Commands.run(() -> setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), this);
-  }
   
-  public Command autoIntakeHOME() {
-    return Commands.run(() -> {
-      setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION);
-      setIntakingMotor(0);
-    }, this);
-  }
+  // public Command autoIntakeHOME() {
+  //   return Commands.run(() -> {
+  //     setIntakePosition(IntakeConstants.ACTUATOR_HOME_POSITION);
+  //     setIntakingMotor(0);
+  //   }, this);
+  // }
 
-  public Command autoIntakeUnjam() {
-    return Commands.run(() -> setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)).withTimeout(2);
-  }
+  // public Command autoIntakeUnjam() {
+  //   return Commands.run(() -> setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)).withTimeout(2);
+  // }
 }
 
 

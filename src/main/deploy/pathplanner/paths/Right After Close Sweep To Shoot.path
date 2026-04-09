@@ -1,0 +1,75 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.132071428571429,
+        "y": 1.7459047619047623
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.099678571428573,
+        "y": 0.9360833333333334
+      },
+      "isLocked": false,
+      "linkedName": "Right Side After Left To Right Sweet Closer"
+    },
+    {
+      "anchor": {
+        "x": 5.019916666666668,
+        "y": 0.7309285714285727
+      },
+      "prevControl": {
+        "x": 5.894523809523811,
+        "y": 0.7309285714285727
+      },
+      "nextControl": {
+        "x": 4.393654761904764,
+        "y": 0.7309285714285728
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.907761904761905,
+        "y": 0.7417261904761903
+      },
+      "prevControl": {
+        "x": 4.4692380952380955,
+        "y": 0.7309285714285727
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Shoot From Right Trench"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.296265560165962,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Right Pass Fenton",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}

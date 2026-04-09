@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.078,
+        "y": 1.832
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.067202380952381,
+        "y": 3.4840357142857146
+      },
+      "isLocked": false,
+      "linkedName": "Left 2"
+    },
+    {
+      "anchor": {
+        "x": 6.078,
+        "y": 5.956976190475754
+      },
+      "prevControl": {
+        "x": 6.078,
+        "y": 4.995988095237658
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left 3"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Left Pass Fenton",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": false
+}

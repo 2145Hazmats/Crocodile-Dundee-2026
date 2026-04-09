@@ -27,7 +27,6 @@ import frc.robot.Constants.ShooterConstants;
 public class ShooterSubsystem extends SubsystemBase {
   // Creates new motors
   private TalonFX shooterMotor; 
-  private TalonFX feederMotor;
   private TalonFX hoodMotor;
   private final VelocityVoltage m_flywheelRequest = new VelocityVoltage(0).withSlot(0);
   private final PositionVoltage m_hoodRequest = new PositionVoltage(0).withSlot(1);
@@ -38,7 +37,6 @@ public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem(CommandSwerveDrivetrain drivetrain) {
    shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
-   feederMotor = new TalonFX(ShooterConstants.FEEDER_MOTOR_ID);
    m_drivetrain = drivetrain;
    
 
@@ -50,14 +48,7 @@ public class ShooterSubsystem extends SubsystemBase {
     .withStatorCurrentLimitEnable(true);
    shooterMotor.getConfigurator().apply(flywheelCurrentLimitsConfigs);
 
-   var feederCurrentLimitsConfigs = new CurrentLimitsConfigs();
-   feederCurrentLimitsConfigs
-    .withStatorCurrentLimit(60)
-    .withStatorCurrentLimitEnable(true)
-    .withSupplyCurrentLimit(40)
-    .withSupplyCurrentLimitEnable(true);
-    
-    feederMotor.getConfigurator().apply(feederCurrentLimitsConfigs);
+   
 
    hoodMotor = new TalonFX(ShooterConstants.HOOD_MOTOR_ID);
    var slot0Configs = new Slot0Configs();
@@ -83,10 +74,7 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterMotor.set(speed);
   }
 
-  // Sets the feeder motor to a speed
-  public void setFeederMotor(double speed) {
-    feederMotor.set(speed);
-  }
+  
 
   public void setHoodMotor(double speed) {
     hoodMotor.set(speed);

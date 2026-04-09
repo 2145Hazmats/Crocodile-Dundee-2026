@@ -39,6 +39,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.HubSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -81,27 +82,33 @@ public class RobotContainer {
 
     //Subsystems are defined here
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
+    //private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
     private final TurretSubsystem m_TurretSubsystem = new TurretSubsystem(drivetrain);
     private final SpindexerSubsystem m_SpindexerSubsystem = new SpindexerSubsystem();
     private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
     private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem(drivetrain);
     private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem(drivetrain);
     private final HubSubsystem hub = new HubSubsystem(this);
+    private final FeederSubsystem m_FeederSubsystem = new FeederSubsystem(drivetrain);
 
     private final SendableChooser<Command> autoChooser;
 
      private void registerNamedCommands() {
         NamedCommands.registerCommand("ShootFlywheel", autoFlywheelShootCommand());
-        NamedCommands.registerCommand("StopAllMotors", autoStopAllMotorsCommand());
-        NamedCommands.registerCommand("IntakeDOWN", m_IntakeSubsystem.autoIntakeDOWN());
-        NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeHOME());
-        NamedCommands.registerCommand("IntakeUnjam", m_IntakeSubsystem.autoIntakeUnjam());
-        NamedCommands.registerCommand("ClimbDown", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
-        NamedCommands.registerCommand("ClimbUp", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
+        // NamedCommands.registerCommand("StopAllMotors", autoStopAllMotorsCommand());
+        NamedCommands.registerCommand("IntakeDown", autoIntakeDOWN());
+        // NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeHOME());
+        // NamedCommands.registerCommand("IntakeUnjam", m_IntakeSubsystem.autoIntakeUnjam());
+        //NamedCommands.registerCommand("ClimbDown", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
+        //NamedCommands.registerCommand("ClimbUp", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
         //NamedCommands.registerCommand("PassAuto", autoPassShootCommand());
         NamedCommands.registerCommand("ShootFeeder", autoFeederCommand());
-        NamedCommands.registerCommand("IntakeRoller", m_IntakeSubsystem.autoIntakeRoll());
+        NamedCommands.registerCommand("StopFeeder", autoFeederStopCommand());
+        NamedCommands.registerCommand("IntakeRoller", autoIntakeRoll());
+        NamedCommands.registerCommand("IntakeStop", autoIntakeStop());
+        NamedCommands.registerCommand("ShootFeeder2", autoFeederCommand2());
+        NamedCommands.registerCommand("IntakeRoller2", autoIntakeRoll2());
+        NamedCommands.registerCommand("ShootFeeder3", autoFeederCommand3());
     }
 
     public RobotContainer() {
@@ -135,6 +142,8 @@ public class RobotContainer {
         // Turn turret where we want it
         m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngleProfiled(
           drivetrain::getAngleToTarget));
+
+        m_ShooterSubsystem.setDefaultCommand(Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem));
           /*
           .onlyIf(() -> !manualMode)
         .beforeStarting(Commands.run(() -> m_TurretSubsystem.turnTurretToAngle(
@@ -248,7 +257,7 @@ public class RobotContainer {
           () -> {
             m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
             m_ShooterSubsystem.setHoodMotorPosition(18/*m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget())*/);
-            m_ShooterSubsystem.setFeederMotor(1);
+            m_FeederSubsystem.setFeederMotor(1);
           }
         )
       )
@@ -257,7 +266,7 @@ public class RobotContainer {
           () -> {
             m_ShooterSubsystem.setFlywheelMotor(0.2);
             m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE);
-            m_ShooterSubsystem.setFeederMotor(0);
+            m_FeederSubsystem.setFeederMotor(0);
           }
         )
       );
@@ -374,47 +383,99 @@ public class RobotContainer {
   }
     */
   // Stop All Motors command for auton
-  private Command autoStopAllMotorsCommand() {
-    return Commands.run(() -> {
-      m_SpindexerSubsystem.SetMotor(0);
-      m_ShooterSubsystem.setFeederMotor(0);
-      m_ShooterSubsystem.setFlywheelMotor(0);
-    }
-    );
-  }
+  // private Command autoStopAllMotorsCommand() {
+  //   return Commands.run(() -> {
+  //     m_SpindexerSubsystem.SetMotor(0);
+  //     m_ShooterSubsystem.setFeederMotor(0);
+  //     m_ShooterSubsystem.setFlywheelMotor(0);
+  //   }
+  //   );
+  // }
   //regurgitate command for auton
   private Command autoRegurgitateCommand() {
     return Commands.run(
       () -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem
       )
       .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0))
-      .alongWith(Commands.run(() -> m_ShooterSubsystem.setFeederMotor(-1), m_ShooterSubsystem)
-      .finallyDo(() -> m_ShooterSubsystem.setFeederMotor(0)));
+      .alongWith(Commands.run(() -> m_FeederSubsystem.setFeederMotor(-1), m_ShooterSubsystem)
+      .finallyDo(() -> m_FeederSubsystem.setFeederMotor(0)));
   }
 
   //Command for autonomous control to shoot
   private Command autoFlywheelShootCommand(){
-     return Commands.runOnce(
+     return Commands.run(
       () -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_RPM_SETPOINT),
-       m_ShooterSubsystem).withTimeout(25)
+       m_ShooterSubsystem)
        .finallyDo(
       () ->
-        Commands.runOnce(() ->
+        Commands.run(() ->
           m_ShooterSubsystem.setFlywheelMotor(0.2)
         , m_ShooterSubsystem)
       );
     }
   
   private Command autoFeederCommand(){
-    return Commands.runOnce(()-> {
-      m_ShooterSubsystem.setFeederMotor(1);
+    return Commands.run(()-> {
+      m_FeederSubsystem.setFeederMotor(1);
       m_SpindexerSubsystem.SetMotor(-1);
-    }, m_ShooterSubsystem, m_SpindexerSubsystem)
+    }, m_FeederSubsystem, m_SpindexerSubsystem).withTimeout(5.3)
     .finallyDo(
-      () -> Commands.runOnce(() -> {
-      m_ShooterSubsystem.setFeederMotor(0);
+      () -> Commands.run(() -> {
+      m_FeederSubsystem.setFeederMotor(0);
       m_SpindexerSubsystem.SetMotor(0);
-    }, m_ShooterSubsystem, m_SpindexerSubsystem));
+    }, m_FeederSubsystem, m_SpindexerSubsystem));
+  }
+
+  private Command autoFeederCommand2(){
+    return Commands.run(()-> {
+      m_FeederSubsystem.setFeederMotor(1);
+      m_SpindexerSubsystem.SetMotor(-1);
+    }, m_FeederSubsystem, m_SpindexerSubsystem).withTimeout(4.6)
+    .finallyDo(
+      () -> Commands.run(() -> {
+      m_FeederSubsystem.setFeederMotor(0);
+      m_SpindexerSubsystem.SetMotor(0);
+    }, m_FeederSubsystem, m_SpindexerSubsystem));
+  }
+
+  private Command autoFeederCommand3(){
+    return Commands.run(()-> {
+      m_FeederSubsystem.setFeederMotor(1);
+      m_SpindexerSubsystem.SetMotor(-1);
+    }, m_FeederSubsystem, m_SpindexerSubsystem).withTimeout(1.8)
+    .finallyDo(
+      () -> Commands.run(() -> {
+      m_FeederSubsystem.setFeederMotor(0);
+      m_SpindexerSubsystem.SetMotor(0);
+    }, m_FeederSubsystem, m_SpindexerSubsystem));
+  }
+
+
+
+
+  private Command autoFeederStopCommand() {
+    return Commands.run(()-> {
+      m_FeederSubsystem.setFeederMotor(0);
+      m_SpindexerSubsystem.SetMotor(0);
+    }, m_FeederSubsystem, m_SpindexerSubsystem);
+  }
+
+  public Command autoIntakeDOWN() {
+    return Commands.runOnce(() -> m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION), m_IntakeSubsystem);
+  }
+
+  public Command autoIntakeRoll(){
+    return Commands.run(
+      () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem).withTimeout(5.3);
+  }
+
+  public Command autoIntakeRoll2(){
+    return Commands.run(
+      () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem).withTimeout(4.6);
+  }
+
+  public Command autoIntakeStop(){
+    return Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0), m_IntakeSubsystem);
   }
 
   public Command getAutonomousCommand() {
