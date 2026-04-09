@@ -152,37 +152,67 @@
       "name": "ShootFlywheel",
       "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFlywheel"
+        }
+      }
     },
     {
       "name": "IntakeDOWN",
       "waypointRelativePos": 0.2970965563808165,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeDOWN"
+        }
+      }
     },
     {
       "name": "IntakeRoller",
       "waypointRelativePos": 0.6482106684672191,
       "endWaypointRelativePos": 1.120864280891283,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeRoller"
+        }
+      }
     },
     {
       "name": "ShootFeeder",
       "waypointRelativePos": 0.6699751861042227,
       "endWaypointRelativePos": 1.0,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFeeder"
+        }
+      }
     },
     {
       "name": "IntakeRoller",
       "waypointRelativePos": 1.8230925050640696,
       "endWaypointRelativePos": 3.2680621201889783,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeRoller"
+        }
+      }
     },
     {
       "name": "ShootFeeder",
       "waypointRelativePos": 1.8411910669975282,
       "endWaypointRelativePos": 3.2208436724565614,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFeeder"
+        }
+      }
     }
   ],
   "globalConstraints": {

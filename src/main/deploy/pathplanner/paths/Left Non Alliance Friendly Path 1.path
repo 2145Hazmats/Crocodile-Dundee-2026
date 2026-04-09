@@ -20,12 +20,12 @@
         "y": 2.1394864479315263
       },
       "prevControl": {
-        "x": 7.920627280385665,
+        "x": 7.920627280385666,
         "y": 7.961883731235594
       },
       "nextControl": {
         "x": 7.714402063202168,
-        "y": -0.47631836276815953
+        "y": -0.4763183627681591
       },
       "isLocked": false,
       "linkedName": null
@@ -156,37 +156,67 @@
       "name": "ShootFlywheel",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFlywheel"
+        }
+      }
     },
     {
       "name": "IntakeDOWN",
       "waypointRelativePos": 0.1485482781904074,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeDOWN"
+        }
+      }
     },
     {
       "name": "IntakeRoller",
       "waypointRelativePos": 0.5536799459824473,
       "endWaypointRelativePos": 1.06,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeRoller"
+        }
+      }
     },
     {
       "name": "ShootFeeder",
       "waypointRelativePos": 0.6212018906144395,
       "endWaypointRelativePos": 1.0803511141120623,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFeeder"
+        }
+      }
     },
     {
       "name": "IntakeRoller",
       "waypointRelativePos": 1.8636056718433522,
       "endWaypointRelativePos": 3.12,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeRoller"
+        }
+      }
     },
     {
       "name": "ShootFeeder",
       "waypointRelativePos": 1.9041188386225472,
       "endWaypointRelativePos": 3.1060094530721805,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFeeder"
+        }
+      }
     }
   ],
   "globalConstraints": {

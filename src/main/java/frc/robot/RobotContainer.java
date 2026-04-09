@@ -106,9 +106,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopFeeder", autoFeederStopCommand());
         NamedCommands.registerCommand("IntakeRoller", autoIntakeRoll());
         NamedCommands.registerCommand("IntakeStop", autoIntakeStop());
-        NamedCommands.registerCommand("ShootFeeder2", autoFeederCommand2());
-        NamedCommands.registerCommand("IntakeRoller2", autoIntakeRoll2());
-        NamedCommands.registerCommand("ShootFeeder3", autoFeederCommand3());
     }
 
     public RobotContainer() {
@@ -143,7 +140,7 @@ public class RobotContainer {
         m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngleProfiled(
           drivetrain::getAngleToTarget));
 
-        m_ShooterSubsystem.setDefaultCommand(Commands.run(() -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_RPM_SETPOINT), m_ShooterSubsystem));
+        
           /*
           .onlyIf(() -> !manualMode)
         .beforeStarting(Commands.run(() -> m_TurretSubsystem.turnTurretToAngle(
@@ -405,7 +402,7 @@ public class RobotContainer {
   private Command autoFlywheelShootCommand(){
      return Commands.run(
       () -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_RPM_SETPOINT),
-       m_ShooterSubsystem)
+       m_ShooterSubsystem).withTimeout(25)
        .finallyDo(
       () ->
         Commands.run(() ->
@@ -418,7 +415,7 @@ public class RobotContainer {
     return Commands.run(()-> {
       m_FeederSubsystem.setFeederMotor(1);
       m_SpindexerSubsystem.SetMotor(-1);
-    }, m_FeederSubsystem, m_SpindexerSubsystem).withTimeout(5.3)
+    }, m_FeederSubsystem, m_SpindexerSubsystem)
     .finallyDo(
       () -> Commands.run(() -> {
       m_FeederSubsystem.setFeederMotor(0);
@@ -426,33 +423,7 @@ public class RobotContainer {
     }, m_FeederSubsystem, m_SpindexerSubsystem));
   }
 
-  private Command autoFeederCommand2(){
-    return Commands.run(()-> {
-      m_FeederSubsystem.setFeederMotor(1);
-      m_SpindexerSubsystem.SetMotor(-1);
-    }, m_FeederSubsystem, m_SpindexerSubsystem).withTimeout(4.6)
-    .finallyDo(
-      () -> Commands.run(() -> {
-      m_FeederSubsystem.setFeederMotor(0);
-      m_SpindexerSubsystem.SetMotor(0);
-    }, m_FeederSubsystem, m_SpindexerSubsystem));
-  }
-
-  private Command autoFeederCommand3(){
-    return Commands.run(()-> {
-      m_FeederSubsystem.setFeederMotor(1);
-      m_SpindexerSubsystem.SetMotor(-1);
-    }, m_FeederSubsystem, m_SpindexerSubsystem).withTimeout(1.8)
-    .finallyDo(
-      () -> Commands.run(() -> {
-      m_FeederSubsystem.setFeederMotor(0);
-      m_SpindexerSubsystem.SetMotor(0);
-    }, m_FeederSubsystem, m_SpindexerSubsystem));
-  }
-
-
-
-
+ 
   private Command autoFeederStopCommand() {
     return Commands.run(()-> {
       m_FeederSubsystem.setFeederMotor(0);
@@ -466,13 +437,10 @@ public class RobotContainer {
 
   public Command autoIntakeRoll(){
     return Commands.run(
-      () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem).withTimeout(5.3);
+      () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem);
   }
 
-  public Command autoIntakeRoll2(){
-    return Commands.run(
-      () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem).withTimeout(4.6);
-  }
+ 
 
   public Command autoIntakeStop(){
     return Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0), m_IntakeSubsystem);

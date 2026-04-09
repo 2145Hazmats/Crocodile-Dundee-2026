@@ -5,104 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Under Trench To Fuel"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right To Left Sweep Farther"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootFeeder"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeRoller"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Turn Around Left Side"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootFeeder3"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Left To Right Sweep Closer"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootFeeder2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeRoller2"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Right After Close Sweep To Shoot"
+            "pathName": "Right Not Alliance Friendly Path 1"
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootFeeder"
-                }
-              }
-            ]
+            "name": "ShootFeeder"
           }
         }
       ]
