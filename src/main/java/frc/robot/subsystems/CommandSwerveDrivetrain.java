@@ -20,8 +20,10 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
+import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -78,6 +80,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+   
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -161,14 +164,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if (Utils.isSimulation()) {
                 startSimThread();
             }
-    
+            
+
             configureAutoBuilder();
             SmartDashboard.putData("GeneralField", generalField);
             SmartDashboard.putData("Target Field", targetField);
         }
+
+       
+                    
+                       
+                
         
-    
-        /**
+        
+                        /**
          * Constructs a CTRE SwerveDrivetrain using the specified constants.
          * <p>
          * This constructs the underlying hardware devices, so users should not construct
@@ -191,6 +200,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if (Utils.isSimulation()) {
                 startSimThread();
             }
+            
+
     
             configureAutoBuilder();
             SmartDashboard.putData("General Field", generalField);
@@ -227,7 +238,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if (Utils.isSimulation()) {
                 startSimThread();
             }
-    
+            
+
             configureAutoBuilder();
             SmartDashboard.putData("General Field", generalField);
             SmartDashboard.putData("Target Field", targetField);
