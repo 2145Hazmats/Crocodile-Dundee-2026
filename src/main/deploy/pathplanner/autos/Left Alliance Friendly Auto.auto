@@ -5,21 +5,15 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Left Alliance Friendly Path 1"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "ShootFeeder"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test Path"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopFeeder"
           }
         }
       ]

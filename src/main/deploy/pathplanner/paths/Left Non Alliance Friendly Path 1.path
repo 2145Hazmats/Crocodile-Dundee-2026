@@ -25,7 +25,7 @@
       },
       "nextControl": {
         "x": 7.714402063202168,
-        "y": -0.4763183627681591
+        "y": -0.47631836276815864
       },
       "isLocked": false,
       "linkedName": null
@@ -164,6 +164,17 @@
       }
     },
     {
+      "name": "UnjamFeeder",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Regurgitate"
+        }
+      }
+    },
+    {
       "name": "IntakeOut",
       "waypointRelativePos": 0.1485482781904074,
       "endWaypointRelativePos": null,
@@ -176,8 +187,8 @@
     },
     {
       "name": "IntakeMotor",
-      "waypointRelativePos": 0.5536799459824473,
-      "endWaypointRelativePos": 1.06,
+      "waypointRelativePos": 0.4591492234976374,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
@@ -188,7 +199,7 @@
     {
       "name": "StartFeeder",
       "waypointRelativePos": 0.6212018906144395,
-      "endWaypointRelativePos": 1.0803511141120623,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
@@ -197,24 +208,118 @@
       }
     },
     {
-      "name": "IntakeMotor",
-      "waypointRelativePos": 1.8636056718433522,
-      "endWaypointRelativePos": 3.12,
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 0.82,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "UnjamFeeder",
+      "waypointRelativePos": 0.83,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "IntakeRoller"
+          "name": "Regurgitate"
+        }
+      }
+    },
+    {
+      "name": "StartFeeder",
+      "waypointRelativePos": 0.9318028359216336,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFeeder"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 1.0668467251856881,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
+      "name": "UnjamFeeder",
+      "waypointRelativePos": 1.1073598919648842,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Regurgitate"
         }
       }
     },
     {
       "name": "StartFeeder",
       "waypointRelativePos": 1.9041188386225472,
-      "endWaypointRelativePos": 3.1060094530721805,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
           "name": "ShootFeeder"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 2.228224172856185,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
+      "name": "UnjamFeeder",
+      "waypointRelativePos": 2.24,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Regurgitate"
+        }
+      }
+    },
+    {
+      "name": "StartFeeder",
+      "waypointRelativePos": 2.5523295070897785,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFeeder"
+        }
+      }
+    },
+    {
+      "name": "IntakeShutDown",
+      "waypointRelativePos": 3.0925050641457736,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeStop"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 3.1735313977042177,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
         }
       }
     }

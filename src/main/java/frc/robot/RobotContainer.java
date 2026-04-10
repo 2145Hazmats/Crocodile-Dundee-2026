@@ -106,6 +106,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopFeeder", autoFeederStopCommand());
         NamedCommands.registerCommand("IntakeRoller", autoIntakeRoll());
         NamedCommands.registerCommand("IntakeStop", autoIntakeStopCommand());
+        NamedCommands.registerCommand("Regurgitate", autoRegurgitateCommand());
 
     }
 
@@ -393,12 +394,9 @@ public class RobotContainer {
   // }
   //regurgitate command for auton
   private Command autoRegurgitateCommand() {
-    return Commands.run(
-      () -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem
-      )
-      .finallyDo(() -> m_SpindexerSubsystem.SetMotor(0))
-      .alongWith(Commands.run(() -> m_FeederSubsystem.setFeederMotor(-1), m_ShooterSubsystem)
-      .finallyDo(() -> m_FeederSubsystem.setFeederMotor(0)));
+    return new ParallelCommandGroup(Commands.run(
+      () -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem), 
+      (Commands.run(() -> m_FeederSubsystem.setFeederMotor(-1), m_ShooterSubsystem))).withTimeout(0.25);
   }
 
   //Command for autonomous control to shoot

@@ -5,76 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "ShootFlywheel"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Left Under Trench To Fuel"
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootFeeder"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeDOWN"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeRoller"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left To Right Sweep Farther"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopFeeder"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Turn Around Right Side"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right To Left Sweep Closer"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeStop"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left After Close Sweep To Shoot"
+            "pathName": "Left Non Alliance Friendly Path 1"
           }
         },
         {
