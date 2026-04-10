@@ -25,7 +25,7 @@
       },
       "nextControl": {
         "x": 7.714402063202168,
-        "y": -0.47631836276815864
+        "y": -0.4763183627681582
       },
       "isLocked": false,
       "linkedName": null
@@ -164,17 +164,6 @@
       }
     },
     {
-      "name": "UnjamFeeder",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Regurgitate"
-        }
-      }
-    },
-    {
       "name": "IntakeOut",
       "waypointRelativePos": 0.1485482781904074,
       "endWaypointRelativePos": null,
@@ -225,6 +214,17 @@
       }
     },
     {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 0.8684863523572944,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
       "name": "StartFeeder",
       "waypointRelativePos": 0.9318028359216336,
       "endWaypointRelativePos": null,
@@ -254,6 +254,17 @@
         "type": "named",
         "data": {
           "name": "Regurgitate"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 1.2952853598014884,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
         }
       }
     },
@@ -291,6 +302,17 @@
       }
     },
     {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 2.317617866004944,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
       "name": "StartFeeder",
       "waypointRelativePos": 2.5523295070897785,
       "endWaypointRelativePos": null,
@@ -315,6 +337,28 @@
     {
       "name": "ShutFeederOff",
       "waypointRelativePos": 3.1735313977042177,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
+      "name": "UnjamFeeder",
+      "waypointRelativePos": 3.250620347394521,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Regurgitate"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 3.4789081885855753,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

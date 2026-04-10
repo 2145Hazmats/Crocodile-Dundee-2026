@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 7.7653922967189715,
-        "y": 2.9804992867332385
+        "x": 7.665333333333335,
+        "y": 3.020023809523809
       },
       "prevControl": {
-        "x": 7.739514978601996,
-        "y": 0.4186447931526396
+        "x": 7.639456015216359,
+        "y": 0.4581693159432101
       },
       "nextControl": {
-        "x": 7.772362943159625,
-        "y": 3.670593284357941
+        "x": 7.6723039797739885,
+        "y": 3.7101178071485115
       },
       "isLocked": false,
       "linkedName": null
@@ -48,44 +48,44 @@
     },
     {
       "anchor": {
-        "x": 5.876348074179743,
-        "y": 1.0655777460770333
+        "x": 6.132071428571429,
+        "y": 0.9144880952380947
       },
       "prevControl": {
-        "x": 5.889286733239841,
-        "y": 1.9195292439382001
+        "x": 6.132071428571429,
+        "y": 1.768537607618732
       },
       "nextControl": {
-        "x": 5.870208616742908,
-        "y": 0.6603735552958416
+        "x": 6.132071428571429,
+        "y": 0.2558333333333337
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.5862054208273886,
-        "y": 0.7938659058487882
+        "x": 3.357083333333334,
+        "y": 0.709333333333334
       },
       "prevControl": {
-        "x": 4.557380859477847,
-        "y": 0.7938659058487882
+        "x": 3.7350000000000003,
+        "y": 0.5149761904761909
       },
       "nextControl": {
-        "x": 2.4864194008559197,
-        "y": 0.7938659058487884
+        "x": 2.914444203278453,
+        "y": 0.9369763145044162
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.4291726105563479,
-        "y": 0.7938659058487882
+        "x": 2.5364642857142865,
+        "y": 1.7782976190476187
       },
       "prevControl": {
-        "x": 1.503081312410841,
-        "y": 0.7550499286733237
+        "x": 2.9467738095238105,
+        "y": 1.1196428571428578
       },
       "nextControl": null,
       "isLocked": false,
@@ -104,6 +104,14 @@
     {
       "waypointRelativePos": 3.053304904051082,
       "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 3.066390041493787,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 3.8381742738589124,
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
@@ -203,13 +211,35 @@
       }
     },
     {
-      "name": "StartFeeder",
-      "waypointRelativePos": 1.8501012829168952,
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 1.5334987593052096,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "IntakeRoller"
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
+      "name": "StartFeeder",
+      "waypointRelativePos": 1.9801488833746745,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFeeder"
+        }
+      }
+    },
+    {
+      "name": "IntakeShutDown",
+      "waypointRelativePos": 2.84,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeShutDown"
         }
       }
     },
@@ -225,17 +255,6 @@
       }
     },
     {
-      "name": "IntakeShutDown",
-      "waypointRelativePos": 3.106009453072227,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeShutDown"
-        }
-      }
-    },
-    {
       "name": "UnjamFeeder",
       "waypointRelativePos": 3.3625928426738447,
       "endWaypointRelativePos": null,
@@ -243,6 +262,17 @@
         "type": "named",
         "data": {
           "name": "Regurgitate"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 3.65756823821339,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
         }
       }
     }
@@ -257,7 +287,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 46.33844292102375
   },
   "reversed": false,
   "folder": "Right Pass Fenton",

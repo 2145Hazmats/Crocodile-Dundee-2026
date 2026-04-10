@@ -211,6 +211,17 @@
       }
     },
     {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 1.5037220843671992,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
       "name": "StartFeeder",
       "waypointRelativePos": 1.8501012829169527,
       "endWaypointRelativePos": null,
@@ -251,6 +262,17 @@
         "type": "named",
         "data": {
           "name": "IntakeStop"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 3.4392059553349337,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
         }
       }
     }

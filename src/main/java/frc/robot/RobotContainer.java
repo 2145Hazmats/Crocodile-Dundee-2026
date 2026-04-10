@@ -97,7 +97,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ShootFlywheel", autoFlywheelShootCommand());
         // NamedCommands.registerCommand("StopAllMotors", autoStopAllMotorsCommand());
         NamedCommands.registerCommand("IntakeDown", autoIntakeDOWN());
-        // NamedCommands.registerCommand("IntakeUP", m_IntakeSubsystem.autoIntakeHOME());
+        NamedCommands.registerCommand("IntakeUp", autoIntakeHOME());
         // NamedCommands.registerCommand("IntakeUnjam", m_IntakeSubsystem.autoIntakeUnjam());
         //NamedCommands.registerCommand("ClimbDown", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_HOME_POSITION));
         //NamedCommands.registerCommand("ClimbUp", m_ClimbSubsystem.moveClimbToPosition(ClimbConstants.CLIMB_UP_POSITION));
@@ -297,6 +297,8 @@ public class RobotContainer {
       P2l4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem)
       .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0)));
 
+      P2X.whileTrue(m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_MIDDLE_POSITION));
+
       // Regurgitate the fuel
       P2leftBumper.whileTrue(autoRegurgitateCommand());
 
@@ -396,7 +398,7 @@ public class RobotContainer {
   private Command autoRegurgitateCommand() {
     return new ParallelCommandGroup(Commands.run(
       () -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem), 
-      (Commands.run(() -> m_FeederSubsystem.setFeederMotor(-1), m_ShooterSubsystem))).withTimeout(0.25);
+      (Commands.run(() -> m_FeederSubsystem.setFeederMotor(-1), m_ShooterSubsystem)));
   }
 
   //Command for autonomous control to shoot
@@ -417,6 +419,10 @@ public class RobotContainer {
       m_FeederSubsystem.setFeederMotor(1);
       m_SpindexerSubsystem.SetMotor(-1);
     }, m_FeederSubsystem, m_SpindexerSubsystem);
+  }
+
+   public Command autoIntakeHOME() {
+    return m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION);
   }
 
  

@@ -215,6 +215,17 @@
       }
     },
     {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 0.8883374689826349,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
       "name": "StartFeeder",
       "waypointRelativePos": 0.9182984469952749,
       "endWaypointRelativePos": null,
@@ -248,6 +259,17 @@
       }
     },
     {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 1.3449131513647539,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
       "name": "StartFeeder",
       "waypointRelativePos": 1.84,
       "endWaypointRelativePos": null,
@@ -277,6 +299,17 @@
         "type": "named",
         "data": {
           "name": "Regurgitate"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 2.456575682382098,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
         }
       }
     },
@@ -321,6 +354,17 @@
         "type": "named",
         "data": {
           "name": "Regurgitate"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 3.88585607940447,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
         }
       }
     }
