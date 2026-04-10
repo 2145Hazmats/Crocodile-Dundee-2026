@@ -130,43 +130,10 @@ public class TurretSubsystem extends SubsystemBase {
         () -> setMotor(0)
       );
   }
- 
-
-  public double calculateTurretFieldPositionX(){
-    
-    //this is the original position of the drivetrain from the center of the robot
-    double drivetrainFieldPositionX = m_drivetrain.getPose2d().getX();
-    
-    // This vector is the position of the turret in the robot  on the X axis
-    // Compensates for the initial angle of the turret relative to the robot
-    double robotRelativePositionOfTurretX = Math.cos(m_drivetrain.getPose2d().getRotation().getRadians() - TurretConstants.TURRET_ANGLE_FROM_CENTER) * TurretConstants.TURRET_DISTANCE_FROM_CENTER;
-    
-    // Adding the two together gets you the turret's position on the field
-    double turretFieldPositionX = drivetrainFieldPositionX + robotRelativePositionOfTurretX;
-    turretPos[0] = turretFieldPositionX;
-    
-    return turretFieldPositionX;
-  }
-
-  public double calculateTurretFieldPositionY(){
-    //this is the original position of the drivetrain from the center of the robot
-    double drivetrainFieldPositionY = m_drivetrain.getPose2d().getY();
-
-    // This vector is the position of the turret in the robot  on the X axis
-    // Compensates for the initial angle of the turret relative to the robot
-    double robotRelativePositionOfTurretY = Math.sin(m_drivetrain.getPose2d().getRotation().getRadians() - TurretConstants.TURRET_ANGLE_FROM_CENTER) * TurretConstants.TURRET_DISTANCE_FROM_CENTER;
-  
-    // Adding the two together gets you the turret's position on the field
-    double turretFieldPositionY = drivetrainFieldPositionY + robotRelativePositionOfTurretY;
-
-    turretPos[1] = turretFieldPositionY;
-
-    return turretFieldPositionY;
-  }
 
    public double getDistanceToTarget(double targetX, double targetY) {
-        double robotX = calculateTurretFieldPositionX();
-        double robotY = calculateTurretFieldPositionY();
+        double robotX = m_drivetrain.calculateTurretFieldPositionX();
+        double robotY = m_drivetrain.calculateTurretFieldPositionY();
 
         double relativeX = robotX - targetX;
         double relativeY = robotY - targetY;
@@ -183,6 +150,9 @@ public class TurretSubsystem extends SubsystemBase {
      / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2));
     
     SmartDashboard.putNumber("Turret Distance To Hub", getDistanceToTarget(PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0], PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1]));
+
+    turretPos[0] = m_drivetrain.calculateTurretFieldPositionX();
+    turretPos[1] = m_drivetrain.calculateTurretFieldPositionY();
 
     turretField.setRobotPose(new Pose2d(turretPos[0], turretPos[1], new Rotation2d()));
   }

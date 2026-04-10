@@ -5,21 +5,27 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ShootFeeder"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Right Preload"
+            "pathName": "Test Path"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ShootFeeder"
+            "name": "StopFeeder"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right Autos",
+  "folder": "Left Autos",
   "choreoAuto": false
 }

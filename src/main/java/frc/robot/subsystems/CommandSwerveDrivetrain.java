@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.Constants.PoseConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -55,7 +56,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private Field2d generalField = new Field2d();
     private Field2d targetField = new Field2d();
-    private TurretSubsystem m_turret = new TurretSubsystem(this);
+    
 
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
@@ -344,6 +345,38 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public double getFilteredAngularVelocity(){
         return angularVelocityFilter.calculate(rawAngularVelocity());
     }
+
+    public double calculateTurretFieldPositionX(){
+    
+        //this is the original position of the drivetrain from the center of the robot
+        double drivetrainFieldPositionX = getPose2d().getX();
+        
+        // This vector is the position of the turret in the robot  on the X axis
+        // Compensates for the initial angle of the turret relative to the robot
+        double robotRelativePositionOfTurretX = Math.cos(getPose2d().getRotation().getRadians() - TurretConstants.TURRET_ANGLE_FROM_CENTER) * TurretConstants.TURRET_DISTANCE_FROM_CENTER;
+        
+        // Adding the two together gets you the turret's position on the field
+        double turretFieldPositionX = drivetrainFieldPositionX + robotRelativePositionOfTurretX;
+        //turretPos[0] = turretFieldPositionX;
+        
+        return turretFieldPositionX;
+      }
+
+    public double calculateTurretFieldPositionY(){
+    //this is the original position of the drivetrain from the center of the robot
+    double drivetrainFieldPositionY = getPose2d().getY();
+
+    // This vector is the position of the turret in the robot  on the X axis
+    // Compensates for the initial angle of the turret relative to the robot
+    double robotRelativePositionOfTurretY = Math.sin(getPose2d().getRotation().getRadians() - TurretConstants.TURRET_ANGLE_FROM_CENTER) * TurretConstants.TURRET_DISTANCE_FROM_CENTER;
+  
+    // Adding the two together gets you the turret's position on the field
+    double turretFieldPositionY = drivetrainFieldPositionY + robotRelativePositionOfTurretY;
+
+    //turretPos[1] = turretFieldPositionY;
+
+    return turretFieldPositionY;
+  }
     
 
     public double calculateAngleToFieldPosition(double targetX, double targetY) {
@@ -351,8 +384,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double xRelativeToPosition = 0;
             double yRelativeToPosition = 0;
 
-            double xRelativeToFieldOrigin = m_turret.calculateTurretFieldPositionX();
-            double yRelativeToFieldOrigin = m_turret.calculateTurretFieldPositionY();
+            double xRelativeToFieldOrigin = calculateTurretFieldPositionX();
+            double yRelativeToFieldOrigin = calculateTurretFieldPositionY();
 
             xRelativeToPosition = xRelativeToFieldOrigin - targetX;
             yRelativeToPosition = yRelativeToFieldOrigin - targetY;
@@ -398,32 +431,34 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         
 
-        if(this.isAllianceBlue() && m_turret.calculateTurretFieldPositionX() < PoseConstants.BLUE_ALLIANCE_ZONE_X) {
+        
+
+        if(this.isAllianceBlue() && calculateTurretFieldPositionX() < PoseConstants.BLUE_ALLIANCE_ZONE_X) {
             SmartDashboard.putString("Target", "Blue Alliance Hub");
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1];
         }
-        else if(this.isAllianceRed() && m_turret.calculateTurretFieldPositionX() > PoseConstants.RED_ALLIANCE_ZONE_X) {
+        else if(this.isAllianceRed() && calculateTurretFieldPositionX() > PoseConstants.RED_ALLIANCE_ZONE_X) {
             SmartDashboard.putString("Target", "Red Alliance Hub");
             targetPose[0] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[1];
         }
-        else if(this.isAllianceBlue() && m_turret.calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
+        else if(this.isAllianceBlue() && calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
             SmartDashboard.putString("Target", "Blue Alliance Right Corner");
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[1];
         }
-        else if(this.isAllianceBlue() && m_turret.calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y) {
+        else if(this.isAllianceBlue() && calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y) {
             SmartDashboard.putString("Target", "Blue Alliance Left Corner");
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[1];
         }
-        else if(this.isAllianceRed() && m_turret.calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y){
+        else if(this.isAllianceRed() && calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y){
             SmartDashboard.putString("Target", "Red Alliance Right Corner");
             targetPose[0] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[1];
         }
-        else if(this.isAllianceRed() && m_turret.calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && m_turret.calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
+        else if(this.isAllianceRed() && calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
             SmartDashboard.putString("Target", "Red Alliance Left Corner");
             targetPose[0] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[1];
@@ -522,8 +557,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public double getDistanceToTarget() {
-        double robotX = m_turret.calculateTurretFieldPositionX();
-        double robotY = m_turret.calculateTurretFieldPositionY();
+        double robotX = calculateTurretFieldPositionX();
+        double robotY = calculateTurretFieldPositionY();
 
         double targetX = targetPose[0];
         double targetY = targetPose[1];

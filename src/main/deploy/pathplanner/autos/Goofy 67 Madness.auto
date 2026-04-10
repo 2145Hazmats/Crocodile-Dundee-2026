@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Preload"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootFeeder"
+            "pathName": "goofy goober"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right Autos",
+  "folder": null,
   "choreoAuto": false
 }

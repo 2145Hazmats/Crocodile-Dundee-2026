@@ -121,7 +121,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6620347394540919,
+      "minWaypointRelativePos": 0.58,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
@@ -149,7 +149,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ShootFlywheel",
+      "name": "StartFlywheel",
       "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
@@ -160,20 +160,20 @@
       }
     },
     {
-      "name": "IntakeDOWN",
+      "name": "IntakeOut",
       "waypointRelativePos": 0.2970965563808165,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "IntakeDOWN"
+          "name": "IntakeDown"
         }
       }
     },
     {
-      "name": "IntakeRoller",
+      "name": "IntakeMotor",
       "waypointRelativePos": 0.6482106684672191,
-      "endWaypointRelativePos": 1.120864280891283,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
@@ -182,9 +182,9 @@
       }
     },
     {
-      "name": "ShootFeeder",
+      "name": "StartFeeder",
       "waypointRelativePos": 0.6699751861042227,
-      "endWaypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
@@ -193,24 +193,57 @@
       }
     },
     {
-      "name": "IntakeRoller",
-      "waypointRelativePos": 1.8230925050640696,
-      "endWaypointRelativePos": 3.2680621201889783,
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 1.01,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "IntakeRoller"
+          "name": "StopFeeder"
         }
       }
     },
     {
-      "name": "ShootFeeder",
-      "waypointRelativePos": 1.8411910669975282,
-      "endWaypointRelativePos": 3.2208436724565614,
+      "name": "StartFeeder",
+      "waypointRelativePos": 1.84,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
           "name": "ShootFeeder"
+        }
+      }
+    },
+    {
+      "name": "ShutFeederOff",
+      "waypointRelativePos": 2.26,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
+    },
+    {
+      "name": "StartFeeder",
+      "waypointRelativePos": 2.8359216745441667,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFeeder"
+        }
+      }
+    },
+    {
+      "name": "IntakeShutDown",
+      "waypointRelativePos": 3.4436191762322976,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeStop"
         }
       }
     }

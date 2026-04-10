@@ -153,7 +153,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ShootFlywheel",
+      "name": "StartFlywheel",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": {
@@ -164,18 +164,18 @@
       }
     },
     {
-      "name": "IntakeDOWN",
+      "name": "IntakeOut",
       "waypointRelativePos": 0.1485482781904074,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "IntakeDOWN"
+          "name": "IntakeDown"
         }
       }
     },
     {
-      "name": "IntakeRoller",
+      "name": "IntakeMotor",
       "waypointRelativePos": 0.5536799459824473,
       "endWaypointRelativePos": 1.06,
       "command": {
@@ -186,7 +186,7 @@
       }
     },
     {
-      "name": "ShootFeeder",
+      "name": "StartFeeder",
       "waypointRelativePos": 0.6212018906144395,
       "endWaypointRelativePos": 1.0803511141120623,
       "command": {
@@ -197,7 +197,7 @@
       }
     },
     {
-      "name": "IntakeRoller",
+      "name": "IntakeMotor",
       "waypointRelativePos": 1.8636056718433522,
       "endWaypointRelativePos": 3.12,
       "command": {
@@ -208,7 +208,7 @@
       }
     },
     {
-      "name": "ShootFeeder",
+      "name": "StartFeeder",
       "waypointRelativePos": 1.9041188386225472,
       "endWaypointRelativePos": 3.1060094530721805,
       "command": {

@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.94,
-        "y": 4.022079772079772
+        "x": 2.25,
+        "y": 4.003
       },
       "prevControl": {
-        "x": 2.8056552706552695,
-        "y": 4.022079772079772
+        "x": 3.1156552706552696,
+        "y": 4.003
       },
       "nextControl": null,
       "isLocked": true,
@@ -31,7 +31,30 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "StartFlywheel",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ShootFlywheel"
+        }
+      }
+    },
+    {
+      "name": "IntakeOut",
+      "waypointRelativePos": 0.8021607022282291,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeDown"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

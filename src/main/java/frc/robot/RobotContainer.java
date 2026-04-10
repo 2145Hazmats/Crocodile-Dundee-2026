@@ -105,7 +105,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("ShootFeeder", autoFeederCommand());
         NamedCommands.registerCommand("StopFeeder", autoFeederStopCommand());
         NamedCommands.registerCommand("IntakeRoller", autoIntakeRoll());
-        NamedCommands.registerCommand("IntakeStop", autoIntakeStop());
+        NamedCommands.registerCommand("IntakeStop", autoIntakeStopCommand());
+
     }
 
     public RobotContainer() {
@@ -140,7 +141,9 @@ public class RobotContainer {
         m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngleProfiled(
           drivetrain::getAngleToTarget));
 
+        m_FeederSubsystem.setDefaultCommand(Commands.run(() -> m_FeederSubsystem.setFeederMotor(0), m_FeederSubsystem));
         
+        m_IntakeSubsystem.setDefaultCommand(Commands.run(()-> m_IntakeSubsystem.setIntakingMotor(0), m_IntakeSubsystem));
           /*
           .onlyIf(() -> !manualMode)
         .beforeStarting(Commands.run(() -> m_TurretSubsystem.turnTurretToAngle(
@@ -253,7 +256,6 @@ public class RobotContainer {
         Commands.run(
           () -> {
             m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
-            m_ShooterSubsystem.setHoodMotorPosition(18/*m_ShooterSubsystem.distanceToHoodAngleDegrees(drivetrain.getDistanceToTarget())*/);
             m_FeederSubsystem.setFeederMotor(1);
           }
         )
@@ -262,7 +264,6 @@ public class RobotContainer {
         Commands.run(
           () -> {
             m_ShooterSubsystem.setFlywheelMotor(0.2);
-            m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE);
             m_FeederSubsystem.setFeederMotor(0);
           }
         )
@@ -302,7 +303,7 @@ public class RobotContainer {
       P2leftTrigger
       .whileTrue(
         new ParallelCommandGroup(
-          m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION),
+          m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_DOWN_POSITION),
           Commands.run(
             () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)
           )
@@ -312,6 +313,8 @@ public class RobotContainer {
             () -> m_IntakeSubsystem.setIntakingMotor(0)
           )
         );
+
+      P2r4.whileTrue(m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION));
 
       
 
@@ -401,8 +404,8 @@ public class RobotContainer {
   //Command for autonomous control to shoot
   private Command autoFlywheelShootCommand(){
      return Commands.run(
-      () -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_RPM_SETPOINT),
-       m_ShooterSubsystem).withTimeout(25)
+      () -> m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget())),
+       m_ShooterSubsystem)
        .finallyDo(
       () ->
         Commands.run(() ->
@@ -415,12 +418,7 @@ public class RobotContainer {
     return Commands.run(()-> {
       m_FeederSubsystem.setFeederMotor(1);
       m_SpindexerSubsystem.SetMotor(-1);
-    }, m_FeederSubsystem, m_SpindexerSubsystem)
-    .finallyDo(
-      () -> Commands.run(() -> {
-      m_FeederSubsystem.setFeederMotor(0);
-      m_SpindexerSubsystem.SetMotor(0);
-    }, m_FeederSubsystem, m_SpindexerSubsystem));
+    }, m_FeederSubsystem, m_SpindexerSubsystem);
   }
 
  
@@ -432,18 +430,16 @@ public class RobotContainer {
   }
 
   public Command autoIntakeDOWN() {
-    return Commands.runOnce(() -> m_IntakeSubsystem.setIntakePosition(IntakeConstants.ACTUATOR_DOWN_POSITION), m_IntakeSubsystem);
+    return m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_DOWN_POSITION);
   }
 
   public Command autoIntakeRoll(){
-    return Commands.run(
+    return Commands.runOnce(
       () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem);
   }
 
- 
-
-  public Command autoIntakeStop(){
-    return Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(0), m_IntakeSubsystem);
+  public Command autoIntakeStopCommand(){
+    return Commands.runOnce(() -> m_IntakeSubsystem.setIntakingMotor(0), m_IntakeSubsystem);
   }
 
   public Command getAutonomousCommand() {
