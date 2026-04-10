@@ -200,7 +200,12 @@
       "name": "ShutFeederOff",
       "waypointRelativePos": 0.82,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StopFeeder"
+        }
+      }
     },
     {
       "name": "UnjamFeeder",

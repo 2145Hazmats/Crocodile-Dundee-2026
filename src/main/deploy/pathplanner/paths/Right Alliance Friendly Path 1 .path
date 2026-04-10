@@ -190,7 +190,7 @@
     },
     {
       "name": "ShutFeederOff",
-      "waypointRelativePos": 1.2964213369344573,
+      "waypointRelativePos": 1.1364764267990148,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
