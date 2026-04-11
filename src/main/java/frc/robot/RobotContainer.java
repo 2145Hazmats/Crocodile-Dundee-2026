@@ -107,6 +107,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeRoller", autoIntakeRoll());
         NamedCommands.registerCommand("IntakeStop", autoIntakeStopCommand());
         NamedCommands.registerCommand("Regurgitate", autoRegurgitateCommand());
+        NamedCommands.registerCommand("IntakeMiddle", autoIntakeMiddleCommand());
 
     }
 
@@ -224,10 +225,10 @@ public class RobotContainer {
 
       P1A.whileTrue(drivetrain.applyRequest(() -> brake));
       
-      P1B.whileTrue(drivetrain.applyRequest(() -> 
-        drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed)
-        .withVelocityY(-P1Controller.getLeftX() * MaxSpeed)
-        .withRotationalRate(rotationPID.calculate(drivetrain.getPose2d().getRotation().getRadians(), drivetrain.getAngleToTarget()) * MaxAngularRate)));
+      // P1B.whileTrue(drivetrain.applyRequest(() -> 
+      //   drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed)
+      //   .withVelocityY(-P1Controller.getLeftX() * MaxSpeed)
+      //   .withRotationalRate(rotationPID.calculate(drivetrain.getPose2d().getRotation().getRadians(), drivetrain.getAngleToTarget()) * MaxAngularRate)));
       
       //When pressed, checks what alliance you are on, and goes to a set pose
       P1Y.and(drivetrain::isAllianceBlue).whileTrue(drivetrain.pathfindToPose(PoseConstants.BLUE_SHOOT_POSE));
@@ -279,14 +280,12 @@ public class RobotContainer {
         }));
       
       //Pass function, different flywheel setpoint
-      P2Y.whileTrue(Commands.run(
-        () -> {
-          m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_MAX_ANGLE);
-          m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_PASS_SETPOINT);
-        })
-      )
-      .whileFalse(Commands.run(
-        () -> m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE)));
+      // P2Y.whileTrue(Commands.run(
+      //   () -> m_ShooterSubsystem.setFlywheelToSpeed(ShooterConstants.FLYWHEEL_PASS_SETPOINT)
+      //   )
+      // )
+      // .whileFalse(Commands.run(
+      //   () -> m_ShooterSubsystem.setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE)));
       
 
       //Climb controls   
@@ -297,7 +296,7 @@ public class RobotContainer {
       P2l4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem)
       .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0)));
 
-      P2X.whileTrue(m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_MIDDLE_POSITION));
+      P2B.whileTrue(m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_MIDDLE_POSITION));
 
       // Regurgitate the fuel
       P2leftBumper.whileTrue(autoRegurgitateCommand());
@@ -399,6 +398,10 @@ public class RobotContainer {
     return new ParallelCommandGroup(Commands.run(
       () -> m_SpindexerSubsystem.SetMotor(1), m_SpindexerSubsystem), 
       (Commands.run(() -> m_FeederSubsystem.setFeederMotor(-1), m_ShooterSubsystem)));
+  }
+
+  private Command autoIntakeMiddleCommand(){
+    return m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_MIDDLE_POSITION);
   }
 
   //Command for autonomous control to shoot

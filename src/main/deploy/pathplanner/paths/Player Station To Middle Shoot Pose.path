@@ -3,28 +3,28 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.67039886039886,
-        "y": 7.26505698005698
+        "x": 0.3661428571428581,
+        "y": 0.6769404761904776
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0831536951607936,
-        "y": 7.205702059970164
+        "x": 0.7980476190476198,
+        "y": 1.6379285714285707
       },
       "isLocked": false,
-      "linkedName": "Left On Line"
+      "linkedName": "PlayerStation"
     },
     {
       "anchor": {
-        "x": 2.520498575498576,
-        "y": 5.76631054131054
+        "x": 1.3595238095238105,
+        "y": 2.6529047619047628
       },
       "prevControl": {
-        "x": 3.1019088319088324,
-        "y": 6.94205128205128
+        "x": 0.938416666666668,
+        "y": 1.8430833333333339
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": null
     }
   ],
@@ -44,15 +44,10 @@
       }
     },
     {
-      "name": "PutIntakeDown",
-      "waypointRelativePos": 0.9291019581363881,
+      "name": "",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeDown"
-        }
-      }
+      "command": null
     }
   ],
   "globalConstraints": {
@@ -65,13 +60,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -40.69133508347511
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Left 1 Preload",
+  "folder": "Middle Fenton",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

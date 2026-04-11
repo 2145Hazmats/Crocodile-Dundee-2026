@@ -110,10 +110,10 @@ public final class Constants {
     public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.625594, 4.034536};
     public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.915394, 4.034536};
 
-    public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {1, 1};
-    public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {1, 7.069};
-    public static final double[] RED_ALLIANCE_RIGHT_CORNER = {15.541, 7.069};
-    public static final double[] RED_ALLIANCE_LEFT_CORNER = {15.541, 1};
+    public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {1, 2};
+    public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {1, 6.069};
+    public static final double[] RED_ALLIANCE_RIGHT_CORNER = {15.541, 6.069};
+    public static final double[] RED_ALLIANCE_LEFT_CORNER = {15.541, 2};
     
     public static final double RED_ALLIANCE_ZONE_X = 11.913;
     public static final double CENTER_FIELD_Y = 4.035;

@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Middle Back To Player Station"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Player Station To Middle Shoot Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootFeeder"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Middle Autos",
+  "choreoAuto": false
+}

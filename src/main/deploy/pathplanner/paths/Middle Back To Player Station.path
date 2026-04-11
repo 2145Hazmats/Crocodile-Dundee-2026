@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.67039886039886,
-        "y": 7.26505698005698
+        "x": 3.605428571428572,
+        "y": 4.002607142857143
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0831536951607936,
-        "y": 7.205702059970164
+        "x": 2.406892857142858,
+        "y": 3.3439523809523815
       },
       "isLocked": false,
-      "linkedName": "Left On Line"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.520498575498576,
-        "y": 5.76631054131054
+        "x": 0.3661428571428581,
+        "y": 0.6769404761904776
       },
       "prevControl": {
-        "x": 3.1019088319088324,
-        "y": 6.94205128205128
+        "x": 0.9276190476190486,
+        "y": 1.821488095238095
       },
       "nextControl": null,
-      "isLocked": true,
-      "linkedName": null
+      "isLocked": false,
+      "linkedName": "PlayerStation"
     }
   ],
   "rotationTargets": [],
@@ -33,24 +33,24 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "StartFlywheel",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "ShootFlywheel"
-        }
-      }
-    },
-    {
-      "name": "PutIntakeDown",
-      "waypointRelativePos": 0.9291019581363881,
+      "name": "IntakeOut",
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
           "name": "IntakeDown"
+        }
+      }
+    },
+    {
+      "name": "IntakeToMiddle",
+      "waypointRelativePos": 0.6024813895781578,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeMiddle"
         }
       }
     }
@@ -65,13 +65,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -40.69133508347511
-  },
-  "reversed": false,
-  "folder": "Left 1 Preload",
-  "idealStartingState": {
-    "velocity": 0,
     "rotation": -90.0
   },
-  "useDefaultConstraints": false
+  "reversed": false,
+  "folder": "Middle Fenton",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
 }
