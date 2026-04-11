@@ -43,7 +43,7 @@ public class TurretSubsystem extends SubsystemBase {
   private PIDController turretPID;
   private final PositionVoltage m_turretRequest = new PositionVoltage(0).withSlot(0);
   private TrapezoidProfile.State previousProfiledReference;
-  private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(6 * TurretConstants.TURRET_GEAR_RATIO, 20 * TurretConstants.TURRET_GEAR_RATIO));
+  private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(6 * TurretConstants.TURRET_GEAR_RATIO, 17 * TurretConstants.TURRET_GEAR_RATIO));
 
   private CommandSwerveDrivetrain m_drivetrain;
 

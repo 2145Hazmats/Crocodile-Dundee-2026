@@ -80,7 +80,7 @@ public final class Constants {
     public static final double ACTUATOR_HOME_POSITION = 0;   // TODO: Set home and down positions for the intake
     public static final double ACTUATOR_DOWN_POSITION = -44.29;   // <-----------------------------------------------
     public static final double ACTUATOR_MIDDLE_POSITION = -18.69;
-    public static final double INTAKE_MOTOR_SPEED = 0.4;
+    public static final double INTAKE_MOTOR_SPEED = 1.0;
     public static final double ACTUATOR_P = 0.19;
     public static final double ACTUATOR_I = 0.0000;
     public static final double ACTUATOR_D = 0.0000;
@@ -110,10 +110,10 @@ public final class Constants {
     public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.625594, 4.034536};
     public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.915394, 4.034536};
 
-    public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {1, 2};
-    public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {1, 6.069};
-    public static final double[] RED_ALLIANCE_RIGHT_CORNER = {15.541, 6.069};
-    public static final double[] RED_ALLIANCE_LEFT_CORNER = {15.541, 2};
+    public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {2, 2};
+    public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {2, 6.069};
+    public static final double[] RED_ALLIANCE_RIGHT_CORNER = {14.541, 6.069};
+    public static final double[] RED_ALLIANCE_LEFT_CORNER = {14.541, 2};
     
     public static final double RED_ALLIANCE_ZONE_X = 11.913;
     public static final double CENTER_FIELD_Y = 4.035;

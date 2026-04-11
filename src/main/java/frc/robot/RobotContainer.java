@@ -316,7 +316,7 @@ public class RobotContainer {
           )
         );
 
-      P2r4.whileTrue(m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION));
+      P2A.whileTrue(m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION));
 
       
 
