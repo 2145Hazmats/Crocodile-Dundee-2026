@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.350464285714287,
-        "y": 0.5041785714285709
+        "x": 4.342250712250712,
+        "y": 0.45609686609686717
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.946071428571429,
-        "y": 0.5797619047619049
+        "x": 7.9728347578347565,
+        "y": 0.5982193732193752
       },
       "isLocked": false,
       "linkedName": null
@@ -161,7 +161,7 @@
     },
     {
       "name": "IntakeOut",
-      "waypointRelativePos": 0.08436724565756769,
+      "waypointRelativePos": 0.21,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

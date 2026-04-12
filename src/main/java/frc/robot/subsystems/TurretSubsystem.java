@@ -43,7 +43,7 @@ public class TurretSubsystem extends SubsystemBase {
   private PIDController turretPID;
   private final PositionVoltage m_turretRequest = new PositionVoltage(0).withSlot(0);
   private TrapezoidProfile.State previousProfiledReference;
-  private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(6 * TurretConstants.TURRET_GEAR_RATIO, 17 * TurretConstants.TURRET_GEAR_RATIO));
+  private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(6 * TurretConstants.TURRET_GEAR_RATIO, 12 * TurretConstants.TURRET_GEAR_RATIO));
 
   private CommandSwerveDrivetrain m_drivetrain;
 
@@ -68,8 +68,6 @@ public class TurretSubsystem extends SubsystemBase {
 
    turretMotor.setPosition(MathConstants.DegreesToRotations(TurretConstants.TURRET_STARTING_ANGLE));
    previousProfiledReference = new State(turretMotor.getPosition().getValueAsDouble(), turretMotor.getVelocity().getValueAsDouble());
-
-   SmartDashboard.putData("Turret Field", turretField);
 
    m_drivetrain = drivetrain;
   }
@@ -121,9 +119,9 @@ public class TurretSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Turret Goal", Units.radiansToDegrees(goal.position));
         SmartDashboard.putNumber("Desired Turret Angle", angle);
-        SmartDashboard.putNumber("Actual Turret Setpoint", previousProfiledReference.position);
-        SmartDashboard.putNumber("Rotation of Robot", m_drivetrain.getPose2d().getRotation().getDegrees());
-        SmartDashboard.putNumber("Angular Velocity", Units.radiansToDegrees(m_drivetrain.getFilteredAngularVelocity()));
+        //SmartDashboard.putNumber("Actual Turret Setpoint", previousProfiledReference.position);
+        //SmartDashboard.putNumber("Rotation of Robot", m_drivetrain.getPose2d().getRotation().getDegrees());
+        //SmartDashboard.putNumber("Angular Velocity", Units.radiansToDegrees(m_drivetrain.getFilteredAngularVelocity()));
 
       }, this)
       .finallyDo(
@@ -149,7 +147,7 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Turret Angle", Units.radiansToDegrees(turretMotor.getPosition().getValueAsDouble()
      / TurretConstants.TURRET_GEAR_RATIO * Math.PI * 2));
     
-    SmartDashboard.putNumber("Turret Distance To Hub", getDistanceToTarget(PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0], PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1]));
+    
 
     turretPos[0] = m_drivetrain.calculateTurretFieldPositionX();
     turretPos[1] = m_drivetrain.calculateTurretFieldPositionY();

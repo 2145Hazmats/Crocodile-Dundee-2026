@@ -54,7 +54,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private Field2d generalField = new Field2d();
-    private Field2d targetField = new Field2d();
+    //private Field2d targetField = new Field2d();
     
 
     private static final double kSimLoopPeriod = 0.004; // 4 ms
@@ -168,7 +168,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
             configureAutoBuilder();
             SmartDashboard.putData("GeneralField", generalField);
-            SmartDashboard.putData("Target Field", targetField);
+            //SmartDashboard.putData("Target Field", targetField);
         }
 
        
@@ -205,7 +205,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     
             configureAutoBuilder();
             SmartDashboard.putData("General Field", generalField);
-            SmartDashboard.putData("Target Field", targetField);
+            //SmartDashboard.putData("Target Field", targetField);
         }
     
         /**
@@ -242,7 +242,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
             configureAutoBuilder();
             SmartDashboard.putData("General Field", generalField);
-            SmartDashboard.putData("Target Field", targetField);
+            //SmartDashboard.putData("Target Field", targetField);
         }
     
         /**
@@ -389,8 +389,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             xRelativeToPosition = xRelativeToFieldOrigin - targetX;
             yRelativeToPosition = yRelativeToFieldOrigin - targetY;
 
-            SmartDashboard.putNumber("XRelativeToPos", xRelativeToPosition);
-            SmartDashboard.putNumber("YRelativeToPos", yRelativeToPosition);
         
             angleToTarget = Math.atan(yRelativeToPosition/xRelativeToPosition);
 
@@ -433,32 +431,32 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
 
         if(this.isAllianceBlue() && calculateTurretFieldPositionX() < PoseConstants.BLUE_ALLIANCE_ZONE_X) {
-            SmartDashboard.putString("Target", "Blue Alliance Hub");
+            //SmartDashboard.putString("Target", "Blue Alliance Hub");
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_HUB_LOCATION[1];
         }
         else if(this.isAllianceRed() && calculateTurretFieldPositionX() > PoseConstants.RED_ALLIANCE_ZONE_X) {
-            SmartDashboard.putString("Target", "Red Alliance Hub");
+            //SmartDashboard.putString("Target", "Red Alliance Hub");
             targetPose[0] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_HUB_LOCATION[1];
         }
         else if(this.isAllianceBlue() && calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
-            SmartDashboard.putString("Target", "Blue Alliance Right Corner");
+            //SmartDashboard.putString("Target", "Blue Alliance Right Corner");
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_RIGHT_CORNER[1];
         }
         else if(this.isAllianceBlue() && calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y) {
-            SmartDashboard.putString("Target", "Blue Alliance Left Corner");
+            //SmartDashboard.putString("Target", "Blue Alliance Left Corner");
             targetPose[0] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[0];
             targetPose[1] = PoseConstants.BLUE_ALLIANCE_LEFT_CORNER[1];
         }
         else if(this.isAllianceRed() && calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && calculateTurretFieldPositionY() > PoseConstants.CENTER_FIELD_Y){
-            SmartDashboard.putString("Target", "Red Alliance Right Corner");
+            //SmartDashboard.putString("Target", "Red Alliance Right Corner");
             targetPose[0] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_RIGHT_CORNER[1];
         }
         else if(this.isAllianceRed() && calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X && calculateTurretFieldPositionY() < PoseConstants.CENTER_FIELD_Y) {
-            SmartDashboard.putString("Target", "Red Alliance Left Corner");
+            //SmartDashboard.putString("Target", "Red Alliance Left Corner");
             targetPose[0] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[0];
             targetPose[1] = PoseConstants.RED_ALLIANCE_LEFT_CORNER[1];
         }      
@@ -466,8 +464,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         calculateAngleToFieldPosition(targetPose[0], targetPose[1]);
 
         generalField.setRobotPose(getPose2d());
-        targetField.setRobotPose(new Pose2d(targetPose[0], targetPose[1], new Rotation2d(angleToTarget)));
-        SmartDashboard.putNumber("Angle to Target", Units.radiansToDegrees(angleToTarget));
+        //targetField.setRobotPose(new Pose2d(targetPose[0], targetPose[1], new Rotation2d(angleToTarget)));
+        //SmartDashboard.putNumber("Angle to Target", Units.radiansToDegrees(angleToTarget));
         SmartDashboard.putNumber("Distance to Target", getDistanceToTarget());
     }
 
@@ -578,4 +576,5 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     
+
 }

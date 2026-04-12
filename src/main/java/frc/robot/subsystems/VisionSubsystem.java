@@ -39,7 +39,7 @@ public class VisionSubsystem extends SubsystemBase {
    );
    private EstimatedRobotPose frontEstimatedRobotPose = null;
 
-  //    PhotonCamera sideCamera = new PhotonCamera("SideCamera");
+  //    PhotonCamera sideCamera = new PhotonCamera("Side Camera");
   //  private PhotonPipelineResult sideResult = null;
   //  private PhotonTrackedTarget sideTrackedTarget = null;
   //  private PhotonPoseEstimator sidePoseEstimator = new PhotonPoseEstimator(
@@ -56,16 +56,16 @@ public class VisionSubsystem extends SubsystemBase {
   public VisionSubsystem(CommandSwerveDrivetrain drivetrain) {
     m_drivetrain = drivetrain;
 
-    SmartDashboard.putData("Vision Field", visionField);
+    //SmartDashboard.putData("Vision Field", visionField);
     
     //CameraServer.startAutomaticCapture();
   }
 
   public void addVisionPose2d(Pose2d pose2d, double timestampSeconds) {
-     SmartDashboard.putNumber("aVP2d pose2d X", pose2d.getX());
-     SmartDashboard.putNumber("aVP2d pose2d Y", pose2d.getY());
-     SmartDashboard.putNumber("aVP2d pose2d Rot", pose2d.getRotation().getDegrees());
-     SmartDashboard.putNumber("aVP2d timestampSeconds", timestampSeconds);
+     //SmartDashboard.putNumber("aVP2d pose2d X", pose2d.getX());
+     //SmartDashboard.putNumber("aVP2d pose2d Y", pose2d.getY());
+     //SmartDashboard.putNumber("aVP2d pose2d Rot", pose2d.getRotation().getDegrees());
+     //SmartDashboard.putNumber("aVP2d timestampSeconds", timestampSeconds);
      // Sets trust value for vision measurements
      // charizardsSkateboard.setVisionMeasurementStdDevs(curStdDevs);
      // charizardsSkateboard.addVisionMeasurement(pose2d, timestampSeconds);
@@ -116,29 +116,29 @@ public class VisionSubsystem extends SubsystemBase {
        frontEstimatedRobotPose = null;
      }
 
-    // Same thing but for the side camera
-    //   sideResult = sideCamera.getLatestResult();
+  //   // Same thing but for the side camera
+  //     sideResult = sideCamera.getLatestResult();
 
-    //   try {
-    //    // Only accepts camera results if they see more than 1 april tag, or if it sees 1 april tag and the poseAmbiguity is low
-    //    // COMMENT OUT THE LINE BELOW THIS AND IT'S CLOSING BRACKETS IF THIS DOESN'T WORK
-    //    if ((sideResult.getTargets().size() == 1 && sideResult.getBestTarget().poseAmbiguity < VisionConstants.AMBIGUITY_RATIO_CUTOFF) 
-    //    || sideResult.getTargets().size() > 1) {
-    //      sideEstimatedRobotPose = sidePoseEstimator.update(sideResult).get();
-    //      //updateEstimationStdDevs(leftPoseEstimator.update(leftResult), cameraLeft.getAllUnreadResults().get(0).getTargets());
-    //      addVisionPose2d(sideEstimatedRobotPose.estimatedPose.toPose2d(), sideEstimatedRobotPose.timestampSeconds);
-    //      visionField.setRobotPose(sideEstimatedRobotPose.estimatedPose.toPose2d());
-    //    }
-    //  } catch (Exception e) {
-    //    sideEstimatedRobotPose = null;
-    //  } 
+  //     try {
+  //      // Only accepts camera results if they see more than 1 april tag, or if it sees 1 april tag and the poseAmbiguity is low
+  //      // COMMENT OUT THE LINE BELOW THIS AND IT'S CLOSING BRACKETS IF THIS DOESN'T WORK
+  //      if ((sideResult.getTargets().size() == 1 && sideResult.getBestTarget().poseAmbiguity < VisionConstants.AMBIGUITY_RATIO_CUTOFF) 
+  //      || sideResult.getTargets().size() > 1) {
+  //        sideEstimatedRobotPose = sidePoseEstimator.update(sideResult).get();
+  //        //updateEstimationStdDevs(leftPoseEstimator.update(leftResult), cameraLeft.getAllUnreadResults().get(0).getTargets());
+  //        addVisionPose2d(sideEstimatedRobotPose.estimatedPose.toPose2d(), sideEstimatedRobotPose.timestampSeconds);
+  //        visionField.setRobotPose(sideEstimatedRobotPose.estimatedPose.toPose2d());
+  //      }
+  //    } catch (Exception e) {
+  //      sideEstimatedRobotPose = null;
+  //    } 
 
-     try {
-      visionField.setRobotPose(frontEstimatedRobotPose.estimatedPose.toPose2d());
-     } catch(Exception e) {
+  //    try {
+  //     visionField.setRobotPose(frontEstimatedRobotPose.estimatedPose.toPose2d());
+  //    } catch(Exception e) {
         
-     }
+  //    }
      
-  }
+   }
 }
 

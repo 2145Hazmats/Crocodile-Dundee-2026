@@ -90,7 +90,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setHoodMotorPosition(double angle) {
-    SmartDashboard.putNumber("Actual Hood Setpoint", angle);
+    //SmartDashboard.putNumber("Actual Hood Setpoint", angle);
     hoodMotor.setControl(m_hoodRequest.withPosition(MathConstants.DegreesToRotations(angle) * ShooterConstants.HOOD_GEAR_RATIO));
   }
 
@@ -99,7 +99,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double distanceToFlywheelSpeed(double distance) {
-    return 1384.84549 *(Math.pow(1.21174, distance));//1.21174=power
+    return 1022.24862 *(Math.pow(1.31006, distance));//1.21174=power
   }
 
   public double distanceToHoodAngleDegrees(double distance) {
@@ -130,12 +130,12 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Measured Flywheel Speed", MathConstants.RPStoRPM(shooterMotor.getVelocity().getValueAsDouble()));
-    SmartDashboard.putNumber("Measured Hood Angle", (hoodMotor.getPosition().getValueAsDouble() / ShooterConstants.HOOD_GEAR_RATIO * 360));
+    //SmartDashboard.putNumber("Measured Hood Angle", (hoodMotor.getPosition().getValueAsDouble() / ShooterConstants.HOOD_GEAR_RATIO * 360));
 
-    /*
+    
     setHoodMotorPosition(SmartDashboard.getNumber("Hood Setpoint", 12));
     setFlywheelToSpeed(SmartDashboard.getNumber("Flywheel Setpoint", 0));
-    */
+    
 
     if(m_drivetrain.calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && m_drivetrain.calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X) {
       setHoodMotorPosition(ShooterConstants.HOOD_MAX_ANGLE);

@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Preload"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
+            "pathName": "Left Non Alliance Friendly Path 1"
           }
         },
         {
@@ -26,6 +20,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Left Autos",
+  "folder": "Expiremental Autos",
   "choreoAuto": false
 }

@@ -110,10 +110,10 @@ public final class Constants {
     public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.625594, 4.034536};
     public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.915394, 4.034536};
 
-    public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {2, 2};
-    public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {2, 6.069};
-    public static final double[] RED_ALLIANCE_RIGHT_CORNER = {14.541, 6.069};
-    public static final double[] RED_ALLIANCE_LEFT_CORNER = {14.541, 2};
+    public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {2.75, 2};
+    public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {2.75, 6.069};
+    public static final double[] RED_ALLIANCE_RIGHT_CORNER = {13.791, 6.069};
+    public static final double[] RED_ALLIANCE_LEFT_CORNER = {13.791, 2};
     
     public static final double RED_ALLIANCE_ZONE_X = 11.913;
     public static final double CENTER_FIELD_Y = 4.035;
@@ -129,7 +129,7 @@ public final class Constants {
     new Rotation3d(Units.degreesToRadians(0),Units.degreesToRadians(10), Units.degreesToRadians(0)));
     public static final double AMBIGUITY_RATIO_CUTOFF = 0.2;
     public static final Transform3d SIDE_CAMERA_POSITION = 
-    new Transform3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0),
+    new Transform3d(Units.inchesToMeters(11.125), Units.inchesToMeters(-13.4375), Units.inchesToMeters(14.6875),
     new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)));
   }
   

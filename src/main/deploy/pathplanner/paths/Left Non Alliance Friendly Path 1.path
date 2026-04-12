@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.4013409415121245,
-        "y": 7.53490727532097
+        "x": 4.342250712250712,
+        "y": 7.63974358974359
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.606405135520683,
-        "y": 7.4702139800285305
+        "x": 8.528404558404558,
+        "y": 7.665584045584046
       },
       "isLocked": false,
       "linkedName": null
@@ -25,7 +25,7 @@
       },
       "nextControl": {
         "x": 7.714402063202168,
-        "y": -0.4763183627681582
+        "y": -0.4763183627681573
       },
       "isLocked": false,
       "linkedName": null
@@ -89,7 +89,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Start Coast"
     }
   ],
   "rotationTargets": [
@@ -165,7 +165,7 @@
     },
     {
       "name": "IntakeOut",
-      "waypointRelativePos": 0.10421836228288242,
+      "waypointRelativePos": 0.18906144496960814,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

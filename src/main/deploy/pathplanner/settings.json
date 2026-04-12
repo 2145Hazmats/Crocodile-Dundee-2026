@@ -7,12 +7,14 @@
     "Left Pass Fenton",
     "Middle 1 Preload",
     "Middle Fenton",
+    "Expiremental Paths",
     "Right 1 Preload",
     "Right Pass Fenton"
   ],
   "autoFolders": [
     "Left Autos",
     "Middle Autos",
+    "Expiremental Autos",
     "Right Autos"
   ],
   "defaultMaxVel": 3.0,
