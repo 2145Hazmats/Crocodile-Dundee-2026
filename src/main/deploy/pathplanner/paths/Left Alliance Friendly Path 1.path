@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.406851851851851,
-        "y": 7.626823361823362
+        "x": 4.3551709401709395,
+        "y": 7.471780626780627
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.050356125356124,
-        "y": 7.6914245014245015
+        "x": 7.998675213675214,
+        "y": 7.5363817663817665
       },
       "isLocked": false,
       "linkedName": null
@@ -64,28 +64,28 @@
     },
     {
       "anchor": {
-        "x": 3.3533095577746077,
-        "y": 7.431398002853067
+        "x": 3.6378214285714296,
+        "y": 7.447047619047619
       },
       "prevControl": {
-        "x": 4.606691393416944,
-        "y": 7.36543053781926
+        "x": 4.891203264213765,
+        "y": 7.381080154013812
       },
       "nextControl": {
-        "x": 3.1036551004414803,
-        "y": 7.444537711133758
+        "x": 3.3881669712383022,
+        "y": 7.46018732732831
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.4734807417974314,
-        "y": 6.31867332382311
+        "x": 3.3354880952380954,
+        "y": 7.133916666666667
       },
       "prevControl": {
-        "x": 2.8875178316690437,
-        "y": 7.017360912981456
+        "x": 3.5514404761904763,
+        "y": 7.393059523809525
       },
       "nextControl": null,
       "isLocked": false,
@@ -93,6 +93,10 @@
     }
   ],
   "rotationTargets": [
+    {
+      "waypointRelativePos": 0.37313432835821364,
+      "rotationDegrees": 90.0
+    },
     {
       "waypointRelativePos": 1.0703624733475288,
       "rotationDegrees": 90.0
@@ -117,11 +121,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7427413909520364,
+      "minWaypointRelativePos": 0.5707196029776731,
       "maxWaypointRelativePos": 1.2694125590816896,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 1.0,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -130,11 +134,11 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.8636056718433016,
+      "minWaypointRelativePos": 1.78163771712159,
       "maxWaypointRelativePos": 3.106009453072166,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 1.0,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -157,7 +161,7 @@
     },
     {
       "name": "IntakeOut",
-      "waypointRelativePos": 0.18,
+      "waypointRelativePos": 0.13504388926400884,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -287,13 +291,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -46.8585029996111
+    "rotation": -67.54985792115924
   },
   "reversed": false,
   "folder": "Left Pass Fenton",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

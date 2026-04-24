@@ -100,6 +100,9 @@ public class TurretSubsystem extends SubsystemBase {
         
         double angle = -angleToPointTo.getAsDouble() + m_drivetrain.getPose2d().getRotation().getRadians() /*+ angularVelocityToTurretOffset()*/;
 
+        if(m_drivetrain.getPose2d().getX() > m_drivetrain.getTargetPose()[0]) { 
+            angle += Math.PI;
+        }
         
         if(angle > Math.PI) {
           angle -= (Math.PI * 2);

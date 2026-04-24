@@ -391,10 +391,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         
             angleToTarget = Math.atan(yRelativeToPosition/xRelativeToPosition);
-
-            if(xRelativeToFieldOrigin > targetX) {
-                angleToTarget += Math.PI;
-            }
        
             return angleToTarget;
         } catch (Exception e) {
@@ -575,6 +571,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
     }
 
-    
+    public double[] getTargetPose() {
+        return targetPose;
+    }
 
 }

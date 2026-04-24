@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 4.342250712250712,
-        "y": 0.45609686609686717
+        "y": 0.5594586894586906
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.9728347578347565,
-        "y": 0.5982193732193752
+        "y": 0.7015811965811987
       },
       "isLocked": false,
       "linkedName": null
@@ -68,24 +68,24 @@
         "y": 0.6121547619047625
       },
       "prevControl": {
-        "x": 6.067285714285714,
-        "y": 0.6121547619047625
+        "x": 6.067034212296316,
+        "y": 0.6383133868665044
       },
       "nextControl": {
-        "x": 3.313516246927203,
-        "y": 0.6121547619047627
+        "x": 4.145309523809525,
+        "y": 0.6013571428571437
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.072382310984308,
-        "y": 1.6478174037089879
+        "x": 3.4110714285714296,
+        "y": 0.6553452380952387
       },
       "prevControl": {
-        "x": 2.3958487874465044,
-        "y": 0.5480313837375181
+        "x": 3.8645714285714297,
+        "y": 0.5689642857142871
       },
       "nextControl": null,
       "isLocked": false,
@@ -93,6 +93,10 @@
     }
   ],
   "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3304904051172733,
+      "rotationDegrees": -90.0
+    },
     {
       "waypointRelativePos": 0.5203319502074699,
       "rotationDegrees": -90.0
@@ -121,11 +125,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.58,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.5012406947890831,
+      "maxWaypointRelativePos": 0.9776674937965282,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 1.0,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 180.0,
         "maxAngularAcceleration": 360.0,
         "nominalVoltage": 12.0,
@@ -134,11 +138,11 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.8908188585607943,
-      "maxWaypointRelativePos": 3.0,
+      "minWaypointRelativePos": 1.9404466501240647,
+      "maxWaypointRelativePos": 3.0223325062034814,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 1.0,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -161,7 +165,7 @@
     },
     {
       "name": "IntakeOut",
-      "waypointRelativePos": 0.21,
+      "waypointRelativePos": 0.12153950033760852,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -379,13 +383,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 43.025065989117984
+    "rotation": 70.19460015927838
   },
   "reversed": false,
   "folder": "Right Pass Fenton",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

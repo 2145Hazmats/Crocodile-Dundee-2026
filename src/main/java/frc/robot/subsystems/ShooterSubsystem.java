@@ -99,7 +99,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double distanceToFlywheelSpeed(double distance) {
-    return 1022.24862 *(Math.pow(1.31006, distance));//1.21174=power
+    return 1013.63192 * (Math.pow(1.31539, distance));//1.21174=power
   }
 
   public double distanceToHoodAngleDegrees(double distance) {
@@ -133,8 +133,8 @@ public class ShooterSubsystem extends SubsystemBase {
     //SmartDashboard.putNumber("Measured Hood Angle", (hoodMotor.getPosition().getValueAsDouble() / ShooterConstants.HOOD_GEAR_RATIO * 360));
 
     
-    setHoodMotorPosition(SmartDashboard.getNumber("Hood Setpoint", 12));
-    setFlywheelToSpeed(SmartDashboard.getNumber("Flywheel Setpoint", 0));
+    // setHoodMotorPosition(SmartDashboard.getNumber("Hood Setpoint", 12));
+    // setFlywheelToSpeed(SmartDashboard.getNumber("Flywheel Setpoint", 0));
     
 
     if(m_drivetrain.calculateTurretFieldPositionX() > PoseConstants.BLUE_ALLIANCE_ZONE_X && m_drivetrain.calculateTurretFieldPositionX() < PoseConstants.RED_ALLIANCE_ZONE_X) {

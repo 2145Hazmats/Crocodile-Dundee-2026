@@ -34,6 +34,11 @@ public class IntakeSubsystem extends SubsystemBase {
     intakingCurrentLimitConfig.withSupplyCurrentLimit(40).withSupplyCurrentLimitEnable(true);
     intakingMotor.getConfigurator().apply(intakingCurrentLimitConfig);
 
+    var actuatorCurrentLimitConfig = new CurrentLimitsConfigs();
+    actuatorCurrentLimitConfig.withStatorCurrentLimit(10).withStatorCurrentLimitEnable(true);
+    actuatorCurrentLimitConfig.withSupplyCurrentLimit(20).withSupplyCurrentLimitEnable(true);
+    actuatorMotor.getConfigurator().apply(actuatorCurrentLimitConfig);
+
     var slot0Configs = new Slot0Configs();
     slot0Configs.kG = 0.4;
     slot0Configs.kP = IntakeConstants.ACTUATOR_P;
@@ -71,6 +76,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public Command setIntakePositionCommand(double position){
      return Commands.run(() -> actuatorMotor.setControl(m_actuatorRequest.withPosition(position)), this);
+  }
+
+  public boolean intakeIsNearPosition(double position){
+    return MathUtil.isNear(position,getActuatorPosition() , 15);
   }
   
   // public Command autoIntakeHOME() {

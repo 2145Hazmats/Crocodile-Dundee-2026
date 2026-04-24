@@ -33,6 +33,7 @@ public final class Constants {
     public static final int P2_CONTROLLER_PORT = 1;
     public static final int EVERYTHING_CONTROLLER_PORT = 2;
     public static final int TESTING_CONTROLLER_PORT = 3;
+    public static final int P6_CONTROLLER_PORT = 5;
   }
 
   public static class PathPlannerConstants {
@@ -78,10 +79,11 @@ public final class Constants {
     public static final int ACTUATOR_INTAKE_MOTOR_ID = 30;
     public static final int INTAKING_MOTOR_ID = 31;
     public static final double ACTUATOR_HOME_POSITION = 0;   // TODO: Set home and down positions for the intake
-    public static final double ACTUATOR_DOWN_POSITION = -44.29;   // <-----------------------------------------------
+    public static final double ACTUATOR_DOWN_POSITION = -41;   // -44.29 <-----------------------------------------------
     public static final double ACTUATOR_MIDDLE_POSITION = -18.69;
     public static final double INTAKE_MOTOR_SPEED = 1.0;
-    public static final double ACTUATOR_P = 0.19;
+    public static final double REGURGITATE_SPEED = -1.0;
+    public static final double ACTUATOR_P = 0.3;
     public static final double ACTUATOR_I = 0.0000;
     public static final double ACTUATOR_D = 0.0000;
    
@@ -110,10 +112,10 @@ public final class Constants {
     public static final double[] BLUE_ALLIANCE_HUB_LOCATION = {4.625594, 4.034536};
     public static final double[] RED_ALLIANCE_HUB_LOCATION = {11.915394, 4.034536};
 
-    public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {2.75, 2};
-    public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {2.75, 6.069};
-    public static final double[] RED_ALLIANCE_RIGHT_CORNER = {13.791, 6.069};
-    public static final double[] RED_ALLIANCE_LEFT_CORNER = {13.791, 2};
+    public static final double[] BLUE_ALLIANCE_RIGHT_CORNER = {4, 2.11}; // 2.75, 2
+    public static final double[] BLUE_ALLIANCE_LEFT_CORNER = {4, 5.96}; // 2.75, 2
+    public static final double[] RED_ALLIANCE_RIGHT_CORNER = {12, 5.96}; // 13.791, 6.069 
+    public static final double[] RED_ALLIANCE_LEFT_CORNER = {12, 2.11}; // 13.791, 2
     
     public static final double RED_ALLIANCE_ZONE_X = 11.913;
     public static final double CENTER_FIELD_Y = 4.035;

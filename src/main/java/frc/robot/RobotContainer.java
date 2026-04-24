@@ -47,6 +47,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import pabeles.concurrency.IntRangeTask;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -80,7 +81,9 @@ public class RobotContainer {
     private final XboxController P2Controller = new XboxController(ControllerConstants.P2_CONTROLLER_PORT);
     private final XboxController m_EverythingController = new XboxController(ControllerConstants.EVERYTHING_CONTROLLER_PORT);
     private final XboxController m_TestingController = new XboxController(ControllerConstants.TESTING_CONTROLLER_PORT);
+    private final XboxController P6Controller = new XboxController(ControllerConstants.P6_CONTROLLER_PORT);
 
+    
     //Subsystems are defined here
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     //private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
@@ -133,18 +136,39 @@ public class RobotContainer {
 
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
+        // drivetrain.setDefaultCommand(
+        //     // Drivetrain will execute this command periodically
+        //     drivetrain.applyRequest(() ->
+        //         drive.withVelocityX(-P1Controller.getRawAxis(1) * MaxSpeed) // Drive forward with negative Y (forward)
+        //             .withVelocityY(-P1Controller.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left)
+        //             .withRotationalRate(-P1Controller.getRawAxis(3) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        //     )
+        // );
+
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-P1Controller.getRawAxis(1) * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-P1Controller.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-P1Controller.getRawAxis(3) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-P6Controller.getRawAxis(1) * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-P6Controller.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-P6Controller.getRawAxis(3) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
+        // Saturday Sponser Video Default Commands
+        // drivetrain.setDefaultCommand(
+        //     // Drivetrain will execute this command periodically
+        //     drivetrain.applyRequest(() ->
+        //         drive.withVelocityX(-P1Controller.getRawAxis(1) * MaxSpeed* 0.5) // Drive forward with negative Y (forward)
+        //             .withVelocityY(-P1Controller.getRawAxis(0) * MaxSpeed * 0.5) // Drive left with negative X (left)
+        //             .withRotationalRate(-P1Controller.getRawAxis(3) * MaxAngularRate * 0.5) // Drive counterclockwise with negative X (left)
+        //     )
+
+        // );
+
+
         // Turn turret where we want it
         m_TurretSubsystem.setDefaultCommand(m_TurretSubsystem.turnTurretToAngleProfiled(
-          drivetrain::getAngleToTarget));
+        drivetrain::getAngleToTarget));
 
         m_FeederSubsystem.setDefaultCommand(Commands.run(() -> m_FeederSubsystem.setFeederMotor(0), m_FeederSubsystem));
         
@@ -213,9 +237,70 @@ public class RobotContainer {
       final Trigger P2minus = new Trigger(() -> P2Controller.getRawButton(11));
       final Trigger P2Plus = new Trigger(() -> P2Controller.getRawButton(12));
 
-    /*--------------------------------New Controller Commands-------------------------------- */
+    /*----------------------------New Controller Commands--------------------*/
 
-    /*-------------------------------------------Driver Controls-------------------------------------------*/  
+
+    /*----------------------------Saturday Garage Dorr Sponser Video stuffs--*/
+      
+
+      final Trigger P6A = new Trigger(() -> P6Controller.getRawButton(1));
+      final Trigger P6B = new Trigger(() -> P6Controller.getRawButton(2));
+      final Trigger P6l4 = new Trigger(() -> P6Controller.getRawButton(3));
+      final Trigger P6X = new Trigger(() -> P6Controller.getRawButton(4));
+      final Trigger P6Y = new Trigger(() -> P6Controller.getRawButton(5));
+      final Trigger P6r4 = new Trigger(() -> P6Controller.getRawButton(6));
+      final Trigger P6leftBumper = new Trigger(() -> P6Controller.getRawButton(7));
+      final Trigger P6rightBumper = new Trigger(() -> P6Controller.getRawButton(8));
+      final Trigger P6leftTrigger = new Trigger(() -> P6Controller.getRawButton(9));
+      final Trigger P6rightTrigger = new Trigger(() -> P6Controller.getRawButton(10));
+      final Trigger P6minus = new Trigger(() -> P6Controller.getRawButton(11));
+      final Trigger P6Plus = new Trigger(() -> P6Controller.getRawButton(12));
+
+    // Drivin
+      // Snail mode        
+      P6leftBumper.whileTrue(drivetrain.applyRequest(() ->
+        drive.withVelocityX(-P6Controller.getLeftY() * MaxSpeed * 0.5) // Drive forward with negative Y (forward)
+        .withVelocityY(-P6Controller.getLeftX() * MaxSpeed * 0.5) // Drive left with negative X (left)
+        .withRotationalRate(-P6Controller.getRightX() * MaxAngularRate * 0.75) // Drive counterclockwise with negative X (left)
+      ));
+
+      // Pre Shootin
+      P6rightBumper.whileTrue(
+        Commands.run(
+          () -> {
+            m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
+            m_FeederSubsystem.setFeederMotor(1);
+          }
+        )
+      )
+      .whileFalse(
+        Commands.run(
+          () -> {
+            m_ShooterSubsystem.setFlywheelMotor(0.2);
+            m_FeederSubsystem.setFeederMotor(0);
+          }
+        )
+      );
+
+      // Shoots
+      P6rightTrigger.whileTrue(Commands.run(
+        
+        () -> {
+          m_SpindexerSubsystem.SetMotor(-1);
+        }))
+      .whileFalse(Commands.run(
+        () -> {
+          m_SpindexerSubsystem.SetMotor(0);
+        }));
+
+
+        P6A.whileTrue(m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_MIDDLE_POSITION));
+        P6leftBumper.whileTrue(autoRegurgitateCommand());
+        // Regurgitate Fuel From Intake
+        P6r4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.REGURGITATE_SPEED), m_IntakeSubsystem)
+        .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0)));
+
+    /*----------------------------Driver Controls----------------------------*/  
         
     // slow mode
         P1rightBumper.whileTrue(drivetrain.applyRequest(() ->
@@ -226,10 +311,10 @@ public class RobotContainer {
 
       P1A.whileTrue(drivetrain.applyRequest(() -> brake));
       
-      // P1B.whileTrue(drivetrain.applyRequest(() -> 
-      //   drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed)
-      //   .withVelocityY(-P1Controller.getLeftX() * MaxSpeed)
-      //   .withRotationalRate(rotationPID.calculate(drivetrain.getPose2d().getRotation().getRadians(), drivetrain.getAngleToTarget()) * MaxAngularRate)));
+      P1B.whileTrue(drivetrain.applyRequest(() -> 
+        drive.withVelocityX(-P1Controller.getLeftY() * MaxSpeed)
+        .withVelocityY(-P1Controller.getLeftX() * MaxSpeed)
+        .withRotationalRate(rotationPID.calculate(drivetrain.getPose2d().getRotation().getRadians(), drivetrain.getAngleToTarget()) * MaxAngularRate)));
       
       //When pressed, checks what alliance you are on, and goes to a set pose
       P1Y.and(drivetrain::isAllianceBlue).whileTrue(drivetrain.pathfindToPose(PoseConstants.BLUE_SHOOT_POSE));
@@ -255,11 +340,11 @@ public class RobotContainer {
           , m_ShooterSubsystem)));
       */
 
-      
+      // Shoot thingy
       P2rightBumper.whileTrue(
         Commands.run(
           () -> {
-            //m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
+            m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
             m_FeederSubsystem.setFeederMotor(1);
           }
         )
@@ -267,7 +352,7 @@ public class RobotContainer {
       .whileFalse(
         Commands.run(
           () -> {
-            //m_ShooterSubsystem.setFlywheelMotor(0.2);
+            m_ShooterSubsystem.setFlywheelMotor(0.2);
             m_FeederSubsystem.setFeederMotor(0);
           }
         )
@@ -280,6 +365,8 @@ public class RobotContainer {
         () -> {
           m_SpindexerSubsystem.SetMotor(0);
         }));
+
+
       
       //Pass function, different flywheel setpoint
       // P2Y.whileTrue(Commands.run(
@@ -298,19 +385,26 @@ public class RobotContainer {
       P2l4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED), m_IntakeSubsystem)
       .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0)));
 
-      P2B.whileTrue(m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_MIDDLE_POSITION));
+      P2B.whileTrue(m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_MIDDLE_POSITION).alongWith(
+        Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)).withTimeout(0.5)
+        .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0))
+      ));
 
       // Regurgitate the fuel
       P2leftBumper.whileTrue(autoRegurgitateCommand());
+
+      // Regurgitate Fuel From Intake
+      P2r4.whileTrue(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.REGURGITATE_SPEED), m_IntakeSubsystem)
+      .finallyDo(() -> m_IntakeSubsystem.setIntakingMotor(0)));
+      
 
       // Intake command -- Puts intake down when pressing down LT
       P2leftTrigger
       .whileTrue(
         new ParallelCommandGroup(
           m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_DOWN_POSITION),
-          Commands.run(
-            () -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)
-          )
+          Commands.waitUntil(() -> m_IntakeSubsystem.intakeIsNearPosition(IntakeConstants.ACTUATOR_DOWN_POSITION))
+                  .andThen(Commands.run(() -> m_IntakeSubsystem.setIntakingMotor(IntakeConstants.INTAKE_MOTOR_SPEED)))
         )
       )
       .whileFalse(Commands.run(
