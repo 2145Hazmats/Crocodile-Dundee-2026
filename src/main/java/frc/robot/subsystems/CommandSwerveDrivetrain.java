@@ -32,6 +32,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -573,6 +575,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public double[] getTargetPose() {
         return targetPose;
+    }
+
+    public double[] getSimulatedMotorCurrents() {
+        double[] currents = new double[8];
+
+        for(int i = 0; i < 4; i++) {
+            var module = getModules()[i];
+            var driveSim = module.getDriveMotor().getSimState();
+            var steerSim = module.getSteerMotor().getSimState();
+
+            driveSim.setSupplyVoltage(RobotController.getBatteryVoltage());
+            steerSim.setSupplyVoltage(RobotController.getBatteryVoltage());
+
+            currents[i] = driveSim.getSupplyCurrent();
+            currents[i + 4] = steerSim.getSupplyCurrent();
+        }
+
+        return currents;
     }
 
 }

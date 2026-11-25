@@ -24,7 +24,9 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -59,7 +61,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
    if(Utils.isSimulation()){
     var shooterMotorSim = shooterMotor.getSimState();
-    shooterMotorSim.Orientation = ChassisReference.CounterClockwise_Positive;
+    shooterMotorSim.Orientation = ChassisReference.Clockwise_Positive;
     shooterMotorSim.setMotorType(MotorType.KrakenX60);
    }
 
@@ -176,5 +178,9 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheelSim.update(0.020);
 
     shooterMotorSim.setRotorVelocity(flywheelSim.getAngularVelocity().times(kGearRatio));
+  }
+
+  public double getSimulatedMotorCurrent() {
+    return flywheelSim.getCurrentDrawAmps();
   }
 }

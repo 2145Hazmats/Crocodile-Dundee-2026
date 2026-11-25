@@ -14,7 +14,10 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -116,6 +119,22 @@ public class RobotContainer {
         SmartDashboard.putNumber("Flywheel Setpoint", 0);
         SmartDashboard.putNumber("Hood Setpoint", 12);
        
+    }
+
+    public void simulationPeriodic() {
+      RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(
+        drivetrain.getSimulatedMotorCurrents()[0],
+        drivetrain.getSimulatedMotorCurrents()[1],
+        drivetrain.getSimulatedMotorCurrents()[2],
+        drivetrain.getSimulatedMotorCurrents()[3],
+        drivetrain.getSimulatedMotorCurrents()[4],
+        drivetrain.getSimulatedMotorCurrents()[5],
+        drivetrain.getSimulatedMotorCurrents()[6],
+        drivetrain.getSimulatedMotorCurrents()[7],
+        m_ShooterSubsystem.getSimulatedMotorCurrent()
+      ));
+
+      SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
     }
 
     private void configureBindings() {
@@ -490,10 +509,14 @@ public class RobotContainer {
 
   //Command for autonomous control to shoot
   private Command autoFlywheelShootCommand(){
-     return Commands.run(
-      () -> { m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
-      m_FeederSubsystem.setFeederMotor(1);
-    }, m_FeederSubsystem, m_ShooterSubsystem);}
+    return Commands.run(
+      () -> {
+        m_ShooterSubsystem.setFlywheelToSpeed(m_ShooterSubsystem.distanceToFlywheelSpeed(drivetrain.getDistanceToTarget()));
+        m_FeederSubsystem.setFeederMotor(1);
+      },
+      m_FeederSubsystem, m_ShooterSubsystem
+    );
+  }
   
   private Command autoSpindexerCommand(){
     return Commands.run(()-> 
@@ -501,7 +524,7 @@ public class RobotContainer {
     , m_SpindexerSubsystem);
   }
 
-   public Command autoIntakeHOME() {
+  public Command autoIntakeHOME() {
     return m_IntakeSubsystem.setIntakePositionCommand(IntakeConstants.ACTUATOR_HOME_POSITION);
   }
 
