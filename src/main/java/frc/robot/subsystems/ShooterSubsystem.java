@@ -4,17 +4,27 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Volts;
+
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.ChassisReference;
+import com.ctre.phoenix6.sim.TalonFXSimState.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -34,11 +44,24 @@ public class ShooterSubsystem extends SubsystemBase {
   
   private PIDController hoodPID = new PIDController(ShooterConstants.HOOD_P, ShooterConstants.HOOD_I, ShooterConstants.HOOD_D);
 
+  // SIMULATION
+  private final double kGearRatio = 1.0;
+  private final double kFlywheelMomentOfInertia = 0.5 * Units.lbsToKilograms(3) * Math.pow(Units.inchesToMeters(4), 2);
+  private final DCMotor m_gearbox = DCMotor.getKrakenX60(1);
+  private final LinearSystem<N1, N1, N1> m_plant = LinearSystemId.createFlywheelSystem(m_gearbox, kFlywheelMomentOfInertia, kGearRatio);
+  private final FlywheelSim flywheelSim = new FlywheelSim(m_plant, m_gearbox, 0.01);
+
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem(CommandSwerveDrivetrain drivetrain) {
+
    shooterMotor = new TalonFX(ShooterConstants.SHOOTER_MOTOR_ID);
    m_drivetrain = drivetrain;
-   
+
+   if(Utils.isSimulation()){
+    var shooterMotorSim = shooterMotor.getSimState();
+    shooterMotorSim.Orientation = ChassisReference.CounterClockwise_Positive;
+    shooterMotorSim.setMotorType(MotorType.KrakenX60);
+   }
 
    var flywheelCurrentLimitsConfigs = new CurrentLimitsConfigs();
    flywheelCurrentLimitsConfigs
@@ -47,8 +70,6 @@ public class ShooterSubsystem extends SubsystemBase {
     .withStatorCurrentLimit(60)
     .withStatorCurrentLimitEnable(true);
    shooterMotor.getConfigurator().apply(flywheelCurrentLimitsConfigs);
-
-   
 
    hoodMotor = new TalonFX(ShooterConstants.HOOD_MOTOR_ID);
    var slot0Configs = new Slot0Configs();
@@ -73,8 +94,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setFlywheelMotor(double speed) {
     shooterMotor.set(speed);
   }
-
-  
 
   public void setHoodMotor(double speed) {
     hoodMotor.set(speed);
@@ -142,12 +161,20 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     else {
       setHoodMotorPosition(ShooterConstants.HOOD_HOME_ANGLE);
-    }
-    
+    } 
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+    var shooterMotorSim = shooterMotor.getSimState();
+    shooterMotorSim.setSupplyVoltage(RobotController.getBatteryVoltage());
+
+    var motorVoltage = shooterMotorSim.getMotorVoltageMeasure();
+
+    flywheelSim.setInputVoltage(motorVoltage.in(Volts));
+    flywheelSim.update(0.020);
+
+    shooterMotorSim.setRotorVelocity(flywheelSim.getAngularVelocity().times(kGearRatio));
   }
 }
